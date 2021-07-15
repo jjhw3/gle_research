@@ -139,3 +139,7 @@ cython_debug/
 
 .idea/
 .DS_Store
+
+gle/cle/src/*.c
+gle/cle/src/*.cpp
+gle/cle/src/*.html
