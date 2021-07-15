@@ -15,7 +15,6 @@ class GLEConfig:
         dt,
         absorbate_mass,
         eta,
-        tau,
         lattice_parameter,
         temperature,
         working_directory,
@@ -24,7 +23,6 @@ class GLEConfig:
         self.dt = dt
         self.absorbate_mass = absorbate_mass
         self.eta = eta
-        self.tau = tau
         self.lattice_parameter = lattice_parameter
         self.temperature = temperature
         self.working_directory = working_directory
@@ -32,8 +30,6 @@ class GLEConfig:
         self.num_iterations = int(np.round(run_time / dt))
         self._times = None
         self.noise_stddev = np.sqrt(2 * boltzmann_constant * temperature * absorbate_mass * eta / dt)
-        self.discrete_decay_factor = np.exp(- dt / tau) if tau > 0 else 0
-        self.memory_kernel_normalization = 1 / (1 - self.discrete_decay_factor)
         self.isf_directory = self.working_directory / 'ISFs'
         self.log_isf_directory = self.isf_directory / 'log'
         if not self.isf_directory.exists():
@@ -55,17 +51,19 @@ class GLEConfig:
             self._times = np.linspace(0, self.run_time, self.num_iterations)
         return self._times
 
-    def __str__(self):
-        return str({
+    def to_dict(self):
+        return {
             'run_time': self.run_time,
             'dt': self.dt,
             'absorbate_mass': self.absorbate_mass,
             'eta': self.eta,
-            'tau': self.tau,
             'lattice_parameter': self.lattice_parameter,
             'temperature': self.temperature,
             'working_directory': self.working_directory,
-        })
+        }
+
+    def __str__(self):
+        return str(self.to_dict())
 
     def in_plane_rotate(self, points):
         return change_basis(self.xy_plane_rotation_matrix, points)
@@ -81,9 +79,69 @@ class GLEConfig:
         grady = (samples[2] - samples[3]) / 2 / dy
         return - np.asarray([gradx, grady])
 
+    @classmethod
+    def load(cls, dir):
+        return cls(
+            **yaml.load(open(dir / 'config.yml', "r")),
+            working_directory=dir
+        )
 
-def load(dir):
-    return GLEConfig(
-        **yaml.load(open(dir / 'config.yml', "r")),
-        working_directory=dir
-    )
+
+class TauGLEConfig(GLEConfig):
+    def __init__(
+        self,
+        run_time,
+        dt,
+        absorbate_mass,
+        eta,
+        tau,
+        lattice_parameter,
+        temperature,
+        working_directory,
+    ):
+        self.tau = tau
+        self.discrete_decay_factor = np.exp(- dt / tau) if tau > 0 else 0
+        self.memory_kernel_normalization = 1 / (1 - self.discrete_decay_factor)
+
+        super().__init__(
+            run_time,
+            dt,
+            absorbate_mass,
+            eta,
+            lattice_parameter,
+            temperature,
+            working_directory,
+        )
+
+    def to_dict(self):
+        dic = super(TauGLEConfig, self).to_dict()
+        dic['tau'] = self.tau
+        return dic
+
+
+class ComplexTauGLEConfig(TauGLEConfig):
+    def __init__(
+        self,
+        run_time,
+        dt,
+        absorbate_mass,
+        eta,
+        tau,
+        w_1,
+        lattice_parameter,
+        temperature,
+        working_directory,
+    ):
+        super().__init__(
+            run_time,
+            dt,
+            absorbate_mass,
+            eta,
+            tau,
+            lattice_parameter,
+            temperature,
+            working_directory,
+        )
+
+        self.discrete_decay_factor *= np.exp(1j * w_1 * dt)
+        self.memory_kernel_normalization = np.real(1 / (1 - self.discrete_decay_factor))

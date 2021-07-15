@@ -2,14 +2,14 @@
 #! This line is a comment
 #! Make sure you only have comments and #SBATCH directives between here and the end of the #SBATCH directives, or things will break
 #! Name of the job:
-#BATCH -J multi_gle
+#SBATCH -J multi_gle
 #! Account name for group, use SL2 for paying queue:
 #SBATCH -A ellis-sl3-cpu
 #! Output filename:
 #! %A means slurm job ID and %a means array index
-#SBATCH --output=$HOME/logs/multi_gle_%A_%a.out
+#SBATCH --output="$HOME/logs/multi_gle_%A_%a.out"
 #! Errors filename:
-#SBATCH --error=$HOME/logs/multi_gle_%A_%a.err
+#SBATCH --error="$HOME/logs/multi_gle_%A_%a.err"
 
 #! Number of nodes to be allocated  for the job (for single core jobs always leave this at 1)
 #SBATCH --nodes=1
