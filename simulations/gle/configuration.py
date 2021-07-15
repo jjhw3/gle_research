@@ -8,7 +8,7 @@ from common.lattice_tools import fcc
 from common.lattice_tools.common import change_basis, get_basis_rotation_matrix
 
 
-class Config:
+class GLEConfig:
     def __init__(
         self,
         run_time,
@@ -46,8 +46,8 @@ class Config:
         self.canonical_basis = self.in_plane_rotate(fcc.get_fcc_basis(lattice_parameter))[:2]
         self.inv_in_plane_basis = np.linalg.inv(self.in_plane_basis)
 
-        self.digitized_background_potential = pickle.load(open(working_directory / 'in_first_cell_lattice_coords_potential_interpolator.pickle', 'rb'))
-        self.force_grid = np.load(self.working_directory / 'digitized_force.npy')
+        # self.digitized_background_potential = pickle.load(open(working_directory / 'in_first_cell_lattice_coords_potential_interpolator.pickle', 'rb'))
+        self.potential_grid = np.load(self.working_directory / 'potential_grid.npy')
 
     @property
     def times(self):
@@ -83,7 +83,7 @@ class Config:
 
 
 def load(dir):
-    return Config(
+    return GLEConfig(
         **yaml.load(open(dir / 'config.yml', "r")),
         working_directory=dir
     )

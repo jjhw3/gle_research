@@ -25,6 +25,15 @@ class GLEResult:
             config.noise_stddev,
             size=self.positions.shape
         ) / config.memory_kernel_normalization
+        self.config = config
+
+    def save(self):
+        dir = self.config.working_directory
+        np.save(dir / 'positions.npy', self.positions)
+        np.save(dir / 'velocities.npy', self.velocities)
+        np.save(dir / 'forces.npy', self.forces)
+        np.save(dir / 'friction_forces.npy', self.friction_forces)
+        np.save(dir / 'noise_forces.npy', self.noise_forces)
 
 
 def run_gle(config, initial_position):
@@ -41,7 +50,7 @@ def run_gle(config, initial_position):
         results.velocities,
         results.friction_forces,
         results.noise_forces,
-        config.pot_grid,
+        config.potential_grid,
     )
 
     end = time.time()
@@ -54,18 +63,11 @@ if __name__ == '__main__':
     working_dir = Path(sys.argv[1])
     print(sys.argv[1])
     config = load(working_dir)
-
-    res = 100
-    X, Y = np.meshgrid(np.linspace(0, 1, res), np.linspace(0, 1, res), indexing='ij')
-    positions1 = change_basis(config.in_plane_basis, np.asarray([X, Y]))
-    pots = config.background_potential(positions1)
-    config.pot_grid = pots
     initial_position = np.asarray([1.2783537, 0.72844401])
 
     for i in range(5):
         results = run_gle(config, initial_position)
-        # plot_path_on_crystal(config, results)
-        print('temperature', sample_temperature(config, results))
+        print('Observed temperature: ', sample_temperature(config, results))
         pot_surface = extract_potential_surface(config, results.positions, 60)
         plt.plot(amu_K_ps_to_eV(np.diag(pot_surface)))
         config.pot_grid = pot_surface
