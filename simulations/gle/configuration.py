@@ -150,5 +150,6 @@ class ComplexTauGLEConfig(TauGLEConfig):
             working_directory,
         )
 
+        self.w_1 = w_1
         self.discrete_decay_factor *= np.exp(1j * w_1 * dt)
-        self.memory_kernel_normalization = np.real(1 / (1 - self.discrete_decay_factor))
+        self.memory_kernel_normalization = np.real(1 / (1 - self.discrete_decay_factor)) / 2

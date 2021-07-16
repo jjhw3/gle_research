@@ -7,9 +7,9 @@
 #SBATCH -A ellis-sl3-cpu
 #! Output filename:
 #! %A means slurm job ID and %a means array index
-#SBATCH --output="logs/gle_power_spectrum_%A_%a.out"
+#SBATCH --output="/home/jjhw3/logs/gle_power_spectrum_%A_%a.out"
 #! Errors filename:
-#SBATCH --error="logs/gle_power_spectrum_%A_%a.err"
+#SBATCH --error="/home/jjhw3/logs/gle_power_spectrum_%A_%a.err"
 
 #! Number of nodes to be allocated  for the job (for single core jobs always leave this at 1)
 #SBATCH --nodes=1
@@ -55,5 +55,6 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 
 mkdir -p $HOME/rds/hpc-work/gle/gle_power_spectrum/
 
-cp -R gle_power_spectrum_template $HOME/rds/hpc-work/gle/gle_power_spectrum/$SLURM_ARRAY_TASK_ID
+rm -r $HOME/rds/hpc-work/gle/gle_power_spectrum/$SLURM_ARRAY_TASK_ID
+cp -R $HOME/code/gle_research/simulation_scripts/gle_power_spectrum/gle_power_spectrum_template $HOME/rds/hpc-work/gle/gle_power_spectrum/$SLURM_ARRAY_TASK_ID
 python $HOME/code/gle_research/simulation_scripts/gle_power_spectrum/run_gle_power_spectrum.py $HOME/rds/hpc-work/gle/gle_power_spectrum/$SLURM_ARRAY_TASK_ID

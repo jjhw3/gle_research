@@ -99,6 +99,12 @@ def run_gle(
     results.start_time = time.time()
     print(results.start_time, ' Starting run with config:', config)
 
+    # results.noise_forces *= 0
+    # results.noise_forces[:, 0] = 1 / config.memory_kernel_normalization
+
+    results.velocities[:, 0] = np.sqrt(boltzmann_constant * config.temperature / config.absorbate_mass)
+    results.friction_forces[:, 0] = - config.absorbate_mass * config.eta * results.velocities[:, 0]
+
     runner(
         config,
         results.positions,
@@ -106,7 +112,7 @@ def run_gle(
         results.velocities,
         results.friction_forces,
         results.noise_forces,
-        config.potential_grid,
+        config.potential_grid * 0,
     )
 
     results.end_time = time.time()
