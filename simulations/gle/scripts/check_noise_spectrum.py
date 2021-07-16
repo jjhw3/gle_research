@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from common.result_checks import plot_fourier_spectrum
+from gle.result_checks import plot_power_spectrum
 from common.thermodynamics import sample_temperature
 from gle.configuration import ComplexTauGLEConfig
 from gle.run_le import run_gle
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
     initial_position = np.asarray([1.2783537, 0.72844401])
-    num_iterations = 20
+    num_iterations = 100
 
     cum_fft = np.zeros((2, config.num_iterations))
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
             'complex'
         )
         print('Observed temperature: ', sample_temperature(config, results))
-        ws, fft = plot_fourier_spectrum(config, results)
+        ws, fft = plot_power_spectrum(config, results)
         cum_fft += fft
 
     plt.scatter(ws, cum_fft[0] / num_iterations, s=3)
@@ -33,5 +33,7 @@ if __name__ == '__main__':
     plt.plot(ws, config.noise_stddev ** 2 * config.num_iterations * 1 / np.abs(1 + 1j * ws * config.tau) ** 2)
     plt.xlim(- 10 / config.tau, 10 / config.tau)
     plt.show()
+
+    # results.save()
 
     print()

@@ -32,10 +32,17 @@ class GLEConfig:
         self.noise_stddev = np.sqrt(2 * boltzmann_constant * temperature * absorbate_mass * eta / dt)
         self.isf_directory = self.working_directory / 'ISFs'
         self.log_isf_directory = self.isf_directory / 'log'
-        if not self.isf_directory.exists():
-            self.isf_directory.mkdir()
-        if not self.log_isf_directory.exists():
-            self.log_isf_directory.mkdir()
+        self.summary_dir = self.working_directory / 'run_summary'
+
+        self.aux_dirs = [
+            self.isf_directory,
+            self.log_isf_directory,
+            self.summary_dir
+        ]
+
+        for aux_dir in self.aux_dirs:
+            if not aux_dir.exists():
+                aux_dir.mkdir()
 
         self.xy_plane_rotation_matrix = get_basis_rotation_matrix(fcc.get_fcc_111_basis(lattice_parameter))
         self.in_plane_basis = self.in_plane_rotate(fcc.get_fcc_111_basis(lattice_parameter))[:2, :2]

@@ -2,14 +2,14 @@
 #! This line is a comment
 #! Make sure you only have comments and #SBATCH directives between here and the end of the #SBATCH directives, or things will break
 #! Name of the job:
-#SBATCH -J multi_gle
+#SBATCH -J gle_power_spectrum
 #! Account name for group, use SL2 for paying queue:
 #SBATCH -A ellis-sl3-cpu
 #! Output filename:
 #! %A means slurm job ID and %a means array index
-#SBATCH --output="logs/multi_gle_%A_%a.out"
+#SBATCH --output="logs/gle_power_spectrum_%A_%a.out"
 #! Errors filename:
-#SBATCH --error="logs/multi_gle_%A_%a.err"
+#SBATCH --error="logs/gle_power_spectrum_%A_%a.err"
 
 #! Number of nodes to be allocated  for the job (for single core jobs always leave this at 1)
 #SBATCH --nodes=1
@@ -25,7 +25,7 @@
 #SBATCH --mem=5980mb
 #! Submit a job array with index values between 0 and 31
 #! NOTE: This must be a range, not a single number (i.e. specifying '32' here would only run one job, with index 32)
-#SBATCH --array=0-4
+#SBATCH --array=0-100
 
 #! This is the partition name.
 #SBATCH -p skylake
@@ -33,7 +33,7 @@
 #! mail alert at start, end and abortion of execution
 #! emails will default to going to your email address
 #! you can specify a different email address manually if needed.
-##SBATCH --mail-type=ALL
+#SBATCH --mail-type=ALL
 
 #! Don't put any #SBATCH directives below this line
 
@@ -42,7 +42,7 @@
 module purge                               # Removes all modules still loaded
 module load rhel7/default-peta4            # REQUIRED - loads the basic environment
 module load python/3.8
-source $HOME/venvs/multi_gle/bin/activate
+source $HOME/venvs/gle_power_spectrum/bin/activate
 export PYTHONPATH="${PYTHONPATH}:${HOME}/code/gle_research/simulations/"
 
 #! The variable $SLURM_ARRAY_TASK_ID contains the array index for each job.
@@ -53,12 +53,7 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 
 #! export SLURM_ARRAY_TASK_ID=1
 
-temperatures=(10 20 30 40 50)
-temp=${temperatures[SLURM_ARRAY_TASK_ID]}
+mkdir -p $HOME/rds/hpc-work/gle/gle_power_spectrum/
 
-mkdir -p $HOME/rds/hpc-work/gle/multi_gle/
-
-cp -R multi_gle_template $HOME/rds/hpc-work/gle/multi_gle/$temp
-sed -i "s/temp_here/${temp}/g" "$HOME/rds/hpc-work/gle/multi_gle/${temp}/config.yml"
-
-python $HOME/code/gle_research/simulation_scripts/multi_gle/run_multi_gle.py $HOME/rds/hpc-work/gle/multi_gle/$temp
+cp -R gle_power_spectrum_template $HOME/rds/hpc-work/gle/gle_power_spectrum/$SLURM_ARRAY_TASK_ID
+python $HOME/code/gle_research/simulation_scripts/gle_power_spectrum/run_gle_power_spectrum.py $HOME/rds/hpc-work/gle/gle_power_spectrum/$SLURM_ARRAY_TASK_ID

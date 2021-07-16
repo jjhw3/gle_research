@@ -5,11 +5,12 @@ from pathlib import Path
 import cle
 import matplotlib.pyplot as plt
 import numpy as np
+import yaml
 
 from common.constants import boltzmann_constant, amu_K_ps_to_eV
 from common.lattice_tools.common import change_basis
 from common.lattice_tools.extract_potential_surface import extract_potential_surface
-from common.result_checks import plot_path_on_crystal, plot_fourier_spectrum
+from gle.result_checks import plot_path_on_crystal, plot_power_spectrum, plot_maxwell_boltzmann_distributions
 from common.thermodynamics import sample_temperature
 from gle.configuration import TauGLEConfig, ComplexTauGLEConfig
 
@@ -20,12 +21,30 @@ class BaseGLEResult:
         self.velocities = np.zeros_like(self.positions)
         self.forces = np.zeros_like(self.positions)
         self.config = config
+        self.start_time = None
+        self.end_time = None
 
     def save(self):
         dir = self.config.working_directory
         np.save(dir / 'positions.npy', self.positions)
         np.save(dir / 'velocities.npy', self.velocities)
         np.save(dir / 'forces.npy', self.forces)
+
+    def save_summary(self):
+        summary = {
+            'temperature': float(sample_temperature(self.config, self)),
+            'start_time': self.start_time,
+            'end_time': self.end_time,
+            'duration': self.end_time - self.start_time
+        }
+
+        plot_maxwell_boltzmann_distributions(self)
+        plot_power_spectrum(self)
+        plot_path_on_crystal(self)
+
+        summary_file = open(self.config.summary_dir / 'run_summary.yml', 'w')
+        yaml.dump(summary, summary_file)
+        summary_file.close()
 
 
 class GLEResult(BaseGLEResult):
@@ -77,8 +96,8 @@ def run_gle(
     results = result_class(config)
     results.positions[:, 0] = initial_position
 
-    start = time.time()
-    print(start, ' Starting run with config:', config)
+    results.start_time = time.time()
+    print(results.start_time, ' Starting run with config:', config)
 
     runner(
         config,
@@ -90,8 +109,8 @@ def run_gle(
         config.potential_grid,
     )
 
-    end = time.time()
-    print(end, f' Finished run, final duration {end - start:.2f} seconds')
+    results.end_time = time.time()
+    print(results.end_time, f' Finished run, final duration {results.end_time - results.start_time:.2f} seconds')
 
     return results
 
@@ -107,11 +126,10 @@ if __name__ == '__main__':
         initial_position,
         'complex'
     )
+    results.save_summary()
     print('Observed temperature: ', sample_temperature(config, results))
     pot_surface = extract_potential_surface(config, results.positions, 60)
     plt.plot(amu_K_ps_to_eV(np.diag(pot_surface)))
     plt.show()
-
-    plot_fourier_spectrum(config, results)
 
     print()
