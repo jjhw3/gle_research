@@ -8,6 +8,12 @@ from gle.initialization import initialize_position, initialize_friction, initial
 from gle.result_checks import plot_maxwell_boltzmann_distributions, plot_power_spectrum, plot_path_on_crystal
 
 
+def load_or_none(path):
+    if path.exists():
+        return np.load(path)
+    return None
+
+
 class GLEResult:
     def __init__(
         self,
@@ -77,11 +83,11 @@ class GLEResult:
         if postfix != '':
             postfix = '_' + postfix
 
-        positions = np.load(dir / f'positions{postfix}.npy')
-        velocities = np.load(dir / f'velocities{postfix}.npy')
-        forces = np.load(dir / f'forces{postfix}.npy')
-        friction_forces = np.load(dir / f'friction_forces{postfix}.npy')
-        noise_forces = np.load(dir / f'noise_forces{postfix}.npy')
+        positions = load_or_none(dir / f'positions{postfix}.npy')
+        velocities = load_or_none(dir / f'velocities{postfix}.npy')
+        forces = load_or_none(dir / f'forces{postfix}.npy')
+        friction_forces = load_or_none(dir / f'friction_forces{postfix}.npy')
+        noise_forces = load_or_none(dir / f'noise_forces{postfix}.npy')
 
         return cls(
             config,

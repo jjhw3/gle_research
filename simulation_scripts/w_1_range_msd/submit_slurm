@@ -56,13 +56,13 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 w_1s=(0 0.1 0.2 0.4 0.8 1.0 2.0 4.0 8.0 10.0 20.0 40.0 80.0 100.0)
 w_1=${w_1s[SLURM_ARRAY_TASK_ID]}
 
-mkdir -p $HOME/rds/hpc-work/gle/w_1_range_msd/
+#! mkdir -p $HOME/rds/hpc-work/gle/w_1_range_msd/
 
-rm -r $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
-cp -R $HOME/code/gle_research/simulation_scripts/w_1_range_msd/w_1_range_msd_template $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
-sed -i "s/w_1_here/${w_1}/g" "$HOME/rds/hpc-work/gle/w_1_range_msd/${w_1}/config.yml"
+#! rm -r $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
+#! cp -R $HOME/code/gle_research/simulation_scripts/w_1_range_msd/w_1_range_msd_template $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
+#! sed -i "s/w_1_here/${w_1}/g" "$HOME/rds/hpc-work/gle/w_1_range_msd/${w_1}/config.yml"
 
-python $HOME/code/gle_research/simulation_scripts/w_1_range_msd/run_w_1_range_msd.py $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
+#! python $HOME/code/gle_research/simulation_scripts/w_1_range_msd/run_w_1_range_msd.py $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
 python $HOME/code/gle_research/simulations/gle/batched_scripts/calculate_1D_mean_square_distance.py $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
 
 mkdir -p $HOME/rds/hpc-work/results/w_1_msds/
