@@ -5,6 +5,7 @@ from pathlib import Path
 import cle
 import numpy as np
 import matplotlib.pyplot as plt
+import yaml
 
 from common.constants import boltzmann_constant
 from common.thermodynamics import sample_temperature
@@ -69,6 +70,18 @@ def run_gle_batched(
 
     print('Final temp:', np.mean(batch_temperatures))
 
+    info = {
+        'num_batches': int(num_batches),
+        'batch_run_time': float(batch_run_time),
+        'total_run_time': float(num_batches * batch_run_time),
+        'batch_temperatures': list(map(float, batch_temperatures)),
+        'final_temperature': float(np.mean(batch_temperatures)),
+    }
+
+    batch_summary_file = open(config.batched_results_dir / 'batch_summary.yml', 'w')
+    yaml.dump(info, batch_summary_file)
+    batch_summary_file.close()
+
     return results
 
 
@@ -77,7 +90,7 @@ if __name__ == '__main__':
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
 
-    f = lambda: run_gle_batched(
+    run_gle_batched(
         config,
         10000
     )

@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 
 from gle.configuration import ComplexTauGLEConfig
-from gle.run_le import run_gle, run_gle_batched
+from gle.run_le import run_gle_batched
 
 
 if __name__ == '__main__':

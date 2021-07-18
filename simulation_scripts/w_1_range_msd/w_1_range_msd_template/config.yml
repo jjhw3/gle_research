@@ -1,0 +1,8 @@
+run_time: 100000
+dt: 0.001
+absorbate_mass: 7
+temperature: 50
+eta: 0.1
+tau: 10.0
+w_1: w_1_here
+lattice_parameter: 1.795
