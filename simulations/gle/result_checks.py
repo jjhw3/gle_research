@@ -5,7 +5,7 @@ from common.constants import boltzmann_constant
 from common.lattice_tools import fcc
 from common.lattice_tools.common import get_lattice_points, change_basis
 from common.lattice_tools.plot_tools import force_aspect
-from common.thermodynamics import boltzmann_distribution_2D
+from common.thermodynamics import MaxwellBoltzmannDistribution2D
 
 
 def plot_path_on_crystal(results, lattice_shape=(15, 15, 4), show=False):
@@ -30,11 +30,15 @@ def plot_path_on_crystal(results, lattice_shape=(15, 15, 4), show=False):
     if show:
         plt.show()
     else:
+        plt.clf()
         plt.cla()
+        plt.close()
 
 
-def plot_power_spectrum(results, show=False, tau_plot_bound_multiple=10):
+def plot_power_spectrum(results, show=False, tau_plot_bound_multiple=3):
     config = results.config
+
+    plot_limit = tau_plot_bound_multiple * config.w_1 if config.w_1 > 0 else tau_plot_bound_multiple
 
     ws = 2 * np.pi * np.fft.fftfreq(config.num_iterations, config.dt)
     noise_forces = np.real(results.noise_forces)
@@ -43,7 +47,7 @@ def plot_power_spectrum(results, show=False, tau_plot_bound_multiple=10):
     plt.scatter(ws, noise_spectrum[0], label='x noise', s=3)
     plt.scatter(ws, noise_spectrum[1], label='y noise', s=3)
     plt.plot(ws, config.noise_stddev ** 2 * config.num_iterations * 1 / np.abs(1 + 1j * ws * config.tau) ** 2)
-    plt.xlim(- tau_plot_bound_multiple / config.tau, tau_plot_bound_multiple / config.tau)
+    plt.xlim(- plot_limit, plot_limit)
     plt.xlabel('angular frequency')
     plt.xlabel('|amplitude|^2')
 
@@ -54,7 +58,9 @@ def plot_power_spectrum(results, show=False, tau_plot_bound_multiple=10):
     if show:
         plt.show()
     else:
+        plt.clf()
         plt.cla()
+        plt.close()
 
     return ws, noise_spectrum
 
@@ -67,8 +73,9 @@ def plot_maxwell_boltzmann_distributions(results, show=False, plot_bound_multipl
 
     vals, bins, _ = plt.hist(speeds, range=(0, plot_bound_multiple * theoretical_mean_speed), density=True, bins=num_bins)
     bin_centres = (bins[1:] + bins[:-1]) / 2
-    theoretical_dist = boltzmann_distribution_2D(config.temperature, config.absorbate_mass, bin_centres)
-    plt.plot(bin_centres, theoretical_dist)
+    theoretical_dist = MaxwellBoltzmannDistribution2D(config.temperature, config.absorbate_mass)
+
+    plt.plot(bin_centres, theoretical_dist.pdf(bin_centres))
     plt.xlabel('speed')
     plt.xlabel('probability')
 
@@ -77,6 +84,8 @@ def plot_maxwell_boltzmann_distributions(results, show=False, plot_bound_multipl
     if show:
         plt.show()
     else:
+        plt.clf()
         plt.cla()
+        plt.close()
 
     return bin_centres, vals

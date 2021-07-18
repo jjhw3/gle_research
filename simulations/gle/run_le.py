@@ -3,109 +3,22 @@ import time
 from pathlib import Path
 
 import cle
-import matplotlib.pyplot as plt
 import numpy as np
-import yaml
+import matplotlib.pyplot as plt
 
-from common.constants import boltzmann_constant, amu_K_ps_to_eV
-from common.lattice_tools.common import change_basis
-from common.lattice_tools.extract_potential_surface import extract_potential_surface
-from gle.result_checks import plot_path_on_crystal, plot_power_spectrum, plot_maxwell_boltzmann_distributions
+from common.constants import boltzmann_constant
 from common.thermodynamics import sample_temperature
-from gle.configuration import TauGLEConfig, ComplexTauGLEConfig
+from gle.configuration import ComplexTauGLEConfig
 
 
-class BaseGLEResult:
-    def __init__(self, config):
-        self.positions = np.zeros((2, config.num_iterations))
-        self.velocities = np.zeros_like(self.positions)
-        self.forces = np.zeros_like(self.positions)
-        self.config = config
-        self.start_time = None
-        self.end_time = None
-
-    def save(self):
-        dir = self.config.working_directory
-        np.save(dir / 'positions.npy', self.positions)
-        np.save(dir / 'velocities.npy', self.velocities)
-        np.save(dir / 'forces.npy', self.forces)
-
-    def save_summary(self):
-        summary = {
-            'temperature': float(sample_temperature(self.config, self)),
-            'start_time': self.start_time,
-            'end_time': self.end_time,
-            'duration': self.end_time - self.start_time
-        }
-
-        plot_maxwell_boltzmann_distributions(self)
-        plot_power_spectrum(self)
-        plot_path_on_crystal(self)
-
-        summary_file = open(self.config.summary_dir / 'run_summary.yml', 'w')
-        yaml.dump(summary, summary_file)
-        summary_file.close()
-
-
-class GLEResult(BaseGLEResult):
-    def __init__(self, config):
-        super().__init__(config)
-        self.friction_forces = np.zeros_like(self.positions)
-        self.noise_forces = np.random.normal(
-            0,
-            config.noise_stddev,
-            size=self.positions.shape
-        ) / config.memory_kernel_normalization
-
-    def save(self):
-        super().save()
-        dir = self.config.working_directory
-        np.save(dir / 'friction_forces.npy', self.friction_forces)
-        np.save(dir / 'noise_forces.npy', self.noise_forces)
-
-
-class ComplexGLEResult(BaseGLEResult):
-    def __init__(self, config):
-        super().__init__(config)
-        self.friction_forces = np.zeros_like(self.positions, dtype=np.complex128)
-        self.noise_forces = np.random.normal(
-            0,
-            config.noise_stddev,
-            size=self.positions.shape,
-        ).astype(np.complex128) / config.memory_kernel_normalization
-
-    def save(self):
-        super().save()
-        dir = self.config.working_directory
-        np.save(dir / 'friction_forces.npy', self.friction_forces)
-        np.save(dir / 'noise_forces.npy', self.noise_forces)
-
-
-def run_gle(
-    config,
-    initial_position,
-    type='real',
-):
-    if type == 'real':
-        result_class = GLEResult
-        runner = cle.run_gle
-    elif type == 'complex':
-        result_class = ComplexGLEResult
-        runner = cle.run_complex_gle
-
-    results = result_class(config)
-    results.positions[:, 0] = initial_position
+def run_gle(config, results=None):
+    if results is None:
+        results = config.get_blank_results()
 
     results.start_time = time.time()
     print(results.start_time, ' Starting run with config:', config)
 
-    # results.noise_forces *= 0
-    # results.noise_forces[:, 0] = 1 / config.memory_kernel_normalization
-
-    results.velocities[:, 0] = np.sqrt(boltzmann_constant * config.temperature / config.absorbate_mass)
-    results.friction_forces[:, 0] = - config.absorbate_mass * config.eta * results.velocities[:, 0]
-
-    runner(
+    config.RUNNER(
         config,
         results.positions,
         results.forces,
@@ -121,21 +34,57 @@ def run_gle(
     return results
 
 
+def run_gle_batched(
+    config,
+    batch_run_time,
+):
+    for fil in config.batched_results_dir.glob('*.npy'):
+        fil.unlink()
+
+    total_run_time = config.run_time
+    num_batches = int(np.ceil(total_run_time / batch_run_time))
+    config.run_time = batch_run_time + config.dt
+    config.calculate_time_quantities()
+    results = config.get_blank_results()
+    batch_temperatures = []
+
+    print(f'Running {num_batches} batches of {batch_run_time} duration each')
+
+    for i in range(num_batches):
+        print(f'Running batch {i+1} / {num_batches}')
+
+        run_gle(config, results)
+        results.save(config.batched_results_dir, postfix=str(i), save_slice=slice(0, -1))
+
+        batch_temperatures.append(sample_temperature(results))
+        print('Batch temperature:', batch_temperatures[-1])
+
+        if i < num_batches - 1:
+            last_noise = results.noise_forces[:, -1].copy()
+            results.resample_noise()
+            results.noise_forces[:, 0] = last_noise
+            results.positions[:, 0] = results.positions[:, -1]
+            results.velocities[:, 0] = results.velocities[:, -1]
+            results.friction_forces[:, 0] = results.friction_forces[:, -1]
+
+    print('Final temp:', np.mean(batch_temperatures))
+
+    return results
+
+
 if __name__ == '__main__':
     working_dir = Path(sys.argv[1])
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
-    initial_position = np.asarray([1.2783537, 0.72844401])
 
-    results = run_gle(
+    f = lambda: run_gle_batched(
         config,
-        initial_position,
-        'complex'
+        10000
     )
-    results.save_summary()
-    print('Observed temperature: ', sample_temperature(config, results))
-    pot_surface = extract_potential_surface(config, results.positions, 60)
-    plt.plot(amu_K_ps_to_eV(np.diag(pot_surface)))
-    plt.show()
 
-    print()
+    # last_result.save_summary()
+
+    # from memory_profiler import memory_usage
+    # mem_usage = memory_usage(f)
+    # plt.plot(mem_usage)
+    # plt.show()

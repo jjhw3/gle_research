@@ -80,6 +80,8 @@ cdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :] potentia
     cdef double remx = float_indx - indx
     cdef double remy = float_indy - indy
 
+    # print(first_cell_lattice_x, first_cell_lattice_y, float_indx, float_indy, indx, indy, adjacent_indx, adjacent_indy)
+
     cdef double pot = potential_grid[indx, indy] * (1 - remx) * (1 - remy)
     pot += potential_grid[adjacent_indx, indy] * (remx) * (1 - remy)
     pot += potential_grid[indx, adjacent_indy] * (1 - remx) * (remy)
@@ -130,7 +132,6 @@ def run_gle(
     cdef double dt = config.dt
     cdef double[:, :] lattice_coords_cob = np.linalg.inv(config.in_plane_basis)
     cdef int idx
-    cdef tmp = np.zeros(2)
 
     eval_force_from_pot(forces[:, 0], lattice_coords_cob, pot_grid, positions[:, 0])
 
@@ -143,15 +144,15 @@ def run_gle(
         vec_2d_scalar_mult(positions[:, idx], velocities[:, idx-1], dt)
         vec_2d_scalar_mult(positions[:, idx], forces[:, idx-1], 0.5 / absorbate_mass * dt ** 2)
 
-        eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
-        # vec_2d_scalar_mult(forces[:, idx], tmp, - absorbate_mass * 10 ** 2)
-
         vec_2d_scalar_mult(noise_forces[:, idx], noise_forces[:, idx-1], discrete_decay_factor)
 
         friction_forces[:, idx] = 0
         vec_2d_scalar_mult(friction_forces[:, idx], velocities[:, idx-1], - eta * absorbate_mass / memory_kernel_normalization)
         vec_2d_scalar_mult(friction_forces[:, idx], friction_forces[:, idx-1], discrete_decay_factor)
 
+        forces[:, idx] = 0
+        eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
+        # vec_2d_scalar_mult(forces[:, idx], positions[:, idx], - absorbate_mass * 10 ** 2)
         vec_sum_2d(forces[:, idx], friction_forces[:, idx])
         vec_sum_2d(forces[:, idx], noise_forces[:, idx])
 
@@ -181,10 +182,12 @@ def run_complex_gle(
     cdef double absorbate_mass = config.absorbate_mass
     cdef double dt = config.dt
     cdef double[:, :] lattice_coords_cob = np.linalg.inv(config.in_plane_basis)
-    cdef int idx
-    cdef tmp = np.zeros(2)
+    cdef int idx = 0
 
-    eval_force_from_pot(forces[:, 0], lattice_coords_cob, pot_grid, positions[:, 0])
+    forces[:, idx] = 0
+    eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
+    real_part_vec_sum_2d(forces[:, idx], friction_forces[:, idx])
+    real_part_vec_sum_2d(forces[:, idx], noise_forces[:, idx])
 
     for idx in range(1, num_iterations):
         if idx % (num_iterations // 10) ==0:
@@ -195,15 +198,15 @@ def run_complex_gle(
         vec_2d_scalar_mult(positions[:, idx], velocities[:, idx-1], dt)
         vec_2d_scalar_mult(positions[:, idx], forces[:, idx-1], 0.5 / absorbate_mass * dt ** 2)
 
-        eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
-        # vec_2d_scalar_mult(forces[:, idx], tmp, - absorbate_mass * 10 ** 2)
-
         complex_vec_2d_scalar_mult(noise_forces[:, idx], noise_forces[:, idx-1], discrete_decay_factor)
 
         friction_forces[:, idx] = 0
         complex_real_vec_2d_scalar_mult(friction_forces[:, idx], velocities[:, idx-1], - eta * absorbate_mass / memory_kernel_normalization)
         complex_vec_2d_scalar_mult(friction_forces[:, idx], friction_forces[:, idx-1], discrete_decay_factor)
 
+        forces[:, idx] = 0
+        eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
+        # vec_2d_scalar_mult(forces[:, idx], positions[:, idx], - absorbate_mass * 10 ** 2)
         real_part_vec_sum_2d(forces[:, idx], friction_forces[:, idx])
         real_part_vec_sum_2d(forces[:, idx], noise_forces[:, idx])
 

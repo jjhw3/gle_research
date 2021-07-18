@@ -1,14 +1,18 @@
-import pickle
-
+import cle
 import numpy as np
 import yaml
 
-from common.constants import boltzmann_constant, eV_to_amu_K_ps
+from common.constants import boltzmann_constant
 from common.lattice_tools import fcc
 from common.lattice_tools.common import change_basis, get_basis_rotation_matrix
+from gle.results import ComplexGLEResult, GLEResult
+from gle.theoretics import calculate_kernel_temperature_normalization
 
 
 class GLEConfig:
+    RUNNER = None
+    RESULT_CLASS = None
+
     def __init__(
         self,
         run_time,
@@ -27,17 +31,18 @@ class GLEConfig:
         self.temperature = temperature
         self.working_directory = working_directory
 
-        self.num_iterations = int(np.round(run_time / dt))
-        self._times = None
-        self.noise_stddev = np.sqrt(2 * boltzmann_constant * temperature * absorbate_mass * eta / dt)
+        self.calculate_time_quantities()
+
         self.isf_directory = self.working_directory / 'ISFs'
         self.log_isf_directory = self.isf_directory / 'log'
         self.summary_dir = self.working_directory / 'run_summary'
+        self.batched_results_dir = self.working_directory / 'batched_results'
 
         self.aux_dirs = [
             self.isf_directory,
             self.log_isf_directory,
-            self.summary_dir
+            self.summary_dir,
+            self.batched_results_dir
         ]
 
         for aux_dir in self.aux_dirs:
@@ -49,8 +54,12 @@ class GLEConfig:
         self.canonical_basis = self.in_plane_rotate(fcc.get_fcc_basis(lattice_parameter))[:2]
         self.inv_in_plane_basis = np.linalg.inv(self.in_plane_basis)
 
-        # self.digitized_background_potential = pickle.load(open(working_directory / 'in_first_cell_lattice_coords_potential_interpolator.pickle', 'rb'))
         self.potential_grid = np.load(self.working_directory / 'potential_grid.npy')
+
+    def calculate_time_quantities(self):
+        self.num_iterations = int(np.round(self.run_time / self.dt))
+        self._times = None
+        self.noise_stddev = np.sqrt(2 * boltzmann_constant * self.temperature * self.absorbate_mass * self.eta / self.dt)
 
     @property
     def times(self):
@@ -93,8 +102,14 @@ class GLEConfig:
             working_directory=dir
         )
 
+    def get_blank_results(self):
+        return self.RESULT_CLASS.blank_from_config(self)
+
 
 class TauGLEConfig(GLEConfig):
+    RUNNER = cle.run_gle
+    RESULT_CLASS = GLEResult
+
     def __init__(
         self,
         run_time,
@@ -107,8 +122,6 @@ class TauGLEConfig(GLEConfig):
         working_directory,
     ):
         self.tau = tau
-        self.discrete_decay_factor = np.exp(- dt / tau) if tau > 0 else 0
-        self.memory_kernel_normalization = 1 / (1 - self.discrete_decay_factor)
 
         super().__init__(
             run_time,
@@ -120,6 +133,12 @@ class TauGLEConfig(GLEConfig):
             working_directory,
         )
 
+    def calculate_time_quantities(self):
+        super().calculate_time_quantities()
+        self.discrete_decay_factor = np.exp(- self.dt / self.tau) if self.tau > 0 else 0
+        self.memory_kernel_normalization = 1 / (1 - self.discrete_decay_factor)
+        self.memory_kernel_normalization *= calculate_kernel_temperature_normalization(self)
+
     def to_dict(self):
         dic = super(TauGLEConfig, self).to_dict()
         dic['tau'] = self.tau
@@ -127,6 +146,9 @@ class TauGLEConfig(GLEConfig):
 
 
 class ComplexTauGLEConfig(TauGLEConfig):
+    RUNNER = cle.run_complex_gle
+    RESULT_CLASS = ComplexGLEResult
+
     def __init__(
         self,
         run_time,
@@ -139,6 +161,8 @@ class ComplexTauGLEConfig(TauGLEConfig):
         temperature,
         working_directory,
     ):
+        self.w_1 = w_1
+
         super().__init__(
             run_time,
             dt,
@@ -150,6 +174,13 @@ class ComplexTauGLEConfig(TauGLEConfig):
             working_directory,
         )
 
-        self.w_1 = w_1
-        self.discrete_decay_factor *= np.exp(1j * w_1 * dt)
-        self.memory_kernel_normalization = np.real(1 / (1 - self.discrete_decay_factor)) / 2
+    def calculate_time_quantities(self):
+        super().calculate_time_quantities()
+        self.discrete_decay_factor *= np.exp(1j * self.w_1 * self.dt)
+        self.memory_kernel_normalization = np.real(1 / (1 - self.discrete_decay_factor))
+        self.memory_kernel_normalization *= calculate_kernel_temperature_normalization(self)
+
+    def to_dict(self):
+        dic = super().to_dict()
+        dic['w_1'] = self.w_1
+        return dic

@@ -24,7 +24,7 @@ if __name__ == '__main__':
             initial_position,
             'complex'
         )
-        print('Observed temperature: ', sample_temperature(config, results))
+        print('Observed temperature: ', sample_temperature(results))
         ws, fft = plot_power_spectrum(results)
         cum_power += fft
 
