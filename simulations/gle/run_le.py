@@ -68,6 +68,10 @@ def run_gle_batched(
             results.velocities[:, 0] = results.velocities[:, -1]
             results.friction_forces[:, 0] = results.friction_forces[:, -1]
 
+        for fil in config.batched_results_dir.glob('*.npy'):
+            if not 'position' in fil.name:
+                fil.unlink()
+
     print('Final temp:', np.mean(batch_temperatures))
 
     info = {
@@ -81,6 +85,7 @@ def run_gle_batched(
     batch_summary_file = open(config.batched_results_dir / 'batch_summary.yml', 'w')
     yaml.dump(info, batch_summary_file)
     batch_summary_file.close()
+
 
     return results
 

@@ -18,7 +18,7 @@
 #! How many many cores will be allocated per task? (for single core jobs always leave this at 1)
 #SBATCH --cpus-per-task=1
 #! Estimated runtime: hh:mm:ss (job is force-stopped after if exceeded):
-#SBATCH --time=00:10:00
+#SBATCH --time=12:00:00
 #! Estimated maximum memory needed (job is force-stopped if exceeded):
 #! RAM is allocated in ~5980mb blocks, you are charged per block used,
 #! and unused fractions of blocks will not be usable by others.
@@ -69,3 +69,4 @@ mkdir -p $HOME/rds/hpc-work/results/w_1_msds/
 mkdir -p $HOME/rds/hpc-work/results/w_1_msds/$w_1
 
 cp $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1/mean_square_distance.npy $HOME/rds/hpc-work/results/w_1_msds/$w_1
+cp $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1/batched_results/batch_summary.yml $HOME/rds/hpc-work/results/w_1_msds/$w_1
