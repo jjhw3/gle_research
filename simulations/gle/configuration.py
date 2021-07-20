@@ -122,6 +122,10 @@ class TauGLEConfig(GLEConfig):
         working_directory,
     ):
         self.tau = tau
+        self.discrete_decay_factor = 1
+        self.temperature_normalization = 1
+        self.memory_kernel_normalization = 1
+
 
         super().__init__(
             run_time,
@@ -136,12 +140,17 @@ class TauGLEConfig(GLEConfig):
     def calculate_time_quantities(self):
         super().calculate_time_quantities()
         self.discrete_decay_factor = np.exp(- self.dt / self.tau) if self.tau > 0 else 0
-        self.memory_kernel_normalization = 1 / (1 - self.discrete_decay_factor)
-        self.memory_kernel_normalization *= calculate_kernel_temperature_normalization(self)
+        self.normalize_kernel()
+
+    def normalize_kernel(self):
+        self.memory_kernel_normalization = 1 / np.real(1 - self.discrete_decay_factor)
+        self.temperature_normalization = calculate_kernel_temperature_normalization(self)
+        self.memory_kernel_normalization *= self.temperature_normalization
 
     def to_dict(self):
         dic = super(TauGLEConfig, self).to_dict()
         dic['tau'] = self.tau
+        dic['temperature_normalization'] = self.temperature_normalization
         return dic
 
 
@@ -177,8 +186,7 @@ class ComplexTauGLEConfig(TauGLEConfig):
     def calculate_time_quantities(self):
         super().calculate_time_quantities()
         self.discrete_decay_factor *= np.exp(1j * self.w_1 * self.dt)
-        self.memory_kernel_normalization = np.real(1 / (1 - self.discrete_decay_factor))
-        self.memory_kernel_normalization *= calculate_kernel_temperature_normalization(self)
+        self.normalize_kernel()
 
     def to_dict(self):
         dic = super().to_dict()

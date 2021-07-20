@@ -86,7 +86,6 @@ def run_gle_batched(
     yaml.dump(info, batch_summary_file)
     batch_summary_file.close()
 
-
     return results
 
 

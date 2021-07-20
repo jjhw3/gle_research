@@ -63,10 +63,13 @@ w_1=${w_1s[SLURM_ARRAY_TASK_ID]}
 #! sed -i "s/w_1_here/${w_1}/g" "$HOME/rds/hpc-work/gle/w_1_range_msd/${w_1}/config.yml"
 
 #! python $HOME/code/gle_research/simulation_scripts/w_1_range_msd/run_w_1_range_msd.py $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
-python $HOME/code/gle_research/simulations/gle/batched_scripts/calculate_1D_mean_square_distance.py $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
+#! python $HOME/code/gle_research/simulations/gle/batched_scripts/calculate_1D_mean_square_distance.py $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
+python $HOME/code/gle_research/simulations/gle/batched_scripts/calculate_isf.py $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1
+
 
 mkdir -p $HOME/rds/hpc-work/results/w_1_msds/
 mkdir -p $HOME/rds/hpc-work/results/w_1_msds/$w_1
 
 cp $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1/mean_square_distance.npy $HOME/rds/hpc-work/results/w_1_msds/$w_1
 cp $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1/batched_results/batch_summary.yml $HOME/rds/hpc-work/results/w_1_msds/$w_1
+cp $HOME/rds/hpc-work/gle/w_1_range_msd/$w_1/batched_results/isf.npy $HOME/rds/hpc-work/results/w_1_msds/$w_1
