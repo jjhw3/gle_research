@@ -26,7 +26,7 @@ def run_gle(config, results=None):
         results.velocities,
         results.friction_forces,
         results.noise_forces,
-        config.potential_grid * 0,
+        config.potential_grid,
     )
 
     results.end_time = time.time()
