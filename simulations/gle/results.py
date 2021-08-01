@@ -65,29 +65,32 @@ class GLEResult:
 
         return obj
 
-    def save(self, dir=None, postfix='', save_slice=slice(0)):
+    def save(self, dir=None, postfix='', save_slice=None):
+        if save_slice is None:
+            save_slice = slice(0, self.config.num_iterations)
+
         if postfix != '':
             postfix = '_' + postfix
 
         if dir is None:
             dir = self.config.working_directory
 
-        np.save(dir / f'positions{postfix}.npy', self.positions[:, save_slice])
-        np.save(dir / f'velocities{postfix}.npy', self.velocities[:, save_slice])
-        np.save(dir / f'forces{postfix}.npy', self.forces[:, save_slice])
-        np.save(dir / f'friction_forces{postfix}.npy', self.friction_forces[:, save_slice])
-        np.save(dir / f'noise_forces{postfix}.npy', self.noise_forces[:, save_slice])
+        np.save(dir / f'absorbate_positions{postfix}.npy', self.positions[:, save_slice])
+        np.save(dir / f'absorbate_velocities{postfix}.npy', self.velocities[:, save_slice])
+        np.save(dir / f'absorbate_forces{postfix}.npy', self.forces[:, save_slice])
+        np.save(dir / f'absorbate_friction_forces{postfix}.npy', self.friction_forces[:, save_slice])
+        np.save(dir / f'absorbate_noise_forces{postfix}.npy', self.noise_forces[:, save_slice])
 
     @classmethod
     def load(cls, config, dir, postfix=''):
         if postfix != '':
             postfix = '_' + postfix
 
-        positions = load_or_none(dir / f'positions{postfix}.npy')
-        velocities = load_or_none(dir / f'velocities{postfix}.npy')
-        forces = load_or_none(dir / f'forces{postfix}.npy')
-        friction_forces = load_or_none(dir / f'friction_forces{postfix}.npy')
-        noise_forces = load_or_none(dir / f'noise_forces{postfix}.npy')
+        positions = load_or_none(dir / f'absorbate_positions{postfix}.npy')
+        velocities = load_or_none(dir / f'absorbate_velocities{postfix}.npy')
+        forces = load_or_none(dir / f'absorbate_forces{postfix}.npy')
+        friction_forces = load_or_none(dir / f'absorbate_friction_forces{postfix}.npy')
+        noise_forces = load_or_none(dir / f'absorbate_noise_forces{postfix}.npy')
 
         return cls(
             config,

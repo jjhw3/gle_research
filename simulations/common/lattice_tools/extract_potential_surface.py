@@ -4,9 +4,15 @@ from common.constants import boltzmann_constant
 from common.lattice_tools.common import change_basis
 
 
-def extract_potential_surface(config, positions, resolution):
+def extract_potential_surface_3D(config, positions, resolution):
+    basis_2D = config.in_plane_basis[:2, :2]
+    positions_2D = positions[:2]
+    return extract_potential_surface(basis_2D, config.temperature, positions_2D, resolution)
+
+
+def extract_potential_surface(basis, temperature, positions, resolution):
     in_first_cell_lattice_coords = change_basis(
-        np.linalg.inv(config.in_plane_basis),
+        np.linalg.inv(basis),
         positions
     ) % 1
 
@@ -32,7 +38,7 @@ def extract_potential_surface(config, positions, resolution):
     x_points = (x_bin_edges[1:-1] + x_bin_edges[:-2]) / 2
     y_points = (y_bin_edges[1:-1] + y_bin_edges[:-2]) / 2
 
-    boltzmann_energy = - np.log(pos_hist) * boltzmann_constant * config.temperature
+    boltzmann_energy = - np.log(pos_hist) * boltzmann_constant * temperature
     boltzmann_energy -= boltzmann_energy.min()
 
     return boltzmann_energy

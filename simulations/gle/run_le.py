@@ -94,10 +94,13 @@ if __name__ == '__main__':
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
 
-    run_gle_batched(
-        config,
-        10000
+    results = run_gle(
+        config
     )
+
+    print('Temp:', 0.5 * config.absorbate_mass * (results.velocities**2).sum(axis=0).mean() / boltzmann_constant)
+
+    results.save()
 
     # last_result.save_summary()
 

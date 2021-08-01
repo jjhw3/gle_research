@@ -2,3 +2,4 @@ Cython
 pyaml
 matplotlib
 scipy
+tqdm

@@ -93,7 +93,7 @@ cdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :] potentia
 @cython.cdivision(True)
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef void eval_force_from_pot(
+cpdef void eval_force_from_pot(
     double[:] dest,
     double[:, :] lattice_coords_cob,
     double[:, :] potential_grid,

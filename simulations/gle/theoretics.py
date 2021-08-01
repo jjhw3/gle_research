@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
 
 
-def calculate_kernel_temperature_normalization(config, w0=0):
+def calculate_kernel_temperature_normalization(config, w0=0.0):
     if config.tau == 0:
         return 1
 
@@ -26,7 +26,11 @@ def calculate_kernel_temperature_normalization(config, w0=0):
         temp_mult = 2 * config.eta * np.sum(dw * pre_integral) / 2 / np.pi
         return np.abs(temp_mult - 1)
 
-    return fsolve(inner, 1)[0]
+    norm = fsolve(inner, 1)[0]
+
+    # plt.plot(np.fft.fftshift(ws), np.fft.fftshift(np.abs(kernel_fft / norm)**2))
+
+    return norm
 
 
 def abs_real_polynomial(poly):

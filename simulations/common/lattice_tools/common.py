@@ -89,6 +89,84 @@ def get_reciprocal_basis(basis):
     return reciprocal_basis
 
 
+def index_last_coords(arr, inds):
+    return arr[:, inds[0], inds[1], inds[2]]
+
+
+def get_in_plane_basis(
+    basis,
+    conventional_cell,
+    plane_indices,
+    check_cell_size=(10, 10, 10),
+    tol=1e-5
+):
+    check_cell_size = np.asarray(check_cell_size)
+    reciprocal_basis = get_reciprocal_basis(conventional_cell)
+    normal_vec = norm(reciprocal_basis.dot(plane_indices))
+
+    check_square = change_basis(basis, get_lattice_points(*check_cell_size))
+    check_square -= index_last_coords(check_square, check_cell_size // 2)[:, np.newaxis, np.newaxis, np.newaxis]
+    normal_components = np.tensordot(normal_vec, norm(check_square), axes=(0, 0))
+    in_plane_points = check_square[:, (np.abs(normal_components) < tol) & (mag(check_square)[0] > 0)]
+    sorted_in_plane_points = in_plane_points[:, np.argsort(mag(in_plane_points)[0])]
+
+    first_in_plane_vec = sorted_in_plane_points[:, 0]
+    second_in_plane_vec = None
+    for i in range(1, sorted_in_plane_points.shape[0]):
+        vec = sorted_in_plane_points[:, i]
+        if np.abs(norm(first_in_plane_vec).dot(norm(vec))) < 1 - tol:
+            second_in_plane_vec = vec
+            break
+
+    if second_in_plane_vec is None:
+        raise Exception('Could not find basis for the specified free plane')
+
+    not_in_plane_vecs = check_square[:, (np.abs(normal_components) > tol) & (normal_components > 0)]
+    inter_plane_vec = not_in_plane_vecs[:, np.argmin(mag(not_in_plane_vecs))]
+
+    if np.cross(first_in_plane_vec, second_in_plane_vec).dot(inter_plane_vec) < 0:
+        first_in_plane_vec, second_in_plane_vec = second_in_plane_vec, first_in_plane_vec
+
+    return np.asarray([first_in_plane_vec, second_in_plane_vec, inter_plane_vec]).T
+
+
+def get_nearest_neighbour_list(
+    basis,
+    check_cell_size=(5, 5, 5),
+    tol=1e-5
+):
+    check_cell_size = np.asarray(check_cell_size)
+    check_square = change_basis(basis, get_lattice_points(*check_cell_size))
+    centre_point = index_last_coords(check_square, check_cell_size // 2)
+    check_square -= centre_point[:, np.newaxis, np.newaxis, np.newaxis]
+
+    dists = mag(check_square)[0]
+    nearest_neighbour_dist = np.min(dists[dists > tol])
+    nearest_neighbours = check_square[:, np.abs(dists - nearest_neighbour_dist) < tol]
+    nearest_neighbours_lattice_coords = change_basis(np.linalg.inv(basis), nearest_neighbours)
+
+    if np.max(nearest_neighbours_lattice_coords - np.round(nearest_neighbours_lattice_coords)) > tol:
+        raise Exception('Something went wrong in calculating nearest neighbours')
+
+    nearest_neighbours_lattice_coords = np.round(nearest_neighbours_lattice_coords).astype(int)
+    nearest_neighbours_lattice_coords_no_duplicates = []
+
+    for neighbour in nearest_neighbours_lattice_coords.T:
+        if -neighbour not in nearest_neighbours_lattice_coords.T:
+            raise Exception('Something went wrong in calculating nearest neighbours')
+
+        for i in [2, 0, 1]:
+            if neighbour[i] != 0:
+                if neighbour[i] < 0:
+                    neighbour = -neighbour
+
+                if not tuple(neighbour) in nearest_neighbours_lattice_coords_no_duplicates:
+                    nearest_neighbours_lattice_coords_no_duplicates.append(tuple(neighbour))
+                break
+
+    return np.asarray(nearest_neighbours_lattice_coords_no_duplicates).T
+
+
 def in_plane_rot90(vec):
     return np.asarray([-vec[1], vec[0], vec[2]])
 

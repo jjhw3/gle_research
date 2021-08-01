@@ -4,7 +4,7 @@ import yaml
 
 from common.constants import boltzmann_constant
 from common.lattice_tools import fcc
-from common.lattice_tools.common import change_basis, get_basis_rotation_matrix
+from common.lattice_tools.common import change_basis, get_basis_rotation_matrix, rotate_basis, get_in_plane_basis
 from gle.results import ComplexGLEResult, GLEResult
 from gle.theoretics import calculate_kernel_temperature_normalization
 
@@ -19,16 +19,20 @@ class GLEConfig:
         dt,
         absorbate_mass,
         eta,
-        lattice_parameter,
         temperature,
+        basis_vectors,
+        conventional_cell,
+        free_plane_indices,
         working_directory,
     ):
         self.run_time = run_time
         self.dt = dt
         self.absorbate_mass = absorbate_mass
         self.eta = eta
-        self.lattice_parameter = lattice_parameter
         self.temperature = temperature
+        self.canonical_basis = np.asarray(basis_vectors).T[:2, :2]
+        self.conventional_cell = np.asarray(conventional_cell).T
+        self.free_plane_indices = np.asarray(free_plane_indices)
         self.working_directory = working_directory
 
         self.calculate_time_quantities()
@@ -49,9 +53,17 @@ class GLEConfig:
             if not aux_dir.exists():
                 aux_dir.mkdir()
 
-        self.xy_plane_rotation_matrix = get_basis_rotation_matrix(fcc.get_fcc_111_basis(lattice_parameter))
-        self.in_plane_basis = self.in_plane_rotate(fcc.get_fcc_111_basis(lattice_parameter))[:2, :2]
-        self.canonical_basis = self.in_plane_rotate(fcc.get_fcc_basis(lattice_parameter))[:2]
+        self.in_plane_basis_canonical_coords = get_in_plane_basis(
+            np.asarray(basis_vectors).T,
+            np.asarray(conventional_cell).T,
+            np.asarray(free_plane_indices),
+        )
+
+        self.in_plane_rotation_matrix = get_basis_rotation_matrix(self.in_plane_basis_canonical_coords)
+        self.in_plane_basis = rotate_basis(self.in_plane_basis_canonical_coords)[:2, :2]
+        # self.xy_plane_rotation_matrix = get_basis_rotation_matrix(fcc.get_fcc_111_basis(lattice_parameter))
+        # self.in_plane_basis = self.in_plane_rotate(fcc.get_fcc_111_basis(lattice_parameter))[:2, :2]
+        # self.canonical_basis = self.in_plane_rotate(fcc.get_fcc_basis(lattice_parameter))[:2]
         self.inv_in_plane_basis = np.linalg.inv(self.in_plane_basis)
 
         self.potential_grid = np.load(self.working_directory / 'potential_grid.npy')
@@ -73,7 +85,6 @@ class GLEConfig:
             'dt': self.dt,
             'absorbate_mass': self.absorbate_mass,
             'eta': self.eta,
-            'lattice_parameter': self.lattice_parameter,
             'temperature': self.temperature,
             'working_directory': self.working_directory,
         }
@@ -117,8 +128,11 @@ class TauGLEConfig(GLEConfig):
         absorbate_mass,
         eta,
         tau,
-        lattice_parameter,
+        w_1,
         temperature,
+        basis_vectors,
+        conventional_cell,
+        free_plane_indices,
         working_directory,
     ):
         self.tau = tau
@@ -132,8 +146,10 @@ class TauGLEConfig(GLEConfig):
             dt,
             absorbate_mass,
             eta,
-            lattice_parameter,
             temperature,
+            basis_vectors,
+            conventional_cell,
+            free_plane_indices,
             working_directory,
         )
 
@@ -144,7 +160,7 @@ class TauGLEConfig(GLEConfig):
 
     def normalize_kernel(self):
         self.memory_kernel_normalization = 1 / np.real(1 - self.discrete_decay_factor)
-        self.temperature_normalization = calculate_kernel_temperature_normalization(self, w0=12)
+        self.temperature_normalization = calculate_kernel_temperature_normalization(self)
         self.memory_kernel_normalization *= self.temperature_normalization
 
     def to_dict(self):
@@ -166,8 +182,10 @@ class ComplexTauGLEConfig(TauGLEConfig):
         eta,
         tau,
         w_1,
-        lattice_parameter,
         temperature,
+        basis_vectors,
+        conventional_cell,
+        free_plane_indices,
         working_directory,
     ):
         self.w_1 = w_1
@@ -178,8 +196,11 @@ class ComplexTauGLEConfig(TauGLEConfig):
             absorbate_mass,
             eta,
             tau,
-            lattice_parameter,
+            w_1,
             temperature,
+            basis_vectors,
+            conventional_cell,
+            free_plane_indices,
             working_directory,
         )
 
