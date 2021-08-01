@@ -65,17 +65,25 @@ def get_alpha(
 
 def stable_fit_alpha(
     times,
-    positions,
+    isf,
     delta_K,
-    t_final,
     step,
     t_0=0,
+    t_final=None,
     tol=0.01,
     plot_dir=None
 ):
     prev_alpha = None
 
-    isf = fast_calculate_isf(positions, delta_K)
+    baseline = np.mean(isf[(times > 500) & (times < 1000)])
+    if abs(baseline) < 1e-1:
+        isf -= baseline
+
+    if t_final is None:
+        min_value = np.std(isf[(times > 500) & (times < 1000)]) * 5
+        # min_value = 0.05
+        t_final = np.max(times[(isf > min_value) & (times < 300)])
+        # t_final = 100
 
     while t_0 < t_final:
         fit_mask = (times > t_0) & (times < t_final)
@@ -91,7 +99,6 @@ def stable_fit_alpha(
         alpha = - p0[0]
 
         if prev_alpha is not None:
-            print(np.abs(alpha / prev_alpha - 1))
             if np.abs(alpha / prev_alpha - 1) < tol:
                 if plot_dir is not None:
                     plot_mask = times < 2.0 * t_final

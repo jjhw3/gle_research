@@ -68,16 +68,17 @@ class GLEConfig:
 
         self.potential_grid = np.load(self.working_directory / 'potential_grid.npy')
 
-    def calculate_time_quantities(self):
-        self.num_iterations = int(np.round(self.run_time / self.dt))
-        self._times = None
-        self.noise_stddev = np.sqrt(2 * boltzmann_constant * self.temperature * self.absorbate_mass * self.eta / self.dt)
+    @property
+    def num_iterations(self):
+        return int(np.round(self.run_time / self.dt))
+
+    @property
+    def noise_stddev(self):
+        return np.sqrt(2 * boltzmann_constant * self.temperature * self.absorbate_mass * self.eta / self.dt)
 
     @property
     def times(self):
-        if self._times is None:
-            self._times = np.linspace(0, self.run_time, self.num_iterations)
-        return self._times
+        return np.linspace(0, self.run_time, self.num_iterations)
 
     def to_dict(self):
         return {
@@ -140,7 +141,6 @@ class TauGLEConfig(GLEConfig):
         self.temperature_normalization = 1
         self.memory_kernel_normalization = 1
 
-
         super().__init__(
             run_time,
             dt,
@@ -154,7 +154,6 @@ class TauGLEConfig(GLEConfig):
         )
 
     def calculate_time_quantities(self):
-        super().calculate_time_quantities()
         self.discrete_decay_factor = np.exp(- self.dt / self.tau) if self.tau > 0 else 0
         self.normalize_kernel()
 

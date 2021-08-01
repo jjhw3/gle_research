@@ -18,14 +18,14 @@
 #! How many many cores will be allocated per task? (for single core jobs always leave this at 1)
 #SBATCH --cpus-per-task=1
 #! Estimated runtime: hh:mm:ss (job is force-stopped after if exceeded):
-#SBATCH --time=05:00:00
+#SBATCH --time=2:00:00
 #! Estimated maximum memory needed (job is force-stopped if exceeded):
 #! RAM is allocated in ~5980mb blocks, you are charged per block used,
 #! and unused fractions of blocks will not be usable by others.
 #SBATCH --mem=5980mb
 #! Submit a job array with index values between 0 and 31
 #! NOTE: This must be a range, not a single number (i.e. specifying '32' here would only run one job, with index 32)
-#SBATCH --array=0-70
+#SBATCH --array=4000-7000
 
 #! This is the partition name.
 #SBATCH -p skylake
@@ -54,8 +54,8 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 #! export SLURM_ARRAY_TASK_ID=1
 
 temperatures=(160 180 200 225 250 275 300)
-temp=${temperatures[$(((SLURM_ARRAY_TASK_ID - 1) / 10))]}
-temp_index=$(((SLURM_ARRAY_TASK_ID - 1) % 10))
+temp=${temperatures[$(((SLURM_ARRAY_TASK_ID - 1) / 1000))]}
+temp_index=$(((SLURM_ARRAY_TASK_ID - 1) % 1000))
 
 mkdir -p $HOME/rds/hpc-work/gle/md_temp_range/
 mkdir -p $HOME/rds/hpc-work/gle/md_temp_range/${temp}
@@ -65,3 +65,14 @@ cp -R $HOME/code/gle_research/simulation_scripts/md_temp_range/md_temp_range_tem
 sed -i "s/temp_here/${temp}/g" "$HOME/rds/hpc-work/gle/md_temp_range/${temp}/${temp_index}/config.yml"
 
 python $HOME/code/gle_research/simulation_scripts/md_temp_range/run_md_temp_range.py $HOME/rds/hpc-work/gle/md_temp_range/$temp/${temp_index}
+python $HOME/code/gle_research/simulation_scripts/md_temp_range/calculate_isf.py $HOME/rds/hpc-work/gle/md_temp_range/$temp/${temp_index}
+
+mkdir -p $HOME/rds/hpc-work/results/md_temp_range/
+mkdir -p $HOME/rds/hpc-work/results/md_temp_range/$temp/
+mkdir -p $HOME/rds/hpc-work/results/md_temp_range/$temp/${temp_index}
+
+cp $HOME/rds/hpc-work/gle/md_temp_range/$temp/${temp_index}/alphas_dk.npy $HOME/rds/hpc-work/results/md_temp_range/$temp/${temp_index}
+cp $HOME/rds/hpc-work/gle/md_temp_range/$temp/${temp_index}/dk_mags.npy $HOME/rds/hpc-work/results/md_temp_range/$temp/${temp_index}
+cp $HOME/rds/hpc-work/gle/md_temp_range/$temp/${temp_index}/alpha_dk.png $HOME/rds/hpc-work/results/md_temp_range/$temp/${temp_index}
+cp $HOME/rds/hpc-work/gle/md_temp_range/$temp/${temp_index}/temperature.png $HOME/rds/hpc-work/results/md_temp_range/$temp/${temp_index}
+cp -r $HOME/rds/hpc-work/gle/md_temp_range/$temp/${temp_index}/ISFs $HOME/rds/hpc-work/results/md_temp_range/$temp/${temp_index}

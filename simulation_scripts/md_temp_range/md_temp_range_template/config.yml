@@ -1,4 +1,4 @@
-run_time: 100000     # picoseconds
+run_time: 10000     # picoseconds
 dt: 0.01          # picoseconds
 temperature: temp_here
 lattice_shape: [8, 8, 8]
