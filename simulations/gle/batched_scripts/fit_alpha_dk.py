@@ -17,15 +17,17 @@ if __name__ == '__main__':
 
     dk_unit = norm(np.asarray(config.in_plane_basis[:, 0]))
     dk_mags = np.load(working_dir / 'dk_mags.npy')
-    target_alpha_dks = np.load(working_dir / 'target_alphas_dk.npy')
-    plt.plot(dk_mags, target_alpha_dks, label='target')
-    plt.legend()
-    plt.show()
+    target_alpha_dks = np.load(working_dir / 'target_alphas.npy')
+    # plt.plot(dk_mags, target_alpha_dks, label='target')
+    # plt.legend()
+    # plt.show()
 
     has_overshot = False
     etas = np.zeros(num_fitting_iterations)
     etas[0] = config.eta
     errors = np.zeros_like(etas)
+
+    alpha_dks = np.zeros((num_fitting_iterations, dk_mags.shape[0]))
 
     for i in range(num_fitting_iterations):
         config.eta = etas[i]
@@ -45,28 +47,23 @@ if __name__ == '__main__':
         err = gle_alphas - target_alpha_dks
         err[np.isnan(err)] = 0
 
-        errors[i] = err.sum()
+        errors[i] = err.mean()
         plt.plot(dk_mags, target_alpha_dks, label='target')
-        plt.plot(dk_mags, gle_alphas, label=f'iter {i}, eta={etas[i]:.2}')
+        plt.plot(dk_mags, gle_alphas, label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
         plt.legend()
         plt.show()
+
+        alpha_dks[i] = gle_alphas
 
         if i == num_fitting_iterations - 1:
             break
 
         print(f'Error {errors[i]}')
-        if not has_overshot and errors[i] < 0:
-            etas[i+1] = etas[i] * 2
-            continue
-
-        has_overshot = True
-        if i == 0:
+        if i < 1:
             etas[i + 1] = etas[i] / 2
-        elif np.sign(errors[i]) == np.sign(errors[i-1]):
-            etas[i + 1] = etas[i - 1] + 2 * (etas[i] - etas[i - 1])
         else:
-            grad = (errors[i] - errors[i-1]) / (etas[i] - etas[i-1])
-            etas[i + 1] = etas[i - 1] + errors[i-1] / grad
+            m, c = np.polyfit(etas[max(0, i-5):i], errors[max(0, i-5):i], 1)
+            etas[i + 1] = - c / m
 
         if etas[i + 1] < 0:
             etas[i + 1] = etas[i] / 2
@@ -74,5 +71,10 @@ if __name__ == '__main__':
     print('etas tried:', etas)
     print('errors:', errors)
 
+    plt.plot(dk_mags, target_alpha_dks, label='target')
+    for i in range(num_fitting_iterations):
+        plt.plot(dk_mags, alpha_dks[i], label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
+
     plt.legend()
     plt.show()
+    print()

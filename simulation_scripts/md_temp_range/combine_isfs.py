@@ -59,7 +59,7 @@ if __name__ == '__main__':
                 alphas[i] = np.nan
 
         np.save(temp_dir / 'dk_mags.npy', dk_mags)
-        np.save(temp_dir / 'alphas.npy', dk_mags)
+        np.save(temp_dir / 'alphas.npy', alphas)
         plt.plot(dk_mags, hbar * amu_K_ps_to_eV(alphas) * 1e6, label=temp_dir.name)
         # plt.show()
         # print()
