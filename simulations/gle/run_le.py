@@ -39,6 +39,8 @@ def run_gle_batched(
     config,
     batch_run_time,
 ):
+    config = config.copy()
+
     for fil in config.batched_results_dir.glob('*.npy'):
         fil.unlink()
 

@@ -10,7 +10,13 @@ def extract_potential_surface_3D(config, positions, resolution):
     return extract_potential_surface(basis_2D, config.temperature, positions_2D, resolution)
 
 
-def extract_potential_surface(basis, temperature, positions, resolution):
+def extract_potential_surface(
+    basis,
+    temperature,
+    positions,
+    resolution,
+    fill_value = None,
+):
     in_first_cell_lattice_coords = change_basis(
         np.linalg.inv(basis),
         positions
@@ -33,7 +39,10 @@ def extract_potential_surface(basis, temperature, positions, resolution):
 
     if (pos_hist == 0.0).any():
         print('Warning,', (pos_hist == 0.0).sum(), ', unvisited potential bins')
-        pos_hist[pos_hist == 0.0] = 0.00001 * np.min(pos_hist[pos_hist > 0])
+        if fill_value is None:
+            fill_value = 0.00001 * np.min(pos_hist[pos_hist > 0])
+
+        pos_hist[pos_hist == 0.0] = fill_value
 
     x_points = (x_bin_edges[1:-1] + x_bin_edges[:-2]) / 2
     y_points = (y_bin_edges[1:-1] + y_bin_edges[:-2]) / 2

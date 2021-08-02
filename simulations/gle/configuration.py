@@ -30,7 +30,8 @@ class GLEConfig:
         self.absorbate_mass = absorbate_mass
         self.eta = eta
         self.temperature = temperature
-        self.canonical_basis = np.asarray(basis_vectors).T[:2, :2]
+        self.basis_vectors = np.asarray(basis_vectors).T
+        self.canonical_basis = self.basis_vectors[:2, :2]
         self.conventional_cell = np.asarray(conventional_cell).T
         self.free_plane_indices = np.asarray(free_plane_indices)
         self.working_directory = working_directory
@@ -61,9 +62,6 @@ class GLEConfig:
 
         self.in_plane_rotation_matrix = get_basis_rotation_matrix(self.in_plane_basis_canonical_coords)
         self.in_plane_basis = rotate_basis(self.in_plane_basis_canonical_coords)[:2, :2]
-        # self.xy_plane_rotation_matrix = get_basis_rotation_matrix(fcc.get_fcc_111_basis(lattice_parameter))
-        # self.in_plane_basis = self.in_plane_rotate(fcc.get_fcc_111_basis(lattice_parameter))[:2, :2]
-        # self.canonical_basis = self.in_plane_rotate(fcc.get_fcc_basis(lattice_parameter))[:2]
         self.inv_in_plane_basis = np.linalg.inv(self.in_plane_basis)
 
         self.potential_grid = np.load(self.working_directory / 'potential_grid.npy')
@@ -212,3 +210,18 @@ class ComplexTauGLEConfig(TauGLEConfig):
         dic = super().to_dict()
         dic['w_1'] = self.w_1
         return dic
+
+    def copy(self):
+        return self.__class__(
+            self.run_time,
+            self.dt,
+            self.absorbate_mass,
+            self.eta,
+            self.tau,
+            self.w_1,
+            self.temperature,
+            self.basis_vectors.T,
+            self.conventional_cell.T,
+            self.free_plane_indices,
+            self.working_directory,
+        )
