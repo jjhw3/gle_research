@@ -1,8 +1,16 @@
-run_time: 10000
+run_time: 500000
 dt: 0.001
-absorbate_mass: 7
+absorbate_mass: 23
 temperature: temp_here
-eta: 0.1
+eta: 1.0
 tau: 0.0
 w_1: 0.0
-lattice_parameter: 1.795
+basis_vectors:
+  - [1.795, 1.795, 0]
+  - [1.795, 0, 1.795]
+  - [0, 1.795, 1.795]
+conventional_cell:
+  - [3.59, 0, 0]
+  - [0, 3.59, 0]
+  - [0, 0, 3.59]
+free_plane_indices: [0, 0, 1]

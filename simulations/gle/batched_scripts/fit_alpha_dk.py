@@ -76,7 +76,7 @@ if __name__ == '__main__':
     print('etas tried:', etas)
     print('errors:', errors)
 
-    plt.plot(dk_mags, target_alpha_dks, label='target')
+    plt.plot(dk_mags, target_alpha_dks, label='target', c='black')
     for i in range(num_fitting_iterations):
         plt.plot(dk_mags, alpha_dks[i], label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
 
