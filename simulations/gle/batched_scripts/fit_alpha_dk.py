@@ -11,9 +11,14 @@ from gle.run_le import run_gle_batched
 
 if __name__ == '__main__':
     working_dir = Path(sys.argv[1])
+    num_fitting_iterations = int(sys.argv[2])
+    fit_dir = working_dir / 'alpha_dk_fit'
+    if fit_dir.exists():
+        fit_dir.unlink()
+    fit_dir.mkdir()
+
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
-    num_fitting_iterations = 10
 
     dk_unit = norm(np.asarray(config.in_plane_basis[:, 0]))
     dk_mags = np.load(working_dir / 'dk_mags.npy')
@@ -48,10 +53,10 @@ if __name__ == '__main__':
         err[np.isnan(err)] = 0
 
         errors[i] = err.mean()
-        plt.plot(dk_mags, target_alpha_dks, label='target')
-        plt.plot(dk_mags, gle_alphas, label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
-        plt.legend()
-        plt.show()
+        # plt.plot(dk_mags, target_alpha_dks, label='target')
+        # plt.plot(dk_mags, gle_alphas, label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
+        # plt.legend()
+        # plt.show()
 
         alpha_dks[i] = gle_alphas
 
@@ -75,6 +80,11 @@ if __name__ == '__main__':
     for i in range(num_fitting_iterations):
         plt.plot(dk_mags, alpha_dks[i], label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
 
+    np.save(fit_dir / 'alpha_dks.npy', alpha_dks)
+    np.save(fit_dir / 'etas.npy', etas)
+    np.save(fit_dir / 'errors.npy', errors)
+
     plt.legend()
-    plt.show()
+    plt.savefig(fit_dir / 'all_fits.png')
+    # plt.show()
     print()
