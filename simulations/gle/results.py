@@ -141,3 +141,5 @@ class ComplexGLEResult(GLEResult):
             self.config.noise_stddev,
             size=self.positions.shape,
         ).astype(np.complex128) / self.config.memory_kernel_normalization
+
+        # np.save(self.config.working_directory / 'raw_noise.npy', self.noise_forces * self.config.memory_kernel_normalization)

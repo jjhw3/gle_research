@@ -107,6 +107,7 @@ def stable_fit_alpha(
                     plt.savefig(plot_dir / f'{mag(delta_K):.2}.png')
                     plt.yscale('log')
                     plt.savefig(plot_dir / f'log/{mag(delta_K):.2}.png')
+                    plt.show()
                     cla()
 
                 return alpha

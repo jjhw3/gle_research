@@ -13,9 +13,8 @@ if __name__ == '__main__':
     working_dir = Path(sys.argv[1])
     num_fitting_iterations = int(sys.argv[2])
     fit_dir = working_dir / 'alpha_dk_fit'
-    if fit_dir.exists():
-        fit_dir.unlink()
-    fit_dir.mkdir()
+    if not fit_dir.exists():
+        fit_dir.mkdir()
 
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
@@ -53,10 +52,10 @@ if __name__ == '__main__':
         err[np.isnan(err)] = 0
 
         errors[i] = err.mean()
-        # plt.plot(dk_mags, target_alpha_dks, label='target')
-        # plt.plot(dk_mags, gle_alphas, label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
-        # plt.legend()
-        # plt.show()
+        plt.plot(dk_mags, target_alpha_dks, label='target')
+        plt.plot(dk_mags, gle_alphas, label=f'iter {i}, eta={etas[i]:.2} err={errors[i]:.2}')
+        plt.legend()
+        plt.show()
 
         alpha_dks[i] = gle_alphas
 

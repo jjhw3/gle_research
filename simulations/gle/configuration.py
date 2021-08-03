@@ -157,8 +157,8 @@ class TauGLEConfig(GLEConfig):
 
     def normalize_kernel(self):
         self.memory_kernel_normalization = 1 / np.real(1 - self.discrete_decay_factor)
-        self.temperature_normalization = calculate_kernel_temperature_normalization(self)
-        self.memory_kernel_normalization *= self.temperature_normalization
+        # self.temperature_normalization = calculate_kernel_temperature_normalization(self)
+        # self.memory_kernel_normalization *= self.temperature_normalization
 
     def to_dict(self):
         dic = super(TauGLEConfig, self).to_dict()
