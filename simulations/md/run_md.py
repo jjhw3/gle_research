@@ -56,9 +56,9 @@ if __name__ == '__main__':
             # substrate_recorder,
         ],
         initial_substrate_deltas=substrate_displacements,
-        initial_absorbate_position=absorbate_position + [0.01, 0, 0.0],
+        initial_absorbate_position=absorbate_position,
         freeze_substrate=False,
-        freeze_absorbate=False,
+        freeze_absorbate=True ##################################################################################
     )
 
     plt.plot(absorbate_positions[0], absorbate_positions[1])

@@ -3,6 +3,7 @@ from pathlib import Path
 
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.signal
 
 from cle import eval_force_from_pot
 
@@ -14,7 +15,7 @@ if __name__ == '__main__':
     print(sys.argv[1])
     # config = MDConfig.load(working_dir)
     config = ComplexTauGLEConfig.load(working_dir)
-    length = 100000
+    length = 10000000
 
     resolution = 30
     basis_2D = config.in_plane_basis[:2, :2]
@@ -50,11 +51,9 @@ if __name__ == '__main__':
     # plt.plot(config.times, stochastic_noise[0] - friction_forces[0] - noise_forces[0])
     # plt.show()
 
-    import scipy.signal
-    # plt.plot(fast_correlate(velocities[0, :100000], noise_forces[0, :100000]))
-    # plt.plot(noise_forces[0])
-    # plt.plot(scipy.signal.convolve(raw_noise[0], kernel))
-    # plt.show()
+    plt.plot(noise_forces[0])
+    plt.plot(scipy.signal.convolve(raw_noise[0], kernel))
+    plt.show()
 
     xdot = velocities[0]
     s = stochastic_noise[0]
@@ -62,11 +61,19 @@ if __name__ == '__main__':
     m = config.absorbate_mass
     eta = config.eta
 
-    xdot_f_corr = fast_correlate(xdot, f)
-    vacf = fast_correlate(xdot, xdot)
+    xdot_f_corr = scipy.signal.correlate(f, xdot)
+    vacf = scipy.signal.correlate(xdot, xdot)
+    xdot_s_corr = scipy.signal.correlate(s, xdot)
 
-    plt.plot(fast_correlate(xdot, s))
-    plt.plot(scipy.signal.convolve(xdot_f_corr, kernel) - m * eta * scipy.signal.convolve(raw_noise[0], kernel))
+    plt.plot(xdot_s_corr)
+    plt.plot(scipy.signal.convolve(xdot_f_corr - m * eta * vacf, np.pad(kernel, ((99999, 0),))))
+    plt.show()
+
+    plt.plot(np.diff(xdot_s_corr) / config.dt)
+    plt.plot((xdot_f_corr - m * eta * vacf - xdot_s_corr) / config.tau)
+    plt.show()
+
+    plt.plot((xdot_f_corr - m * eta * vacf - xdot_s_corr)[:-1] / (np.diff(xdot_s_corr) / config.dt))
     plt.show()
 
     print()

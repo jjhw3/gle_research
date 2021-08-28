@@ -1,13 +1,14 @@
 from common.constants import boltzmann_constant, amu_K_ps_to_eV
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.io as sio
 
 from common.lattice_tools.common import mag
 
 
-def record_temperature(config, absorbate_window_size_ps=1):
-    substrate_temperatures = np.zeros(config.num_iterations)
-    absorbate_temperatures = np.zeros(config.num_iterations)
+def record_temperature(config, absorbate_window_size_ps=1, evaluate_every=100):
+    substrate_temperatures = np.zeros(config.num_iterations // evaluate_every)
+    absorbate_temperatures = np.zeros(config.num_iterations // evaluate_every)
     absorbate_window_size = int(absorbate_window_size_ps / config.dt)
 
     def record(
@@ -17,19 +18,21 @@ def record_temperature(config, absorbate_window_size_ps=1):
         absorbate_velocity,
         **kwargs
     ):
-        substrate_kinetics = 0.5 * config.substrate_mass * substrate_velocities ** 2
-        mean_kinetic_per_dof = substrate_kinetics.sum() / (3 * config.num_moveable_substrate_atoms)
-        substrate_temperature = 2 * mean_kinetic_per_dof / boltzmann_constant
-        substrate_temperatures[idx] = substrate_temperature
-        absorbate_temperature = (absorbate_velocity**2 * config.absorbate_mass / boltzmann_constant).mean()
-        absorbate_temperatures[idx] = absorbate_temperature
+        eval_indx = idx // evaluate_every
+        if idx % evaluate_every == 0:
+            substrate_kinetics = 0.5 * config.substrate_mass * substrate_velocities ** 2
+            mean_kinetic_per_dof = substrate_kinetics.sum() / (3 * config.num_moveable_substrate_atoms)
+            substrate_temperature = 2 * mean_kinetic_per_dof / boltzmann_constant
+            substrate_temperatures[eval_indx] = substrate_temperature
+            absorbate_temperature = (absorbate_velocity**2 * config.absorbate_mass / boltzmann_constant).mean()
+            absorbate_temperatures[eval_indx] = absorbate_temperature
 
         if idx == config.num_iterations - 1:
             expected_temp_sample_stddev = np.sqrt(5 / 3) * config.temperature
 
             print(f"mean substrate temperature: {substrate_temperatures.mean()}K")
             print(f"mean absorbate temperature: {absorbate_temperatures.mean()}K")
-            plt.plot(config.times, substrate_temperatures, label='Substrate')
+            plt.plot(config.times[::evaluate_every], substrate_temperatures, label='Substrate')
 
             plt.axhline(config.temperature + expected_temp_sample_stddev / np.sqrt(config.num_moveable_substrate_atoms), color='red')
             plt.axhline(config.temperature - expected_temp_sample_stddev / np.sqrt(config.num_moveable_substrate_atoms), color='red', label=r"Theoretical substrate 1$\sigma$ C.I.")
@@ -48,7 +51,7 @@ def record_temperature(config, absorbate_window_size_ps=1):
             plt.ylabel('Temperature (K)')
             plt.legend()
             plt.savefig(config.working_directory / 'temperature.png')
-            plt.show()
+            # plt.show()
             plt.cla()
 
     return record
@@ -117,6 +120,20 @@ def record_absorbate(config):
                 absorbate_forces
             )
 
+            sio.savemat(
+                config.working_directory / 'adsorbate_trajectory.mat',
+                {
+                    'run_time': config.run_time,
+                    'dt': config.dt,
+                    'adsorbate_mass': config.absorbate_mass,
+                    'temp': config.temperature,
+                    'adsorbate_positions': absorbate_positions,
+                    'adsorbate_velocities': absorbate_velocities,
+                    'adsorbate_potentials': absorbate_potentials,
+                    'adsorbate_forces': absorbate_forces,
+                }
+            )
+
     return absorbate_positions, absorbate_velocities, absorbate_potentials, record
 
 
@@ -134,8 +151,8 @@ def record_substrate(config):
     return substrate_potentials, record
 
 
-def record_total_energy(config):
-    total_energies = np.zeros(config.num_iterations)
+def record_total_energy(config, evaluate_every=100):
+    total_energies = np.zeros(config.num_iterations // evaluate_every)
 
     def record(
         idx,
@@ -146,12 +163,13 @@ def record_total_energy(config):
         absorbate_potential,
         **kwargs
     ):
-        total_energy = np.sum(substrate_potential) + 0.5 * config.substrate_mass * (mag(substrate_velocities)**2).sum()
-        total_energy += absorbate_potential + 0.5 * config.absorbate_mass * mag(absorbate_velocity)**2
-        total_energies[idx] = total_energy
+        if idx % evaluate_every == 0:
+            total_energy = np.sum(substrate_potential) + 0.5 * config.substrate_mass * (mag(substrate_velocities)**2).sum()
+            total_energy += absorbate_potential + 0.5 * config.absorbate_mass * mag(absorbate_velocity)**2
+            total_energies[idx // evaluate_every] = total_energy
 
         if idx == config.num_iterations - 1:
-            plt.plot(config.times, amu_K_ps_to_eV(total_energies))
+            plt.plot(config.times[::evaluate_every], amu_K_ps_to_eV(total_energies))
             plt.xlabel('Run Time (ps)')
             plt.ylabel('Total Energy (eV)')
             plt.savefig(config.working_directory / 'total_energy.png')

@@ -114,9 +114,6 @@ def simulate(
         if freeze_substrate:
             substrate_F_net *= 0
 
-        if freeze_absorbate:
-            absorbate_F_net[:2] *= 0
-
         if idx == 0:
             for callback in callbacks:
                 callback(
@@ -141,14 +138,18 @@ def simulate(
             damping=substrate_damping,
         )
 
-        absorbate_velocity, new_absorbate_position = update_absorbate(
-            config,
-            absorbate_F_net,
-            prev_absorbate_velocity,
-            absorbate_position,
-            prev_force=prev_absorbate_force,
-            damping=absorbate_damping,
-        )
+        if freeze_absorbate:
+            absorbate_velocity = prev_absorbate_velocity
+            new_absorbate_position = absorbate_position
+        else:
+            absorbate_velocity, new_absorbate_position = update_absorbate(
+                config,
+                absorbate_F_net,
+                prev_absorbate_velocity,
+                absorbate_position,
+                prev_force=prev_absorbate_force,
+                damping=absorbate_damping,
+            )
 
         for callback in callbacks:
             callback(
@@ -168,7 +169,7 @@ def simulate(
         prev_substrate_velocities = substrate_velocities
         prev_substrate_forces = substrate_forces
         substrate_displacements = new_substrate_displacements
-        prev_absorbate_force = np.sum(absorbate_forces, axis=1)
+        prev_absorbate_force = absorbate_F_net
         prev_absorbate_velocity = absorbate_velocity
         absorbate_position = new_absorbate_position
 

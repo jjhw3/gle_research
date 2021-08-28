@@ -11,7 +11,7 @@ from md.configuration import MDConfig
 
 anim_duration = 20
 fps = 15
-working_directory = Path("/Users/jeremywilkinson/research_data/md_data/test")
+working_directory = Path("/Users/jeremywilkinson/research_data/md_data/vel_auto")
 config = MDConfig.load(working_directory)
 position_deltas = np.load(working_directory / 'substrate_last_deltas.npy')
 absorbate_positions = np.load(working_directory / 'absorbate_positions.npy')[:, -position_deltas.shape[1]:]
