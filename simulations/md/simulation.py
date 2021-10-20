@@ -139,8 +139,27 @@ def simulate(
         )
 
         if freeze_absorbate:
-            absorbate_velocity = prev_absorbate_velocity
-            new_absorbate_position = absorbate_position
+            # absorbate_velocity = np.zeros(3)
+            # new_absorbate_position = absorbate_position
+
+            foo = absorbate_F_net.copy()
+            foo[:2] = 0
+            bar = prev_absorbate_velocity.copy()
+            bar[:2] = 0
+            if prev_absorbate_force is not None:
+                bla = prev_absorbate_force.copy()
+                bla[:2] = 0
+            else:
+                bla = None
+
+            absorbate_velocity, new_absorbate_position = update_absorbate(
+                config,
+                foo,
+                bar,
+                absorbate_position,
+                prev_force=bla,
+                damping=absorbate_damping,
+            )
         else:
             absorbate_velocity, new_absorbate_position = update_absorbate(
                 config,
@@ -179,6 +198,8 @@ def simulate(
 def get_nearest_equilibrium_configuration(
     config,
     initial_absorbate_position,
+    freeze_substrate=False,
+    freeze_absorbate=False,
 ):
     config = config.copy()
     config.run_time = 10
@@ -201,6 +222,8 @@ def get_nearest_equilibrium_configuration(
             ),
             substrate_damping=0.4,
             absorbate_damping=0.4,
+            freeze_substrate=freeze_substrate,
+            freeze_absorbate=freeze_absorbate,
         )
 
     return substrate_displacements, absorbate_position

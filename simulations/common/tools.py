@@ -1,16 +1,14 @@
-import numpy as np
-from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+import numpy as np
+import scipy.signal
+from scipy.optimize import curve_fit
 
 from common.lattice_tools.common import mag
 from common.lattice_tools.plot_tools import cla
 
 
 def fast_auto_correlate(arr):
-    shape = arr.shape[0]
-    arr = np.pad(arr, ((0, shape - 1),))
-    correlated = np.abs(np.fft.ifft(np.abs(np.fft.fft(arr))**2)[:shape])
-    return correlated / np.arange(shape, 0, -1)
+    return fast_correlate(arr, arr)
 
 
 def fast_correlate(arr1, arr2):
@@ -26,6 +24,10 @@ def fast_calculate_isf(positions, delta_K):
     isf = fast_auto_correlate(amplitudes)
     isf /= isf[0]
     return isf
+
+
+def fast_windowed_mean(arr, window_size):
+    return scipy.signal.convolve(arr, np.ones(window_size) / window_size)[window_size - 1::window_size]
 
 
 def get_alpha(

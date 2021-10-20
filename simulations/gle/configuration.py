@@ -7,6 +7,7 @@ from common.lattice_tools import fcc
 from common.lattice_tools.common import change_basis, get_basis_rotation_matrix, rotate_basis, get_in_plane_basis
 from gle.results import ComplexGLEResult, GLEResult
 from gle.theoretics import calculate_kernel_temperature_normalization
+import matplotlib.pyplot as plt
 
 
 class GLEConfig:
@@ -78,6 +79,20 @@ class GLEConfig:
     def times(self):
         return np.linspace(0, self.run_time, self.num_iterations)
 
+    @property
+    def unit_cell_grid_lattice_coords(self):
+        xrange = np.linspace(0, 1, self.potential_grid.shape[0])
+        yrange = np.linspace(0, 1, self.potential_grid.shape[0])
+        return np.asarray(np.meshgrid(xrange, yrange, indexing='ij'))
+
+    @property
+    def unit_cell_grid_cartesian_coords(self):
+        return change_basis(self.in_plane_basis, self.unit_cell_grid_lattice_coords)
+
+    @property
+    def centre_top_point(self):
+        return self.in_plane_basis.sum(axis=1) / 2
+
     def to_dict(self):
         return {
             'run_time': self.run_time,
@@ -106,14 +121,25 @@ class GLEConfig:
         return - np.asarray([gradx, grady])
 
     @classmethod
-    def load(cls, dir):
+    def load(cls, dir_or_fil):
+        if dir_or_fil.is_dir():
+            dir_or_fil = dir_or_fil / 'config.yml'
+
         return cls(
-            **yaml.load(open(dir / 'config.yml', "r")),
-            working_directory=dir
+            **yaml.load(open(dir_or_fil, "r")),
+            working_directory=dir_or_fil.parent
         )
 
     def get_blank_results(self):
         return self.RESULT_CLASS.blank_from_config(self)
+
+    def set_plot_limits_to_first_cell(self):
+        diagonal = self.in_plane_basis.sum(axis=1)
+        plt.xlim(-0.1, diagonal[0] + 0.1)
+        plt.ylim(-0.1, diagonal[1] + 0.1)
+        plt.scatter(*self.in_plane_basis)
+        plt.arrow(0, 0, *self.in_plane_basis[:, 0], length_includes_head=True, width=0.02, color='black')
+        plt.arrow(0, 0, *self.in_plane_basis[:, 1], length_includes_head=True, width=0.02, color='black')
 
 
 class TauGLEConfig(GLEConfig):

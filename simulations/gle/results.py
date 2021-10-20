@@ -82,7 +82,10 @@ class GLEResult:
         np.save(dir / f'absorbate_noise_forces{postfix}.npy', self.noise_forces[:, save_slice])
 
     @classmethod
-    def load(cls, config, dir, postfix=''):
+    def load(cls, config, dir=None, postfix=''):
+        if dir is None:
+            dir = config.working_directory
+
         if postfix != '':
             postfix = '_' + postfix
 
@@ -97,8 +100,8 @@ class GLEResult:
             positions,
             velocities,
             forces,
-            friction_forces,
             noise_forces,
+            friction_forces,
             None,
             None,
         )

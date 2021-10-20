@@ -134,7 +134,7 @@ def record_absorbate(config):
                 }
             )
 
-    return absorbate_positions, absorbate_velocities, absorbate_potentials, record
+    return absorbate_positions, absorbate_velocities, absorbate_potentials, absorbate_forces, record
 
 
 def record_substrate(config):

@@ -96,6 +96,12 @@ if __name__ == '__main__':
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
 
+
+
+    config.potential_grid *= 0 #####################################################
+
+
+
     results = run_gle(
         config
     )
