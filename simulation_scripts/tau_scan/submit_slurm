@@ -52,4 +52,6 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 #! export SLURM_ARRAY_TASK_ID=1
 
 mkdir -p $HOME/rds/hpc-work/gle/tau_scan/
+mkdir -p $HOME/rds/hpc-work/gle/tau_scan/$TEMP
+mkdir -p $HOME/rds/hpc-work/gle/tau_scan/$TEMP/$SLURM_ARRAY_TASK_ID
 python $HOME/code/gle_research/simulation_scripts/tau_scan/run_tau_scan.py $HOME/code/gle_research/simulation_scripts/tau_scan/tau_scan_template

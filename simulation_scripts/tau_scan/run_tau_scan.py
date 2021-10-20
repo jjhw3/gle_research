@@ -9,7 +9,7 @@ from gle.run_le import run_gle_batched, run_gle
 
 
 if __name__ == '__main__':
-    results_dir = Path('/home/jjhw3/rds/hpc-work/results')
+    results_dir = Path('/home/jjhw3/rds/hpc-work/results/tau_scan')
     working_dir = Path(sys.argv[1])
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
