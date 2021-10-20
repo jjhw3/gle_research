@@ -126,7 +126,7 @@ class GLEConfig:
             dir_or_fil = dir_or_fil / 'config.yml'
 
         return cls(
-            **yaml.load(open(dir_or_fil, "r")),
+            **yaml.safe_load(open(dir_or_fil, "r")),
             working_directory=dir_or_fil.parent
         )
 

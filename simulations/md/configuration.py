@@ -110,7 +110,7 @@ class MDConfig:
     @classmethod
     def load(cls, dir):
         return cls(
-            **yaml.load(open(dir / 'config.yml', "r")),
+            **yaml.safe_load(open(dir / 'config.yml', "r")),
             working_directory=dir
         )
 

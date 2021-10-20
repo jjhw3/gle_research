@@ -20,5 +20,5 @@ if __name__ == '__main__':
     config.temperature = temperature
     results = run_gle(config, results=None)
 
-    np.save(results_dir / f'{temperature}/{run_no}/positions.npy', results.positions[::10])
-    np.save(results_dir / f'{temperature}/{run_no}/velocities.npy', results.velocities[::10])
+    np.save(results_dir / f'{temperature}/{run_no}/positions.npy', results.positions[:, :10])
+    np.save(results_dir / f'{temperature}/{run_no}/velocities.npy', results.velocities[:, :10])

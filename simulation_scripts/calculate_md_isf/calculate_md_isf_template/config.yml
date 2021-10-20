@@ -1,0 +1,21 @@
+run_time: 10000
+dt: 0.01
+temperature: TEMPERATURE
+lattice_shape: [SIZE, SIZE, SIZE]
+basis_vectors:
+  - [1.795, 1.795, 0]
+  - [1.795, 0, 1.795]
+  - [0, 1.795, 1.795]
+conventional_cell:
+  - [3.59, 0, 0]
+  - [0, 3.59, 0]
+  - [0, 0, 3.59]
+free_plane_indices: [0, 0, 1]
+lattice_connections: null
+spring_const: 16867.47
+substrate_mass: 63.55
+r0_multiple_interaction_distance_cutoff: 3.1
+r0: 3.3
+D: 1301.0
+a: 0.875
+absorbate_mass: MASS

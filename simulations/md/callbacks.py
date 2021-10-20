@@ -82,7 +82,7 @@ def record_last_N_substrate_positions(config, N):
     return substrate_positions, record
 
 
-def record_absorbate(config):
+def record_absorbate(config, auto_save=False):
     absorbate_positions = np.zeros((3, config.num_iterations))
     absorbate_velocities = np.zeros((3, config.num_iterations))
     absorbate_potentials = np.zeros(config.num_iterations)
@@ -102,7 +102,7 @@ def record_absorbate(config):
         absorbate_potentials[idx] = absorbate_potential
         absorbate_forces[:, idx] = absorbate_force
 
-        if idx == config.num_iterations - 1:
+        if idx == config.num_iterations - 1 and auto_save:
             np.save(
                 config.working_directory / f"absorbate_positions.npy",
                 absorbate_positions
@@ -120,19 +120,19 @@ def record_absorbate(config):
                 absorbate_forces
             )
 
-            sio.savemat(
-                config.working_directory / 'adsorbate_trajectory.mat',
-                {
-                    'run_time': config.run_time,
-                    'dt': config.dt,
-                    'adsorbate_mass': config.absorbate_mass,
-                    'temp': config.temperature,
-                    'adsorbate_positions': absorbate_positions,
-                    'adsorbate_velocities': absorbate_velocities,
-                    'adsorbate_potentials': absorbate_potentials,
-                    'adsorbate_forces': absorbate_forces,
-                }
-            )
+            # sio.savemat(
+            #     config.working_directory / 'adsorbate_trajectory.mat',
+            #     {
+            #         'run_time': config.run_time,
+            #         'dt': config.dt,
+            #         'adsorbate_mass': config.absorbate_mass,
+            #         'temp': config.temperature,
+            #         'adsorbate_positions': absorbate_positions,
+            #         'adsorbate_velocities': absorbate_velocities,
+            #         'adsorbate_potentials': absorbate_potentials,
+            #         'adsorbate_forces': absorbate_forces,
+            #     }
+            # )
 
     return absorbate_positions, absorbate_velocities, absorbate_potentials, absorbate_forces, record
 
