@@ -18,14 +18,14 @@
 #! How many many cores will be allocated per task? (for single core jobs always leave this at 1)
 #SBATCH --cpus-per-task=1
 #! Estimated runtime: hh:mm:ss (job is force-stopped after if exceeded):
-#SBATCH --time=00:05:00
+#SBATCH --time=00:10:00
 #! Estimated maximum memory needed (job is force-stopped if exceeded):
 #! RAM is allocated in ~5980mb blocks, you are charged per block used,
 #! and unused fractions of blocks will not be usable by others.
 #SBATCH --mem=5980mb
 #! Submit a job array with index values between 0 and 31
 #! NOTE: This must be a range, not a single number (i.e. specifying '32' here would only run one job, with index 32)
-#SBATCH --array=0-4
+#SBATCH --array=0-1000
 
 #! This is the partition name.
 #SBATCH -p skylake
@@ -41,7 +41,9 @@
 . /etc/profile.d/modules.sh                # This line enables the module command
 module purge                               # Removes all modules still loaded
 module load rhel7/default-peta4            # REQUIRED - loads the basic environment
-l
+module load python/3.8
+source $HOME/venvs/gle_power_spectrum/bin/activate
+export PYTHONPATH="${PYTHONPATH}:${HOME}/code/gle_research/simulations/"
 
 #! The variable $SLURM_ARRAY_TASK_ID contains the array index for each job.
 #! In this example, each job will be passed its index, so each output file will contain a different value
@@ -51,7 +53,7 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 
 #! export SLURM_ARRAY_TASK_ID=1
 
-mkdir -p $HOME/rds/hpc-work/gle/tau_scan/
-mkdir -p $HOME/rds/hpc-work/gle/tau_scan/$TEMP
-mkdir -p $HOME/rds/hpc-work/gle/tau_scan/$TEMP/$SLURM_ARRAY_TASK_ID
+mkdir -p $HOME/rds/hpc-work/results/tau_scan/
+mkdir -p $HOME/rds/hpc-work/results/tau_scan/$TEMP
+mkdir -p $HOME/rds/hpc-work/results/tau_scan/$TEMP/$SLURM_ARRAY_TASK_ID
 python $HOME/code/gle_research/simulation_scripts/tau_scan/run_tau_scan.py $HOME/code/gle_research/simulation_scripts/tau_scan/tau_scan_template
