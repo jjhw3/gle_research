@@ -15,7 +15,7 @@ if __name__ == '__main__':
     print(sys.argv[1])
     config = MDConfig.load(working_dir)
 
-    delta_ks = [norm(np.array([1, 1, 0])) * 2.46, norm(np.array([1, 0, 0])) * 2.46]
+    delta_ks = [norm(np.array([1, 0, 0])) * 2.46, norm(np.array([1, 1, 0])) * 2.46]
 
     (
         absorbate_positions,

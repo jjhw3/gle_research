@@ -2,14 +2,14 @@
 #! This line is a comment
 #! Make sure you only have comments and #SBATCH directives between here and the end of the #SBATCH directives, or things will break
 #! Name of the job:
-#SBATCH -J calculate_md_isf
+#SBATCH -J eta_temp_scan
 #! Account name for group, use SL2 for paying queue:
 #SBATCH -A ellis-sl3-cpu
 #! Output filename:
 #! %A means slurm job ID and %a means array index
-#SBATCH --output="/home/jjhw3/logs/calculate_md_isf_%A_%a.out"
+#SBATCH --output="/home/jjhw3/logs/eta_temp_scan_%A_%a.out"
 #! Errors filename:
-#SBATCH --error="/home/jjhw3/logs/calculate_md_isf_%A_%a.err"
+#SBATCH --error="/home/jjhw3/logs/eta_temp_scan_%A_%a.err"
 
 #! Number of nodes to be allocated  for the job (for single core jobs always leave this at 1)
 #SBATCH --nodes=1
@@ -25,7 +25,7 @@
 #SBATCH --mem=5980mb
 #! Submit a job array with index values between 0 and 31
 #! NOTE: This must be a range, not a single number (i.e. specifying '32' here would only run one job, with index 32)
-#SBATCH --array=0-100
+#SBATCH --array=1-40
 
 #! This is the partition name.
 #SBATCH -p skylake
@@ -42,7 +42,7 @@
 module purge                               # Removes all modules still loaded
 module load rhel7/default-peta4            # REQUIRED - loads the basic environment
 module load python/3.8
-source $HOME/venvs/md_venv/bin/activate
+source $HOME/venvs/gle_venv/bin/activate
 export PYTHONPATH="${PYTHONPATH}:${HOME}/code/gle_research/simulations/"
 
 #! The variable $SLURM_ARRAY_TASK_ID contains the array index for each job.
@@ -53,19 +53,17 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 
 #! export SLURM_ARRAY_TASK_ID=1
 
-export BASE_DIR=$HOME/rds/hpc-work/md/calculate_md_isf
-mkdir -p $BASE_DIR
-mkdir -p $BASE_DIR/$SIZE
-mkdir -p $BASE_DIR/$SIZE/$TEMPERATURE
-export WORK_DIR=$BASE_DIR/$SIZE/$TEMPERATURE/$SLURM_ARRAY_TASK_ID
-export CONFIG_FILE=$WORK_DIR/config.yml
+export ETA=$(echo $SLURM_ARRAY_TASK_ID | awk '{print 0.4 + 0.01 * $1}')
+export base_dir=$HOME/rds/hpc-work/gle/eta_temp_scan/
+export temp_dir=$HOME/rds/hpc-work/gle/eta_temp_scan/$TEMPERATURE
+export working_dir=$HOME/rds/hpc-work/gle/eta_temp_scan/$TEMPERATURE/$ETA
 
-rm -r $WORK_DIR
-cp -R $HOME/code/gle_research/simulation_scripts/calculate_md_isf/calculate_md_isf_template $WORK_DIR
+mkdir -p $base_dir
+mkdir -p $temp_dir
 
-sed -i "s/TEMPERATURE/${TEMPERATURE}/g" "$CONFIG_FILE"
-sed -i "s/SIZE/${SIZE}/g" "$CONFIG_FILE"
-sed -i "s/MASS/${MASS}/g" "$CONFIG_FILE"
-python $HOME/code/gle_research/simulation_scripts/calculate_md_isf/run_calculate_md_isf.py $WORK_DIR
+rm -r $working_dir
+cp -R $HOME/code/gle_research/simulation_scripts/eta_temp_scan/eta_temp_scan_template $working_dir
+sed -i "s/TEMPERATURE/${TEMPERATURE}/g" "$working_dir/config.yml"
+sed -i "s/ETA/${ETA}/g" "$working_dir/config.yml"
 
-python $HOME/code/gle_research/simulation_scripts/calculate_md_isf/calculate_alpha_dk.py $WORK_DIR
+python $HOME/code/gle_research/simulation_scripts/eta_temp_scan/run_eta_temp_scan.py $working_dir

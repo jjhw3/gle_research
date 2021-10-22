@@ -7,6 +7,10 @@ from common.lattice_tools.common import mag
 from common.lattice_tools.plot_tools import cla
 
 
+class FitFailedException(Exception):
+    pass
+
+
 def fast_auto_correlate(arr):
     return fast_correlate(arr, arr)
 
@@ -80,9 +84,10 @@ def stable_fit_alpha(
     baseline = np.mean(isf[(times > 500) & (times < 1000)])
     if abs(baseline) < 1e-1:
         isf -= baseline
+    isf = np.abs(isf)
 
     if t_final is None:
-        min_value = np.std(isf[(times > 500) & (times < 1000)]) * 5
+        min_value = 0.1 # np.std(isf[(times > 500) & (times < 1000)]) * 15
         # min_value = 0.05
         t_final = np.max(times[(isf > min_value) & (times < 300)])
         # t_final = 100
@@ -103,17 +108,26 @@ def stable_fit_alpha(
         if prev_alpha is not None:
             if np.abs(alpha / prev_alpha - 1) < tol:
                 if plot_dir is not None:
+                    log_dir = plot_dir / 'log'
+                    if not plot_dir.exists():
+                        plot_dir.mkdir()
+                    if not log_dir.exists():
+                        log_dir.mkdir()
+
                     plot_mask = times < 2.0 * t_final
                     plt.plot(times[plot_mask], isf[plot_mask])
                     plt.plot(times[fit_mask], np.exp(- alpha * times[fit_mask] + p0[1]))
                     plt.savefig(plot_dir / f'{mag(delta_K):.2}.png')
                     plt.yscale('log')
-                    plt.savefig(plot_dir / f'log/{mag(delta_K):.2}.png')
-                    plt.show()
+                    plt.savefig(log_dir / f'{mag(delta_K):.2}.png')
+                    # plt.show()
                     cla()
 
                 return alpha
 
+        if np.isnan(alpha):
+            return np.nan
+
         prev_alpha = alpha
         t_0 += step
-    raise Exception('Unable to fit alpha')
+    raise FitFailedException('Unable to fit alpha')
