@@ -9,6 +9,8 @@ from common.tools import fast_calculate_isf
 run_dir = Path(sys.argv[1])
 dk_unit = norm(np.array([1, 0, 0]))
 
+times = np.arange(1000000) * 0.01
+
 dk_mags = np.linspace(0, 2.46, 50)
 positions = np.load(run_dir / 'absorbate_positions.npy')
 
@@ -23,4 +25,4 @@ for dk_mag in dk_mags:
     print(dk_mag)
     dk = dk_mag * dk_unit
     isf = fast_calculate_isf(positions, dk)
-    np.save(delta_k_dir / f"{dk_mag}.npy", isf)
+    np.save(delta_k_dir / f"{dk_mag}.npy", isf[times < 5000])

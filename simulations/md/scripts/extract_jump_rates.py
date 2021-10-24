@@ -25,7 +25,7 @@ def get_jump_rates(base_dir):
 if __name__ == '__main__':
     for size in [8, 16, 32]:
         temps, jump_rates = get_jump_rates(Path(f'/Users/jeremywilkinson/research_data/md_data/{size}_combined_isfs'))
-        plt.plot(temps, 1 / np.log(jump_rates), label=size)
+        plt.plot(temps, jump_rates, label=size)
 
     plt.legend()
     plt.show()

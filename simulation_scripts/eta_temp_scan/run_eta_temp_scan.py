@@ -10,6 +10,7 @@ from common.tools import fast_calculate_isf, stable_fit_alpha, FitFailedExceptio
 from gle.configuration import ComplexTauGLEConfig
 from gle.run_le import run_gle_batched, run_gle
 
+
 if __name__ == '__main__':
     working_dir = Path(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
