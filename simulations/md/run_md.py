@@ -14,7 +14,7 @@ if __name__ == '__main__':
     print(sys.argv[1])
     config = MDConfig.load(working_dir)
 
-    absorbate_positions, absorbate_velocities, absorbate_potentials, absorbate_forces, absorbate_recorder = record_absorbate(config)
+    absorbate_positions, absorbate_velocities, absorbate_potentials, absorbate_forces, absorbate_recorder = record_absorbate(config, auto_save=True)
     substrate_positions, substrate_recorder = record_last_N_substrate_positions(config, -1)
 
     # substrate_displacements, substrate_velocities, absorbate_position, absorbate_velocity = simulate(

@@ -8,7 +8,7 @@ from common.tools import stable_fit_alpha
 
 
 def get_alpha_dk(working_dir):
-    times = np.arange(1000000) * 0.01
+    times = np.arange(500000) * 0.01
     dk_alphas = []
 
     for fil in working_dir.glob('*.npy'):
@@ -45,7 +45,7 @@ def get_alpha_dk(working_dir):
 
 if __name__ == '__main__':
     for temp in [140, 160, 180, 200, 225, 250, 275, 300]:
-        working_dir = Path('/Users/jeremywilkinson/research_data/md_data/32_combined_isfs') / f'{temp}' / '1.00_0.00_0.00'
+        working_dir = Path('/Users/jeremywilkinson/research_data/md_data/16_combined_isfs') / f'{temp}' / '1.00_0.00_0.00'
         dks, alphas = get_alpha_dk(working_dir)
         np.save(working_dir / 'alphas.npy', alphas)
         plt.plot(dks, alphas, label=f'{temp}')

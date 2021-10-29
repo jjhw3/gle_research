@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
-dir = Path('/home/jjhw3/rds/hpc-work/gle/eta_temp_scan')
+dir = Path('/Users/jeremywilkinson/research_data/gle_data/eta_temp_scan')
 dks = np.linspace(0, 2.46, 50)
 fit_mask = (dks > 1.23 - 0.5) & (dks < 1.23 + 0.5)
 fit_dks = dks[fit_mask]

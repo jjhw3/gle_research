@@ -9,15 +9,17 @@ from common.tools import fast_calculate_isf
 run_dir = Path(sys.argv[1])
 dk_unit = norm(np.array([1, 0, 0]))
 
-times = np.arange(1000000) * 0.01
-
 dk_mags = np.linspace(0, 2.46, 50)
 positions = np.load(run_dir / 'absorbate_positions.npy')
 
 isf_dir = run_dir / 'ISFs'
 delta_k_dir = isf_dir / '_'.join([f"{c:.2f}" for c in dk_unit])
+
+times = np.arange(0, 10000, 0.01)
+
 if not isf_dir.exists():
     isf_dir.mkdir()
+
 if not delta_k_dir.exists():
     delta_k_dir.mkdir()
 

@@ -65,7 +65,7 @@ cdef double mod(double a, double b):
 @cython.cdivision(True)
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :] potential_grid, double posx, double posy):
+cpdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :] potential_grid, double posx, double posy):
     cdef int grid_x_size = potential_grid.shape[0]
     cdef int grid_y_size = potential_grid.shape[1]
     cdef double first_cell_lattice_x = lattice_coords_cob[0, 0] * posx + lattice_coords_cob[0, 1] * posy

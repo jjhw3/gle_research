@@ -3,7 +3,9 @@ import gc
 import numpy as np
 import yaml
 
+from common.lattice_tools.common import norm, mag
 from common.thermodynamics import sample_temperature
+from common.tools import fast_calculate_isf
 from gle.initialization import initialize_position, initialize_friction, initialize_velocities
 from gle.result_checks import plot_maxwell_boltzmann_distributions, plot_power_spectrum, plot_path_on_crystal
 
@@ -132,6 +134,17 @@ class GLEResult:
         summary_file = open(self.config.summary_dir / 'run_summary.yml', 'w')
         yaml.dump(summary, summary_file)
         summary_file.close()
+
+    def calculate_isf(self, delta_k, save=False, slice=1):
+        isf = fast_calculate_isf(self.positions[:, ::slice], delta_k)
+
+        if save:
+            dk_string = '_'.join([f"{c:.2f}" for c in norm(delta_k)])
+            dk_dir = self.config.isf_directory / dk_string
+            if not dk_dir.exists():
+                dk_dir.mkdir()
+            np.save(dk_dir / f"{mag(delta_k)}.npy", isf)
+        return isf
 
 
 class ComplexGLEResult(GLEResult):

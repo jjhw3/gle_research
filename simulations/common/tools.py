@@ -81,15 +81,20 @@ def stable_fit_alpha(
 ):
     prev_alpha = None
 
-    baseline = np.mean(isf[(times > 500) & (times < 1000)])
-    if abs(baseline) < 1e-1:
+    baseline = np.mean(isf[(times > 1000) & (times < 2000)])
+    if abs(baseline) > 1e-1:
         isf -= baseline
     isf = np.abs(isf)
+    isf /= isf[0]
+
+    if t_0 is None:
+        max_value = 0.9
+        t_0 = times[np.where(isf < max_value)[0][0]]
 
     if t_final is None:
         min_value = 0.1 # np.std(isf[(times > 500) & (times < 1000)]) * 15
         # min_value = 0.05
-        t_final = np.max(times[(isf > min_value) & (times < 300)])
+        t_final = times[np.where(isf < min_value)[0][0]]
         # t_final = 100
 
     while t_0 < t_final:
