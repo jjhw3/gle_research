@@ -1,0 +1,92 @@
+\documentclass[notitlepage]{report}
+
+\usepackage{titling}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{amssymb}
+\usepackage{breqn}
+\usepackage[a4paper, total={6in, 9in}]{geometry}
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+\newcommand{\angstrom}{\text{\normalfont\AA}}
+\usepackage{natbib}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\graphicspath{ {./images/} }
+
+\title{Numerical Simulations and Analytical Results Exploring the use of the Generalized Langevin Equation for Simulations of Atomic Scale Surface Dynamics}
+\author{Blind Grading Number: 4631L \\[0.3cm]{Supervised by Dr. John Ellis}}
+\date{17th of May 2021}
+
+\newcommand{\mev}{\si{\milli\eV}}
+\newcommand{\thz}{\si{\tera\hertz}}
+\newcommand{\ns}{\si{\nano\second}}
+\newcommand{\ps}{\si{\pico\second}}
+\newcommand{\ips}{\si{\per\pico\second}}
+\newcommand{\fs}{\si{\femto\second}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\expnumber}[2]{{#1}\mathrm{e}{#2}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+
+	Langevin equations are widely used as a computationally cheap model of a subset of the degrees of freedom in a complex system. The white noise present in the original Langevin equation, while often a good approximation, does not capture the colored noise in most real systems. This necessitates the introduction of the generalized Langevin equation (GLE). Recent results in the field of surface dynamics \cite{Ward} have used the GLE to explain experimental data for the activated diffusion of lithium on copper(111) by introducing band-limited noise. However, the noise spectrum required was band-limited to around $\SI{1.25}{\thz}$, much lower than the $\SI{7.4}{\thz}$ \cite{sinha} which the phonon cutoff frequency of copper would suggest. The following report presents a careful evaluation of the performance of the GLE in the presence of a corrugated background potential through analytic analysis and numerical comparison with full 3D molecular dynamics (MD) simulations. The analytic work provides an interpretation of the parameters in the GLE in the wide bandwidth regime and proposes a simple technique for the extraction of parameters from experimental/MD results. A semi-realistic classical MD simulation of lithium on copper(111) is constructed with the correct copper phonon spectrum. The GLE with a frequency cutoff of $\SI{7.4}{\thz}$ is shown to reproduce the simulated MD results extremely well leading to the proposal that an additional, unknown, noise filter is present in lithium on copper(111) which reduces the effective bandwidth seen by the lithium. Since lithium is an extremely light atom with a thermal de Broglie wavelength on the order of $\SI{0.5}{\angstrom}$ at $\SI{140}{\kelvin}$, this filter may be quantum mechanical in nature.  
+
+\end{abstract}
+
+
+\vspace{1cm}
+\begin{center}
+\includegraphics[width=0.80\textwidth]{md_top_down}
+\end{center}
+
+\pagebreak
+
+\section*{Acknowledgments}
+
+I would like to thank my supervisor, Dr. John Ellis, for the time, effort and enthusiasm he has invested in this project.
+I would like to thank the Skye Foundation, Oppenheimer Memorial Trust and Cambridge Trust for providing the financial means for me to pursue the degree for which this report was submitted.
+
+\addvspace{2cm}
+
+\section*{Statement of Authenticity}
+
+Except where specific reference is made to the work of others, this work is original and has not been already submitted either wholly or in part to satisfy any degree requirement at this or any other university.
+
+\addvspace{2cm}
+
+\section*{List of Acronyms}
+
+\begin{itemize}
+  \item GLE - Generalized Langevin equation
+  \item MD - Molecular dynamics simulation
+  \item HSEM - Helium spin echo microscopy
+  \item ISF - Intermediate scattering function
+  \item fcc - Face centered cubic crystal
+  \item dof - Degrees of freedom
+\end{itemize}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\include{introduction}
+\include{analytic_gle}
+\include{simulation_setup}
+\include{results}
+\include{conclusion}
+\include{harmonic_gle_proof}
+
+\bibliographystyle{abbrv}
+\bibliography{bibliography}
+
+\end{document}

@@ -3,6 +3,7 @@ from pathlib import Path
 
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.polynomial import Polynomial
 from scipy.optimize import fsolve
 
 
@@ -48,6 +49,7 @@ def divide_out_root(poly, root_i):
         return np.polynomial.Polynomial([poly.trim().coef[-1]])
     return poly.coef[-1] * np.polynomial.Polynomial(new_roots)
 
+
 def calculate_theoretical_msd(config):
     times = config.times
 
@@ -78,6 +80,19 @@ def calculate_theoretical_msd(config):
     msd *= - 2 * config.noise_stddev**2 / config.absorbate_mass**2
 
     return msd
+
+
+def get_harmonic_gle_poles(w0, eta, tau):
+    denominator = Polynomial([w0**2, 1j*(tau * w0**2 + eta), -1, -1j*tau])
+    return denominator.roots()
+
+
+def get_greens_function_parameters(w0, eta, tau):
+    roots = get_harmonic_gle_poles(w0, eta, tau)
+    chi1 = np.abs(roots[0].real)
+    chi2 = roots[0].imag
+    eta1 = roots[1].imag
+    return chi1, chi2, eta1
 
 
 if __name__ == '__main__':

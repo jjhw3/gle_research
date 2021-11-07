@@ -36,20 +36,30 @@ for size in sizes:
         fit_etas[i] = (size_jump_rates[size][i] - c) / m
 
     size_fit_etas[size] = fit_etas
-    plt.plot(fit_etas, size_jump_rates[size], 'o-', color='black', label=f'size {size}^3')
+    plt.plot(fit_etas, size_jump_rates[size], 'o-', color='black', label=rf'${size}^3$')
 
 labelLines(plt.gca().get_lines(), zorder=2.5)
 plt.xlabel('eta (THz)')
-plt.ylabel('jump rate (THz)')
+plt.ylabel(r'Peak long-time ISF decay rate $\Gamma_{MAX}$ (THz)')
+plt.subplots_adjust(left=0.1, bottom=0.13, right=0.99, top=0.986, wspace=0.105)
+plt.gcf().set_size_inches(8, 3.5)
+plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/md_vs_gle_gamma.eps', format='eps')
 plt.show()
 print()
 
-
 for size in sizes:
-    plt.scatter(temps, size_fit_etas[size], label=f'size {size}^3')
+    plt.scatter(temps, size_fit_etas[size], label=f'Simulation size ${size}^3$')
     m, c = np.polyfit(temps, size_fit_etas[size], 1)
     plt.plot(temps, m * temps + c)
     print(size, m)
 
+plt.gcf().set_size_inches(8, 3.5)
+plt.xlabel('Simulation temperature (K)')
+plt.ylabel(r'Best fit $\eta$ (ps$^{-1}$)')
 plt.legend()
+plt.subplots_adjust(left=0.083, bottom=0.13, right=0.99, top=0.986, wspace=0.105)
+plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/md_temp_vs_eta.eps', format='eps')
 plt.show()
+
+print((0.0009009179375361968) / 0.0010528952900089978)
+print((0.0007474621338983017) / 0.0009009179375361968)
