@@ -3,7 +3,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 
-def get_jump_rates(base_dir):
+def get_dephasing_rates(base_dir):
     dks = np.linspace(0, 2.46, 50)
     fit_mask = (dks > 1.23 - 0.5) & (dks < 1.23 + 0.5)
     fit_dks = dks[fit_mask]
@@ -16,7 +16,7 @@ def get_jump_rates(base_dir):
         poly = np.polyfit(fit_dks, alphas[fit_mask], 2)
         # plt.plot(dks, alphas)
         # plt.plot(fit_dks, np.polyval(poly, fit_dks))
-        jump_rates[i] = np.max(np.polyval(poly, fit_dks)) / 4
+        jump_rates[i] = np.max(np.polyval(poly, fit_dks))
     # plt.show()
 
     return temps, jump_rates
@@ -24,7 +24,7 @@ def get_jump_rates(base_dir):
 
 if __name__ == '__main__':
     for size in [8, 16, 32]:
-        temps, jump_rates = get_jump_rates(Path(f'/Users/jeremywilkinson/research_data/md_data/{size}_combined_isfs'))
+        temps, jump_rates = get_dephasing_rates(Path(f'/Users/jeremywilkinson/research_data/md_data/{size}_combined_isfs'))
         plt.plot(temps, jump_rates, label=size)
 
     plt.legend()

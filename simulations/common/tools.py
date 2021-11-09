@@ -94,7 +94,15 @@ def stable_fit_alpha(
     if t_final is None:
         min_value = 0.1 # np.std(isf[(times > 500) & (times < 1000)]) * 15
         # min_value = 0.05
-        t_final = times[np.where(isf < min_value)[0][0]]
+
+        if len(np.where(isf < min_value)) == 0:
+            raise FitFailedException('Unable to fit alpha')
+
+        try:
+            t_final = times[np.where(isf < min_value)[0][0]]
+        except Exception as e:
+            print(e)
+            raise FitFailedException(str(e))
         # t_final = 100
 
     while t_0 < t_final:

@@ -1,0 +1,72 @@
+#!/bin/bash
+#! This line is a comment
+#! Make sure you only have comments and #SBATCH directives between here and the end of the #SBATCH directives, or things will break
+#! Name of the job:
+#SBATCH -J const_ttf
+#! Account name for group, use SL2 for paying queue:
+#SBATCH -A ellis-sl3-cpu
+#! Output filename:
+#! %A means slurm job ID and %a means array index
+#SBATCH --output="/home/jjhw3/logs/const_ttf_%A_%a.out"
+#! Errors filename:
+#SBATCH --error="/home/jjhw3/logs/const_ttf_%A_%a.err"
+
+#! Number of nodes to be allocated  for the job (for single core jobs always leave this at 1)
+#SBATCH --nodes=1
+#! Number of tasks. By default SLURM assumes 1 task per node and 1 CPU per task. (for single core jobs always leave this at 1)
+#SBATCH --ntasks=1
+#! How many many cores will be allocated per task? (for single core jobs always leave this at 1)
+#SBATCH --cpus-per-task=1
+#! Estimated runtime: hh:mm:ss (job is force-stopped after if exceeded):
+#SBATCH --time=12:00:00
+#! Estimated maximum memory needed (job is force-stopped if exceeded):
+#! RAM is allocated in ~5980mb blocks, you are charged per block used,
+#! and unused fractions of blocks will not be usable by others.
+#SBATCH --mem=5980mb
+#! Submit a job array with index values between 0 and 31
+#! NOTE: This must be a range, not a single number (i.e. specifying '32' here would only run one job, with index 32)
+#SBATCH --array=0-7
+
+#! This is the partition name.
+#SBATCH -p skylake
+
+#! mail alert at start, end and abortion of execution
+#! emails will default to going to your email address
+#! you can specify a different email address manually if needed.
+#SBATCH --mail-type=ALL
+
+#! Don't put any #SBATCH directives below this line
+
+#! Modify the environment seen by the application. For this example we need the default modules.
+. /etc/profile.d/modules.sh                # This line enables the module command
+module purge                               # Removes all modules still loaded
+module load rhel7/default-peta4            # REQUIRED - loads the basic environment
+module load python/3.8
+source $HOME/venvs/gle_venv/bin/activate
+export PYTHONPATH="${PYTHONPATH}:${HOME}/code/gle_research/simulations/"
+
+#! The variable $SLURM_ARRAY_TASK_ID contains the array index for each job.
+#! In this example, each job will be passed its index, so each output file will contain a different value
+echo "This is job" $SLURM_ARRAY_TASK_ID
+
+#! Command line that we want to run:
+
+#! export SLURM_ARRAY_TASK_ID=1
+
+ETAs=(0.4000 0.4500 0.5000 0.5500 0.6000 0.6500 0.7000 0.7500)
+TAUs=(0.0862 0.1065 0.1236 0.1384 0.1514 0.1640 0.1759 0.1867)
+
+ETA=${ETAs[SLURM_ARRAY_TASK_ID]}
+TAU=${TAUs[SLURM_ARRAY_TASK_ID]}
+
+export base_dir=$HOME/rds/hpc-work/gle/const_ttf/
+export working_dir=$base_dir/$SLURM_ARRAY_TASK_ID
+
+mkdir -p $base_dir
+
+rm -r $working_dir
+cp -R $HOME/code/gle_research/simulation_scripts/const_ttf/const_ttf_template $working_dir
+sed -i "s/ETA/${ETA}/g" "$working_dir/config.yml"
+sed -i "s/TAU/${TAU}/g" "$working_dir/config.yml"
+
+python $HOME/code/gle_research/simulation_scripts/const_ttf/run_const_ttf.py $working_dir

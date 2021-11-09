@@ -7,8 +7,8 @@ from gle.theoretics import get_greens_function_parameters, get_harmonic_gle_pole
 etas = np.arange(0.4, 0.8, 0.01)
 taus = np.arange(0.0, 0.4, 0.01)
 
-eta_tau_gamma_grid = np.load('/Users/jeremywilkinson/research_data/gle_data/eta_tau_gamma_grid_160.npy')
-eta_tau_ttf_grid = np.load('/Users/jeremywilkinson/research_data/gle_data/eta_tau_ttf_grid_160.npy')
+eta_tau_gamma_grid = np.load('/Users/jeremywilkinson/research_data/gle_data/eta_tau_gamma_grid_300.npy')
+eta_tau_ttf_grid = np.load('/Users/jeremywilkinson/research_data/gle_data/eta_tau_ttf_grid_300.npy')
 
 ETAs, TAUs = np.meshgrid(etas, taus, indexing='ij')
 

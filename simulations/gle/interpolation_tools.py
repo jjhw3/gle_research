@@ -59,6 +59,7 @@ def interpolate(spline_coefficient_matrix_grid, posx, posy):
 
     return interp_value
 
+
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
     from cle import eval_pot_grid_spline
