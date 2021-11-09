@@ -1,13 +1,13 @@
 import cle
+import matplotlib.pyplot as plt
 import numpy as np
 import yaml
+from cle import eval_pot_grid
 
 from common.constants import boltzmann_constant
-from common.lattice_tools import fcc
 from common.lattice_tools.common import change_basis, get_basis_rotation_matrix, rotate_basis, get_in_plane_basis
+from gle.interpolation_tools import get_coefficient_matrix_grid
 from gle.results import ComplexGLEResult, GLEResult
-from gle.theoretics import calculate_kernel_temperature_normalization
-import matplotlib.pyplot as plt
 
 
 class GLEConfig:
@@ -93,6 +93,10 @@ class GLEConfig:
     def centre_top_point(self):
         return self.in_plane_basis.sum(axis=1) / 2
 
+    @property
+    def interpolation_coefficients(self):
+        return get_coefficient_matrix_grid(self.potential_grid)
+
     def to_dict(self):
         return {
             'run_time': self.run_time,
@@ -140,6 +144,20 @@ class GLEConfig:
         plt.scatter(*self.in_plane_basis)
         plt.arrow(0, 0, *self.in_plane_basis[:, 0], length_includes_head=True, width=0.02, color='black')
         plt.arrow(0, 0, *self.in_plane_basis[:, 1], length_includes_head=True, width=0.02, color='black')
+
+    def evaluate_potentials(self, positions):
+        potentials = np.zeros(positions.shape[1])
+        interpolation_coefficients = self.interpolation_coefficients
+
+        for i in range(potentials.shape[0]):
+            potentials[i] = eval_pot_grid(
+                self.inv_in_plane_basis,
+                interpolation_coefficients,
+                positions[0, i],
+                positions[1, i],
+            )
+
+        return potentials
 
 
 class TauGLEConfig(GLEConfig):

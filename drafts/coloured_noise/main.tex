@@ -53,7 +53,7 @@ The Markovian Langevin equation describes the time evolution of a degree of free
 	m\ddot{x}(t)=-m\eta\dot{x}(t) - \nabla U(x(t)) + f(t) \text{ where } \left<f(t_1)f(t_2)\right>=2k_BTm\eta\delta(t_1 - t_2).
 \end{equation}
 \\
-The statistical physics of Equation \ref{eq:markovian_le} is well understood and can be shown to satisfy equilibrium boltzmann statistics, $\rho(x, p)=\frac{1}{Z}\exp(-\beta H(x, p))=\frac{1}{Z}\exp(-\beta(p^2/2m + U(x)))$, exactly for an arbitrary background potential $U(x)$ provided $f$ follows a gaussian distribution.
+The statistical physics of Equation \ref{eq:markovian_le} is well understood and can be shown to satisfy equilibrium boltzmann statistics, $\rho(x, p)=\frac{1}{Z}\exp(-\beta H(x, p))=\frac{1}{Z}\exp(-\beta(p^2/2m + U(x)))$, exactly for an arbitrary background potential $U(x)$ provided $f$ is a gaussian random variable.
 
 \section{The non-Markovian Langevin equation}
 
@@ -63,22 +63,53 @@ However once a background potential is added to the non-Markovian Langevin equat
 \\
 \begin{equation}
 	\label{eq:gle}
-	m\ddot{x}(t)=-m\eta\dot{x} \star K - \nabla U(x) + f \star K.
+	m\ddot{x}(t)=-m\eta\dot{x} \star K - \nabla U(x) + f \star K,
 \end{equation}
 \\
 analytical results become sparse and the assumption that the fluctuation dissipation condition is sufficient to ensure equipartition of energy is no longer true. Fortunately it is often a reasonable assumption to make in practice although it is not difficult to construct situations that demonstrate its failure.
 
 \subsection{The exponential memory kernel}
 
-While the form of $K$ is left unconstrained, an exponential memory kernel of the form\footnote{$\theta(t)$ is used here to denote the Heaviside step function.} $K(t)=\theta(t)\exp(-\frac{t}{\tau})$, parametrized by the correlation time $\tau$, has the advantage of being extremely computationally efficient as one can perform convolutions in linear time. In pracice, one can implement such a convolution in a simulation using a timestep of $\Delta{t}$ using
+While the form of $K(t)$ is left unconstrained, an exponential memory kernel of the form $K(t)=\theta(t)\frac{1}{\tau}\exp\left(-\frac{t}{\tau}\right)$\footnote{$\theta(t)$ is used here to denote the Heaviside step function.}, parametrized by the correlation time $\tau$, has the advantage of being extremely computationally efficient as one can perform convolutions in linear time. In practice, one can implement such a convolution in a simulation with a timestep of $\Delta{t}$ using
 \\
 $$
 \int_0^{n\Delta{t}} dt' K\left(t-t'\right) \vec{f}(t') \approx \alpha \int_0^{(n-1)\Delta{t}} dt' K\left(t-t'\right) \vec{f}(t') + \frac{1}{1-\alpha} \vec{f}\left(t_n\right)
 $$
 \\
-where $\alpha=\exp(-\frac{\Delta{t}}{\tau})$. The normalisation $\frac{1}{1-\alpha}$ ensures that the total impulse imparted by an impulse force remains unchanged by the discretization process.
+where the decay factor $\alpha$ is given by $\alpha=\exp(-\frac{\Delta{t}}{\tau})$. The normalisation $\frac{1}{1-\alpha}$ ensures that the total impulse imparted by a force remains unchanged by the discretization process. The power spectrum of $K(t)$ is given by $\left|\tilde{K}(\omega)\right|^2 = \frac{1}{1+\omega^2\tau^2}$ with bandwidth given by the half-width at half-maximum, $w_c=\frac{1}{\tau}$.
 
-The power spectrum of $K(t)$ is given by $\left|\tilde{K}(\omega)\right|^2 = \frac{1}{1+\omega^2\tau^2}$ with bandwidth given by the half-width at half-maximum, $w_c=\frac{1}{\tau}$.
+While exponential memory kernels are a common choice in the literature, a potentially useful modification which as far as I am aware has not been used before is the exponentially dampened sinusoid, $K(t)=\frac{1+\tau^2\omega_1^2}{\tau}\cos(\omega_1t)\exp\left(-\frac{t}{\tau}\right)$. Such a kernel may be efficiently calculated through a complex decay factor, $\alpha=\exp\left(-\frac{\Delta{t}}{\tau} + i\omega_1\Delta{t}\right)$ and taking the real component of the cumulative force at each timestep. 
+
+The power spectrum of the exponential and dampened sinusoidal kernels are shown in Figure \ref{fig:kernel_spectra}. Together, these functions provide a toolkit for a wide range of kernel spectra, since the exponential kernel may be used as both a high-pass and low-pass filter and the dampened-sinusoid may be used to add or subtract out specific section of the noise spectrum. However when using these exotic kernels in a background potential, one very quickly enters a regime in which the fluctuation-dissipation theorem no longer gaurentees equipartition. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\textwidth]{kernel_spectra}
+	\caption{The power spectrum of the exponential and exponentially dampened sinusoidal kernel. The exponential kernel is centered around $0$ with a half-width at half-maximum of $\tau^{-1}$. The exponentially dampened sinusoidal kernel is centered at $\omega_{\text{max}} \approx \omega_1$ with a half-width at half-maximum of $\tau_{\text{eff}}^{-1}\approx\tau^{-1}$.} 
+	\label{fig:kernel_spectra}
+\end{figure}
+
+
+\section{Models for activated diffusion in the low-friction regime}
+
+Models for the escape of a particle over a potential barrier, known as the Kramers problem, have been studied for many decades. Many such models are built within the framework of the Markovian Langevin equation in the presence of a background potential. The background potential is assumed to contain an approximately harmonic potential trap of barrier height $E_a$ which the particle is able to escape to a region from which the particle never returns, as in Figure \ref{fig:kramers_potential}. 
+
+The qualative behaviour of the particle's dynamics varies significantly across parameter ranges. For the purposes of this paper, we restrict the discussion to the low friction regime, that is to say, diffusion in a system for which $\frac{\eta}{\omega_0} << 1$ where $\omega_0$ is the natural angular frequency of the trapping well. The defining feature of this regime is that the particle changes its total energy very slowly and so the particle is able to oscillate many times without its total energy changing significantly. Furthermore if the particle does find itself at the top of the potential well, the likelihood of the particle diffusing around the potential maximum, changing directions repeatedly and making so called `multiple crossings' of the barrier, is small. Using these assumptions, one may derive expressions for the escape rate of a particle over the barrier of an Ahrennius form, 
+\\
+$$\gamma = A \eta \exp\left(-\beta E_a \right).$$ 
+\\
+The factor $\eta A$ is reffered to as the pre-exponential factor of the hopping rate and while in principal $A$ is temperature dependent, in practice, $A$ is often treated as temperature independent as most of the temperature dependence is found in exponential factor (really?). The key theoretical result for our purposes is that the pre-exponential factor is found to be proportional to the friction constant $\eta$ for low-friction systems.
+
+While not a rigorous exercise, it is helpful to loosely interpret the features in the Ahrennius equation. We consider a statistical model for escape over the barrier in which the particle is consistently, but slowly, changing its energy with a typical energy correlation time reffered to as the \emph{time to forget}, $\phi$. In the Markovian Langevin equation $\phi$ is equal to $\eta^{-1}$ as the energy auto-correlation function $\left<E(0)E(t)\right>$ decays exponentially with a decay rate given by $\eta$.  The number of independent energy levels which the particle achieves per unit time is given by $\phi^{-1}$ and each time the particle achieves an energy level greater than the barrier height, we assume the particle has some probability of escaping the well before its energy changes to some new independent value. In a one dimensionsal system, this probability is close to unity, however things are more complicated for higher dimensional systems in which the activation site isn't rotationally symmetric and the particle can explore the well at energies higher than the activation energy without actually finding the bridge point. We further assume that the probability of escape given sufficient energy is insensitive to small variations in $\phi$. Within this statistical framework, the Ahrennius equation can be loosely interpreted as the product of the rate at which the particle changes its energy, $\phi^{-1}$, the probability that the particle changes its energy to a value greater than the barrier energy, $\exp(-\beta E_a)$, and the probability of escape given an energy level greater then $E_a$, $A$. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{kramers_potential}
+	\caption{}
+	\label{fig:kramers_potential}
+\end{figure}
+
+\section{Basic definitions and methods for spectra interpretation}
 
 \section{Hopping rates and the effect of high frequency phonons}
 
@@ -90,7 +121,7 @@ $$
 x(t) = \frac{1}{m} \int_{-\infty}^t \diff{t'} f(t') F(t-t') \longrightarrow \tilde{x}(\omega) = \frac{1}{m} \tilde{f} \tilde{F}.
 $$ 
 
-In this case the removal of high frequency noise components in $\tilde{f}$ simply amounts to the removal of these same noise components from the trajectory of the particle. From this analysis it may be expected that high frequency noise components only affect the short time-scale motion of the particle but leave the macroscopic trajectory unchanged, as demonstrated in Figure \ref{fig:noise_trajectories}. However in the presence of an anharmonic curved background potential, the Langevin equation ceases to be linear in $x$ and the compounding of small differences between trajectories causes macroscopic divergence between trajectories which otherwise only differ in high frequency noise components. While this does not immediately imply that statistical properties taken over an ensemble of trajectories will be affected, one cannot assume that long-time scale observables are unaffected by high frequency noise in the non-linear case.
+In this case the removal of high frequency noise components in $\tilde{f}$ simply amounts to the removal of these same noise components from the trajectory of the particle. From this analysis it may be expected that high frequency noise components only affect the short time-scale motion of the particle but leave the macroscopic trajectory unchanged, as demonstrated in Figure \ref{fig:noise_trajectories}. However in the presence of an anharmonic background potential, the Langevin equation ceases to be linear in $x$ and the compounding of small differences between trajectories causes macroscopic divergence between trajectories which otherwise only differ in high frequency noise components. While this does not immediately imply that statistical properties taken over an ensemble of trajectories will be affected, one cannot assume that long-time scale observables are unaffected by high frequency noise in the non-linear case.
 
 \begin{figure}
 	\centering

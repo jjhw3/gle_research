@@ -2,7 +2,7 @@ import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 
-from gle.theoretics import get_greens_function_parameters
+from gle.theoretics import get_greens_function_parameters, get_harmonic_gle_poles
 
 etas = np.arange(0.4, 0.8, 0.01)
 taus = np.arange(0.0, 0.4, 0.01)
@@ -26,10 +26,14 @@ ETAs, TAUs = np.meshgrid(etas, taus, indexing='ij')
 # plt.show()
 
 
+# roots = get_harmonic_gle_poles(w0, eta, tau)
+
+
 theoretical_ttf = np.zeros_like(TAUs)
 for i in range(ETAs.shape[0]):
     for j in range(ETAs.shape[1]):
-        chi1, chi2, eta1 = get_greens_function_parameters(8.84, ETAs[i, j], TAUs[i, j])
+        roots = get_harmonic_gle_poles(8.85, ETAs[i, j], TAUs[i, j])
+        chi1, chi2, eta1 = get_greens_function_parameters(8.85, ETAs[i, j], TAUs[i, j])
         theoretical_ttf[i, j] = 2 * chi2
 
 x_contours = [2, 7, 12, 18, 23, 29, 36]
@@ -93,6 +97,17 @@ plt.gcf().set_size_inches(8, 3.5)
 
 plt.scatter(TAUs, theoretical_ttf / eta_tau_ttf_grid, s=2, label='Simulations Values', c=ETAs)
 # plt.plot([0, np.max(theoretical_ttf)], [0, np.max(theoretical_ttf)], label=r'$\phi^{-1} = \phi_0^{-1}$', c='red')
+plt.xlabel(r'Noise correlation time, $\tau$ (ps)')
+plt.ylabel('Ratio of theoretical to simulated total\nenergy decorrelation rates, $\\phi_0^{-1} / \\phi^{-1}$')
+plt.subplots_adjust(left=0.1, bottom=0.155, right=1.0, top=0.986, wspace=0.105)
+# plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/theoretical_ttf_comparison.eps', format='eps')
+plt.ylim(0, 1.1)
+plt.colorbar(label=r'Friction parameter $\eta$ (ps$^{-1}$)')
+plt.show()
+
+
+plt.scatter(ETAs, eta_tau_ttf_grid, s=2, label='Simulations Values', c=TAUs)
+plt.plot([0, np.max(ETAs)], [0, np.max(ETAs)], label=r'$\phi^{-1} = \phi_0^{-1}$', c='red')
 plt.xlabel(r'Noise correlation time, $\tau$ (ps)')
 plt.ylabel('Ratio of theoretical to simulated total\nenergy decorrelation rates, $\\phi_0^{-1} / \\phi^{-1}$')
 plt.subplots_adjust(left=0.1, bottom=0.155, right=1.0, top=0.986, wspace=0.105)

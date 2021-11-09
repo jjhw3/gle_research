@@ -10,6 +10,7 @@ import yaml
 from common.constants import boltzmann_constant
 from common.thermodynamics import sample_temperature
 from gle.configuration import ComplexTauGLEConfig
+from gle.interpolation_tools import get_coefficient_matrix_grid
 
 
 def run_gle(config, results=None):
@@ -26,7 +27,6 @@ def run_gle(config, results=None):
         results.velocities,
         results.friction_forces,
         results.noise_forces,
-        config.potential_grid,
     )
 
     results.end_time = time.time()

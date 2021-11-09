@@ -119,7 +119,7 @@ def stable_fit_alpha(
                     if not log_dir.exists():
                         log_dir.mkdir()
 
-                    plot_mask = times < 2.0 * t_final
+                    plot_mask = times < 4.0 * t_final
                     plt.plot(times[plot_mask], isf[plot_mask])
                     plt.plot(times[fit_mask], np.exp(- alpha * times[fit_mask] + p0[1]))
                     plt.savefig(plot_dir / f'{mag(delta_K):.2}.png')

@@ -65,9 +65,9 @@ cdef double mod(double a, double b):
 @cython.cdivision(True)
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cpdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :] potential_grid, double posx, double posy):
-    cdef int grid_x_size = potential_grid.shape[0]
-    cdef int grid_y_size = potential_grid.shape[1]
+cpdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :, :] spline_coefficient_matrix_grid, double posx, double posy):
+    cdef int grid_x_size = spline_coefficient_matrix_grid.shape[0]
+    cdef int grid_y_size = spline_coefficient_matrix_grid.shape[1]
     cdef double first_cell_lattice_x = lattice_coords_cob[0, 0] * posx + lattice_coords_cob[0, 1] * posy
     cdef double first_cell_lattice_y = lattice_coords_cob[1, 0] * posx + lattice_coords_cob[1, 1] * posy
 
@@ -75,19 +75,14 @@ cpdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :] potenti
     cdef double float_indy = mod(first_cell_lattice_y / (1.0 / grid_y_size), grid_y_size)
     cdef int indx = int(float_indx)
     cdef int indy = int(float_indy)
-    cdef int adjacent_indx = int(mod(indx + 1, grid_x_size))
-    cdef int adjacent_indy = int(mod(indy + 1, grid_y_size))
-    cdef double remx = float_indx - indx
-    cdef double remy = float_indy - indy
+    cdef double interp_value = 0
+    cdef int i, j
 
-    # print(first_cell_lattice_x, first_cell_lattice_y, float_indx, float_indy, indx, indy, adjacent_indx, adjacent_indy)
+    for i in range(4):
+        for j in range(4):
+            interp_value += spline_coefficient_matrix_grid[indx, indy, i + 4*j] * (float_indx - indx)**i * (float_indy - indy)**j
 
-    cdef double pot = potential_grid[indx, indy] * (1 - remx) * (1 - remy)
-    pot += potential_grid[adjacent_indx, indy] * (remx) * (1 - remy)
-    pot += potential_grid[indx, adjacent_indy] * (1 - remx) * (remy)
-    pot += potential_grid[adjacent_indx, adjacent_indy] * (remx) * (remy)
-
-    return pot
+    return interp_value
 
 
 @cython.cdivision(True)
@@ -96,19 +91,19 @@ cpdef double eval_pot_grid(double[:, :] lattice_coords_cob, double[:, :] potenti
 cpdef void eval_force_from_pot(
     double[:] dest,
     double[:, :] lattice_coords_cob,
-    double[:, :] potential_grid,
+    double[:, :, :] spline_coefficient_matrix_grid,
     double[:] vec,
     double dh = 1e-3,
 ):
     cdef double posx = vec[0]
     cdef double posy = vec[1]
 
-    dest[0] = eval_pot_grid(lattice_coords_cob, potential_grid, posx + dh, posy)
-    dest[0] -= eval_pot_grid(lattice_coords_cob, potential_grid, posx - dh, posy)
+    dest[0] = eval_pot_grid(lattice_coords_cob, spline_coefficient_matrix_grid, posx + dh, posy)
+    dest[0] -= eval_pot_grid(lattice_coords_cob, spline_coefficient_matrix_grid, posx - dh, posy)
     dest[0] /= - 2 * dh
 
-    dest[1] = eval_pot_grid(lattice_coords_cob, potential_grid, posx, posy + dh)
-    dest[1] -= eval_pot_grid(lattice_coords_cob, potential_grid, posx, posy - dh)
+    dest[1] = eval_pot_grid(lattice_coords_cob, spline_coefficient_matrix_grid, posx, posy + dh)
+    dest[1] -= eval_pot_grid(lattice_coords_cob, spline_coefficient_matrix_grid, posx, posy - dh)
     dest[1] /= - 2 * dh
 
 
@@ -122,7 +117,6 @@ def run_gle(
     double[:, :] velocities,
     double[:, :] friction_forces,
     double[:, :] noise_forces,
-    double[:, :] pot_grid,
 ):
     cdef int num_iterations = config.num_iterations
     cdef double memory_kernel_normalization = config.memory_kernel_normalization
@@ -132,8 +126,9 @@ def run_gle(
     cdef double dt = config.dt
     cdef double[:, :] lattice_coords_cob = np.linalg.inv(config.in_plane_basis)
     cdef int idx
+    cdef double[:, :, :] spline_coefficient_matrix_grid = config.interpolation_coefficients
 
-    eval_force_from_pot(forces[:, 0], lattice_coords_cob, pot_grid, positions[:, 0])
+    eval_force_from_pot(forces[:, 0], lattice_coords_cob, spline_coefficient_matrix_grid, positions[:, 0])
 
     for idx in range(1, num_iterations):
         if idx % (num_iterations // 10) ==0:
@@ -151,7 +146,7 @@ def run_gle(
         vec_2d_scalar_mult(friction_forces[:, idx], friction_forces[:, idx-1], discrete_decay_factor)
 
         forces[:, idx] = 0
-        eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
+        eval_force_from_pot(forces[:, idx], lattice_coords_cob, spline_coefficient_matrix_grid, positions[:, idx])
         # vec_2d_scalar_mult(forces[:, idx], positions[:, idx], - absorbate_mass * 10 ** 2)
         vec_sum_2d(forces[:, idx], friction_forces[:, idx])
         vec_sum_2d(forces[:, idx], noise_forces[:, idx])
@@ -173,7 +168,6 @@ def run_complex_gle(
     double[:, :] velocities,
     complex[:, :] friction_forces,
     complex[:, :] noise_forces,
-    double[:, :] pot_grid,
 ):
     cdef int num_iterations = config.num_iterations
     cdef double memory_kernel_normalization = config.memory_kernel_normalization
@@ -183,9 +177,10 @@ def run_complex_gle(
     cdef double dt = config.dt
     cdef double[:, :] lattice_coords_cob = np.linalg.inv(config.in_plane_basis)
     cdef int idx = 0
+    cdef double[:, :, :] spline_coefficient_matrix_grid = config.interpolation_coefficients
 
     forces[:, idx] = 0
-    eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
+    eval_force_from_pot(forces[:, idx], lattice_coords_cob, spline_coefficient_matrix_grid, positions[:, idx])
     real_part_vec_sum_2d(forces[:, idx], friction_forces[:, idx])
     real_part_vec_sum_2d(forces[:, idx], noise_forces[:, idx])
 
@@ -205,7 +200,7 @@ def run_complex_gle(
         complex_vec_2d_scalar_mult(friction_forces[:, idx], friction_forces[:, idx-1], discrete_decay_factor)
 
         forces[:, idx] = 0
-        eval_force_from_pot(forces[:, idx], lattice_coords_cob, pot_grid, positions[:, idx])
+        eval_force_from_pot(forces[:, idx], lattice_coords_cob, spline_coefficient_matrix_grid, positions[:, idx])
         # vec_2d_scalar_mult(forces[:, idx], positions[:, idx], - absorbate_mass * 10 ** 2)
         real_part_vec_sum_2d(forces[:, idx], friction_forces[:, idx])
         real_part_vec_sum_2d(forces[:, idx], noise_forces[:, idx])

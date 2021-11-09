@@ -15,7 +15,7 @@ def extract_potential_surface(
     temperature,
     positions,
     resolution,
-    fill_value = None,
+    fill_value=None,
 ):
     in_first_cell_lattice_coords = change_basis(
         np.linalg.inv(basis),
