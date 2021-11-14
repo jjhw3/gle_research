@@ -30,7 +30,7 @@
 \usepackage{sectsty}
 \sectionfont{\small}
 
-\title{}
+\title{Reductionism, surface dynamics and the Kramers problem}
 
 \author{Jeremy Wilkinson}
 \date{September 2021}
@@ -59,7 +59,14 @@ Through theoretical and computational study, the work presented here demonstrate
 
 \section*{Energy exchange and hopping rates}
 
-The energy exchange rate is an important quantity in the determination of hopping rates because it controls the number of independent energy levels the adatom attains per unit time. The fraction of time spent above the activation energy is set by Boltzmann statistics, however the \emph{number of times} this energy level is attained is set by the energy exchange rate. For this reason, we define the energy exchange rate as the inverse of the correlation time, $\phi$, of the \emph{total energy} autocorrelation function, $$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2},$$ as shown in Fig. \ref{fig:e_auto}. For a Markovian Langevin equation in the presence on a harmonic potential, the energy exchange rate is given precisely by $\eta$, however in general this is not the case.
+The energy exchange rate is an important quantity in the determination of hopping rates because it controls the number of independent energy levels the adatom attains per unit time. The fraction of time spent above the activation energy is set by Boltzmann statistics, however the \emph{number of times} this energy level is attained is set by the energy exchange rate. For this reason, we define the energy exchange rate as the inverse of the correlation time, $\phi$, of the \emph{total energy} autocorrelation function, $$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2},$$ as shown in Fig. \ref{fig:e_auto}. In cases where an exponential could not be fit to the autocorrelation function, $\tau$ was taken to be the interval over which the autocorrelation function decays by a factor of $1/e$. For a Markovian Langevin equation in the presence of a harmonic potential, the energy exchange rate is given precisely by $\eta$, however in general this is not the case.
+
+
+The observable quantity in a surface scattering experiment is the intermediate scattering function,
+$$
+\mathrm{ISF}(\Delta{\vec{K}}, t) = \left<\exp\left(i\Delta{\vec{K}}\cdot\vec{r(t)}\right)\right>.
+$$
+Typically the ISF is quoted for a single momentum transfer, $\Delta{K}$, over a range of time, as shown in the main axes of Figure \ref{fig:isf_dk}. For the purposes of extracting long-time transport co-efficients (read average rate of diffusion over the surface), the exponential decay rate of the ISF at long times, $\Gamma(\Delta{\vec{K}})$, is the quantity of interest and is proportional to the hopping rate\cite{Chudley}. By varying the magnitude of $\Delta{K}$ in a particular direction, one may calculate the jump distribution plot as shown in the inset of Figure \ref{fig:isf_dk}. When an adatom escapes from a well, it may hop more than one site before it settles down again. The spectral content, and therefore the shape, of the jump distribution is set by the relative probability of the number of sites an adatom travels before settling down again. The Markovian Langevin equation has been succesfully used to fit both the overal jump rate and jump distributions of physics systems \cite{Alexandrowicz, Hedgeland, Jardine} and non-stochastic molecular dynamics simulations \cite{Diamant}. 
 
 The effects of noise correlations on the energy decorrelation rate were evaluated using the generalised Langevin equation,
 \begin{equation}
@@ -67,6 +74,8 @@ The effects of noise correlations on the energy decorrelation rate were evaluate
 	\label{eq:gle}
 \end{equation}
 with an exponential memory kernel, $K(t)=\exp(-\frac{t}{\tau})$, parametrized by the noise correlation time $\tau$. The resulting noise has a Lorentzian power spectrum given by $\left|\tilde{K}(\omega)\right|^2=\frac{1}{1+\omega^2\tau^2}$ with a half-width at half-maximum given by $\omega_c = \frac{1}{\tau}$.
+
+Fig. \ref{fig:eta_tau_ttf_gamma} shows the energy exchange rate and ISF dephasing rate of the simulation over a range of $\eta$ and $\tau$ values. The top left panel demonstrates that regardless of the value of $\tau$, the energy exchange rate is proportional to $\eta$, although the gradient of the line  $\tau$
 
 \begin{figure*}
 	\centering
@@ -115,11 +124,6 @@ While analytically tractable, the Markovian approximation neglects correlations 
 \end{equation}
 captures linear correlations in noise with a power spectrum given by the power spectrum of $K$. For a non-zero background potential, $U(\vec{r})$, the fluctuation dissipation theorem (the second condition of Equation \ref{eq:langevin}), is not enough to gaurentee exact equipartition of energy. Fortunately, it remains a very good approximation for a kernel with a total area of $1$ though it is not hard to construct a situation where the equipartition theorem is violated (see supplemental material). 
 
-The observable quantity in a surface scattering experiment is the intermediate scattering function,
-$$
-\mathrm{ISF}(\Delta{\vec{K}}, t) = \left<\exp\left(i\Delta{\vec{K}}\cdot\vec{r(t)}\right)\right>.
-$$
-Typically the ISF is quoted for a single momentum transfer, $\Delta{K}$, over a range of time, as shown in the main axes of Figure \ref{fig:isf_dk}. For the purposes of extracting long-time transport co-efficients (read average rate of diffusion over the surface), the exponential decay rate of the ISF at long times, $\Gamma(\Delta{\vec{K}})$, is the quantity of interest and can be directly linked to the rate of hopping of the adatoms \cite{Chudley}. By varying the magnitude of $\Delta{K}$ in a particular direction, one may calculate the jump distribution plot as shown in the inset of Figure \ref{fig:isf_dk}. When an adatom escapes from a well, it may hop more than one site before it settles down again. The spectral content, and therefore the shape, of the jump distribution is set by the relative probability of the number of sites an adatom travels before settling down again. The Markovian Langevin equation has been succesfully used to fit both the overal jump rate and jump distributions of physics systems \cite{Alexandrowicz, Hedgeland, Jardine} and non-stochastic molecular dynamics simulations \cite{Diamant}. 
 
 Analytic expressions for the escape rate, $\gamma$, of a Markovian Langevin particle from a trapping well of natural frequency $\omega_0$ in the low friction, $\frac{\eta}{\omega_0} < 1$, regime explain the Ahrrenius nature of hopping rates seen in experimental and computational studies. 
 

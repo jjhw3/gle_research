@@ -10,6 +10,9 @@ times = np.arange(0, 5000, 0.01)
 
 def get_time_to_forget(path):
     energies = np.load(path / 'total_energy_autocorrelation.npy')
+    energies -= np.mean(energies[(times > 50) & (times < 100)])
+    energies /= energies[0]
+    return 1 / times[np.where(energies < 1 / np.e)[0][0]]
     alpha = stable_fit_alpha(
         times,
         energies,
@@ -64,6 +67,7 @@ for i, eta in enumerate(etas):
             print(eta, tau, e)
             eta_tau_ttf_grid[i, j] = np.nan
             eta_tau_gamma_grid[i, j] = np.nan
+
 
 np.save(top_dir / 'eta_tau_ttf_grid.npy', eta_tau_ttf_grid)
 np.save(top_dir / 'eta_tau_gamma_grid.npy', eta_tau_gamma_grid)

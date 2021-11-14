@@ -60,6 +60,3 @@ plt.legend()
 plt.subplots_adjust(left=0.083, bottom=0.13, right=0.99, top=0.986, wspace=0.105)
 # plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/md_temp_vs_eta.eps', format='eps')
 plt.show()
-
-print((0.0009009179375361968) / 0.0010528952900089978)
-print((0.0007474621338983017) / 0.0009009179375361968)
