@@ -23,13 +23,14 @@ if __name__ == '__main__':
 
     isfs = {}
     e_auto = np.zeros_like(times)
+    temps = np.zeros(num_iterations)
 
     interpolation_coeffs = config.interpolation_coefficients
 
     for i in range(num_iterations):
         print(f'{i} / {num_iterations}')
         results = run_gle(config)
-        print('Temperature:', sample_temperature(results))
+        temps[i] = sample_temperature(results)
         positions = results.positions[:, ::10]
         kinetic_energies = 0.5 * config.absorbate_mass * (results.velocities[:, ::10]**2).sum(axis=0)
         potentials = np.zeros_like(kinetic_energies)
@@ -63,6 +64,7 @@ if __name__ == '__main__':
         np.save(isfs_dir / f"{dk}.npy", isfs[dk][save_mask])
 
     np.save(config.working_directory / "total_energy_autocorrelation.npy", e_auto[save_mask])
+    np.save(config.working_directory / "temperatures.npy", temps)
 
     alphas = np.zeros(len(isfs))
 
