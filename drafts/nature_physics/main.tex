@@ -59,6 +59,30 @@ Through theoretical and computational study, the work presented here demonstrate
 
 \section*{Energy exchange and hopping rates}
 
+The energy exchange rate is an important quantity in the determination of hopping rates because it controls the number of independent energy levels the adatom attains per unit time. The fraction of time spent above the activation energy is set by Boltzmann statistics, however the \emph{number of times} this energy level is attained is set by the energy exchange rate. For this reason, we define the energy exchange rate as the inverse of the correlation time, $\phi$, of the \emph{total energy} autocorrelation function, $$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2},$$ as shown in Fig. \ref{fig:e_auto}. For a Markovian Langevin equation in the presence on a harmonic potential, the energy exchange rate is given precisely by $\eta$, however in general this is not the case.
+
+The effects of noise correlations on the energy decorrelation rate were evaluated using the generalised Langevin equation,
+\begin{equation}
+	m\ddot{\vec{r}}+m\eta\int_0^t\diff{t'}K(t-t')\dot{\vec{r}}(t')+\nabla U(\vec{r})=\int_0^t\diff{t'}\vec{f}(t')K(t-t'),
+	\label{eq:gle}
+\end{equation}
+with an exponential memory kernel, $K(t)=\exp(-\frac{t}{\tau})$, parametrized by the noise correlation time $\tau$. The resulting noise has a Lorentzian power spectrum given by $\left|\tilde{K}(\omega)\right|^2=\frac{1}{1+\omega^2\tau^2}$ with a half-width at half-maximum given by $\omega_c = \frac{1}{\tau}$.
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=1.0\textwidth]{eta_tau_ttf_gamma}
+	\caption{}
+	\label{fig:eta_tau_ttf_gamma}
+\end{figure*}
+
+ we present the results of  
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\columnwidth]{e_auto}
+	\caption{}
+	\label{fig:e_auto}
+\end{figure}
+
 \section*{The inertial cutoff}
 
 \section*{Non-linear friction}

@@ -45,7 +45,7 @@ gamma_levels = sorted(list(eta_tau_gamma_grid[0, y_contours]) + list(eta_tau_gam
 # gamma_levels = 15
 
 plt.gcf().set_size_inches(8, 3.5)
-plt.subplot(1, 2, 1)
+plt.subplot(2, 2, 1)
 
 plt.title(r'Long-time ISF decay rate $\Gamma$ (ps$^{-1}$)')
 plt.xlabel(r"$\eta$ (ps$^{-1}$)")
@@ -59,13 +59,17 @@ contours = plt.contour(
 )
 plt.clabel(contours, inline=True, fontsize=12, colors='black')
 
-plt.subplot(1, 2, 2)
+plt.subplot(2, 2, 2)
 
 plt.title(r'Total energy decorrelation rate $\phi^{-1}$ (ps$^{-1}$)')
 plt.xlabel(r"$\eta$ (ps$^{-1}$)")
 plt.scatter(ETAs, TAUs, c=eta_tau_gamma_grid, s=4)
 contours = plt.contour(ETAs, TAUs, eta_tau_ttf_grid, levels=ttf_levels)
 plt.clabel(contours, inline=True, fontsize=12, colors='black')
+
+
+
+
 
 plt.subplots_adjust(left=0.087, bottom=0.143, right=0.99, top=0.929, wspace=0.138)
 # plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/gamma_and_ttf_contours.eps', format='eps')
