@@ -4,7 +4,7 @@ import numpy as np
 
 from common.tools import stable_fit_alpha
 
-topdir = Path('/home/jjhw3/rds/hpc-work/gle/const_ttf')
+topdir = Path('/home/jjhw3/rds/hpc-work/gle/cubic')
 times = np.arange(0, 5000, 0.01)
 
 alphas = []

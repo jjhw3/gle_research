@@ -160,6 +160,66 @@ class GLEConfig:
         return potentials
 
 
+class CubicGLEConfig(GLEConfig):
+    RUNNER = cle.run_gle_cubic
+    RESULT_CLASS = GLEResult
+
+    def __init__(
+        self,
+        run_time,
+        dt,
+        absorbate_mass,
+        eta,
+        xhi,
+        temperature,
+        basis_vectors,
+        conventional_cell,
+        free_plane_indices,
+        working_directory,
+    ):
+        self.xhi = xhi
+        self.memory_kernel_normalization = 1
+        self.discrete_decay_factor = 0
+
+        super().__init__(
+            run_time,
+            dt,
+            absorbate_mass,
+            eta,
+            temperature,
+            basis_vectors,
+            conventional_cell,
+            free_plane_indices,
+            working_directory,
+        )
+
+    @property
+    def noise_stddev(self):
+        return 1.0
+
+    def to_dict(self):
+        dic = super().to_dict()
+        dic['xhi'] = self.xhi
+        return dic
+
+    def copy(self):
+        return self.__class__(
+            self.run_time,
+            self.dt,
+            self.absorbate_mass,
+            self.eta,
+            self.xhi,
+            self.temperature,
+            self.basis_vectors.T,
+            self.conventional_cell.T,
+            self.free_plane_indices,
+            self.working_directory,
+        )
+
+    def calculate_time_quantities(self):
+        return
+
+
 class TauGLEConfig(GLEConfig):
     RUNNER = cle.run_gle
     RESULT_CLASS = GLEResult

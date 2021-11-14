@@ -32,7 +32,7 @@ ETAs, TAUs = np.meshgrid(etas, taus, indexing='ij')
 theoretical_ttf = np.zeros_like(TAUs)
 for i in range(ETAs.shape[0]):
     for j in range(ETAs.shape[1]):
-        roots = get_harmonic_gle_poles(8.85, ETAs[i, j], TAUs[i, j])
+        roots = get_harmonic_gle_poles(8.8, ETAs[i, j], TAUs[i, j])
         chi1, chi2, eta1 = get_greens_function_parameters(8.85, ETAs[i, j], TAUs[i, j])
         theoretical_ttf[i, j] = 2 * chi2
 
@@ -61,7 +61,7 @@ plt.clabel(contours, inline=True, fontsize=12, colors='black')
 
 plt.subplot(1, 2, 2)
 
-plt.title(r'Total energy decorrelation rate $\chi_2$ (ps$^{-1}$)')
+plt.title(r'Total energy decorrelation rate $\phi^{-1}$ (ps$^{-1}$)')
 plt.xlabel(r"$\eta$ (ps$^{-1}$)")
 plt.scatter(ETAs, TAUs, c=eta_tau_gamma_grid, s=4)
 contours = plt.contour(ETAs, TAUs, eta_tau_ttf_grid, levels=ttf_levels)
@@ -86,7 +86,7 @@ plt.show()
 plt.scatter(eta_tau_ttf_grid, eta_tau_gamma_grid, c=ETAs, s=2)
 plt.gcf().set_size_inches(8, 4)
 plt.subplots_adjust(left=0.083, bottom=0.125, right=1.0, top=0.97, wspace=0.105)
-plt.xlabel(r'Total energy decorrelation rate $\chi_2$ (ps$^{-1}$)')
+plt.xlabel(r'Total energy decorrelation rate $\phi^{-1}$ (ps$^{-1}$)')
 plt.ylabel(r'Long-time ISF decay rate $\Gamma$ (ps$^{-1}$)')
 plt.colorbar(label=r'$\eta$ (ps$^{-1}$)')
 # plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/gamma_and_ttf_scatter.eps', format='eps')

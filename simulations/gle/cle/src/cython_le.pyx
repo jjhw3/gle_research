@@ -5,6 +5,8 @@ import  numpy as np
 cimport numpy as np
 cimport cython
 from libc.stdio cimport printf
+from common.constants import boltzmann_constant
+from libc.math cimport sqrt
 
 
 @cython.boundscheck(False)
@@ -209,3 +211,60 @@ def run_complex_gle(
         vec_sum_2d(velocities[:, idx], velocities[:, idx-1])
         vec_2d_scalar_mult(velocities[:, idx], forces[:, idx-1], dt / 2 / absorbate_mass)
         vec_2d_scalar_mult(velocities[:, idx], forces[:, idx], dt / 2 / absorbate_mass)
+
+
+
+@cython.cdivision(True)
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def run_gle_cubic(
+    config,
+    double[:, :] positions,
+    double[:, :] forces,
+    double[:, :] velocities,
+    double[:, :] friction_forces,
+    double[:, :] noise_forces,
+):
+    cdef int num_iterations = config.num_iterations
+    cdef double eta = config.eta
+    cdef double xhi = config.xhi
+    cdef double mass = config.absorbate_mass
+    cdef double T = config.temperature
+    cdef double dt = config.dt
+    cdef double[:, :] lattice_coords_cob = np.linalg.inv(config.in_plane_basis)
+    cdef int idx
+    cdef double[:, :, :] spline_coefficient_matrix_grid = config.interpolation_coefficients
+
+    cdef double const_noise_var = 2 * boltzmann_constant * T * mass * eta + 4 * mass**2 * xhi * (boltzmann_constant * T) ** 2
+    cdef double var_noise_var = 2 * mass**3 * xhi * boltzmann_constant * T
+    cdef double noise_std
+    cdef double vel_mag_sq
+
+    eval_force_from_pot(forces[:, 0], lattice_coords_cob, spline_coefficient_matrix_grid, positions[:, 0])
+
+    for idx in range(1, num_iterations):
+        if idx % (num_iterations // 10) ==0:
+            printf("%d / %d\n", idx, num_iterations)
+
+        positions[:, idx] = 0
+        vec_sum_2d(positions[:, idx], positions[:, idx-1])
+        vec_2d_scalar_mult(positions[:, idx], velocities[:, idx-1], dt)
+        vec_2d_scalar_mult(positions[:, idx], forces[:, idx-1], 0.5 / mass * dt ** 2)
+
+        vel_mag_sq = (velocities[0, idx-1]**2 + velocities[1, idx-1]**2)
+        noise_std = sqrt(const_noise_var + var_noise_var * vel_mag_sq) / sqrt(dt)
+
+        friction_forces[:, idx] = 0
+        vec_2d_scalar_mult(friction_forces[:, idx], velocities[:, idx-1], - eta * mass)
+        vec_2d_scalar_mult(friction_forces[:, idx], velocities[:, idx-1], - xhi * mass**3 * vel_mag_sq)
+
+        forces[:, idx] = 0
+        eval_force_from_pot(forces[:, idx], lattice_coords_cob, spline_coefficient_matrix_grid, positions[:, idx])
+
+        vec_sum_2d(forces[:, idx], friction_forces[:, idx])
+        vec_2d_scalar_mult(forces[:, idx], noise_forces[:, idx], noise_std)
+
+        velocities[:, idx] = 0
+        vec_sum_2d(velocities[:, idx], velocities[:, idx-1])
+        vec_2d_scalar_mult(velocities[:, idx], forces[:, idx-1], dt / 2 / mass)
+        vec_2d_scalar_mult(velocities[:, idx], forces[:, idx], dt / 2 / mass)
