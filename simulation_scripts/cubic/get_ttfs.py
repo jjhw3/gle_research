@@ -15,6 +15,7 @@ for i in range(0, 26):
     e_auto /= e_auto[0]
 
     ttfs.append(1 / times[np.where(e_auto < 1 / np.e)[0][0]])
+
     # ttfs.append(stable_fit_alpha(
     #     times,
     #     e_auto,

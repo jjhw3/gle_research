@@ -14,10 +14,11 @@ if __name__ == '__main__':
     config = ComplexTauGLEConfig.load(working_dir)
 
     dk_unit = norm(np.array([1, 0]))
-    dk_mags = np.array([0.6, 1.23])
+    dk_mags = np.linspace(0, 2.46, 50)
     times = config.times[::10]
     save_mask = times < 5000
     num_iterations = 200
+    coeff = config.interpolation_coefficients
 
     isfs = {}
     ke_auto = np.zeros_like(times)
@@ -34,7 +35,7 @@ if __name__ == '__main__':
         for i in range(potentials.shape[0]):
             potentials[i] = eval_pot_grid(
                 config.inv_in_plane_basis,
-                config.potential_grid,
+                coeff,
                 positions[0, i],
                 positions[1, i],
             )
@@ -59,7 +60,7 @@ if __name__ == '__main__':
 
     for dk in isfs:
         isfs[dk] /= isfs[dk][0]
-        np.save(isfs_dir / f"{dk}.npy", isfs[dk][save_mask])
+        # np.save(isfs_dir / f"{dk}.npy", isfs[dk][save_mask])
 
     np.save(config.working_directory / "kinetic_energy_autocorrelation.npy", ke_auto[save_mask])
     np.save(config.working_directory / "potential_energy_autocorrelation.npy", u_auto[save_mask])

@@ -18,7 +18,7 @@ if __name__ == '__main__':
     dk_mags = np.linspace(0, 2.46, 50)
     times = config.times[::10]
     save_mask = times < 5000
-    num_iterations = 100
+    num_iterations = 200
 
     isfs = {}
     e_auto = np.zeros_like(times)

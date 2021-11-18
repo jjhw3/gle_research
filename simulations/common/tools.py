@@ -130,9 +130,9 @@ def stable_fit_alpha(
                     plot_mask = times < 4.0 * t_final
                     plt.plot(times[plot_mask], isf[plot_mask])
                     plt.plot(times[fit_mask], np.exp(- alpha * times[fit_mask] + p0[1]))
-                    plt.savefig(plot_dir / f'{mag(delta_K):.2}.png')
+                    plt.savefig(plot_dir / f'{mag(delta_K):.2}.pdf')
                     plt.yscale('log')
-                    plt.savefig(log_dir / f'{mag(delta_K):.2}.png')
+                    plt.savefig(log_dir / f'{mag(delta_K):.2}.pdf')
                     # plt.show()
                     cla()
 

@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from common.constants import cm
+from common.tools import stable_fit_alpha
 
 gle_etas = np.arange(0.4, 0.8, 0.01)
 gle_taus = np.arange(0.0, 0.4, 0.01)
@@ -30,13 +31,35 @@ plt.legend(loc='upper left', prop={'size': 8}, frameon=False)
 
 plt.subplot2grid((2, 2), (1, 1))
 
-plt.yticks([], [])
-MD_ttf = 0.718866407668944
-plt.scatter([300], MD_ttf, marker='x', c='r', s=80, label='3D MD simulation')
-plt.legend(loc='upper left', prop={'size': 8}, frameon=False)
+times = np.arange(0, 1000, 0.01)
+e_auto = np.load('3D_md_8^3_300K_total_energy_autocorrelation.npy')[:times.shape[0]]
+e_auto -= np.mean(e_auto[(times > 200) & (times < 1000)])
+e_auto /= e_auto[0]
+ttf = 1 / times[np.where(e_auto < 1 / np.e)[0][0]]
+fit_ttf = stable_fit_alpha(
+    times,
+    e_auto,
+    np.array([1.0, 0]),
+    0,
+    t_0=0.63,
+    t_final=2.8,
+)
+# fit_ttf = 0.6838884274372572
+plt.plot(
+    times,
+    e_auto[np.abs(times - 0.63) == 0][0] * np.exp(-times * fit_ttf) / np.exp(- 0.63 * fit_ttf),
+    c='black',
+)
+plt.text(2.25, 0.18, f'$e^{{-{fit_ttf:.2f}t}}$')
+plt.scatter(times, e_auto, marker='o', c='r', s=3, label='3D MD simulation')
+plt.xlim(0, 8)
+# plt.yscale('log')
+plt.xlabel('Time (ps)')
+plt.ylabel('Normalised total energy\nautocorrelation function')
+plt.legend(loc='upper right', prop={'size': 8}, frameon=False)
 
 plt.gcf().set_size_inches(18.3 * cm, 13 * cm)
-plt.subplots_adjust(left=0.104, bottom=0.096, right=0.992, top=0.987, wspace=0.021, hspace=0.25)
+plt.subplots_adjust(left=0.104, bottom=0.096, right=0.992, top=0.987, wspace=0.257, hspace=0.25)
 plt.savefig('../../energy_exchange_rates.pdf')
 
 plt.show()
