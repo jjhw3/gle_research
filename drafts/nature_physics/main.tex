@@ -106,22 +106,31 @@ The energy exchange rate is an important quantity in the determination of hoppin
  
 The top panel of Fig. \ref{fig:energy_exchange_rates} demonstrates how the introduction of noise correlations suppresses the energy exchange rate with the substrate. Each point in the plot corresponds to the energy exchange rate extracted from a $2\us$ trajectory simulated using the generalised Langevin equation with an exponential memory kernel. For the sake of comparison, the red line shows the energy exchange rate of a particle with Markovian Langevin statistics in a harmonic well, $\phi^{-1}=\eta$. For short correlation times, we find the energy exchange rate is approximately given by $\eta$, but even for $\tau=0$, they aren't quite equal due to anharmonicities in the background potential. As the noise correlation time approaches $0.4\ps$, the energy exchange rate is seen to fall by close to a factor of four. Evidently there is more to the energy exchange rate than just the friction constant. 
 
-In physical systems the stochastic force is produced through interactions with phonon modes. The overall interaction strength is set by $\eta$ but modes may couple to the particle to varying degrees, in this case set by $\tau$. This is reflected in the results of Fig. \ref{} as $\phi^{-1}$ remains linear in $\eta$, regardless of the value of $\tau$. Since the energy exchange rate and the friction parameter both carry units of inverse time, we introduce a dimensionless function $$I[U(x), m, \tau] = \frac{\phi^{-1}}{\eta}$$. In principal, $I$ is a functional of the potential energy surface, $m$ and $\tau$ with no $\eta$ dependence. All other variables held constant, $I$ quantifies the degree to which the energy exchange rate is affected by introducing a noise cutoff of $\frac{1}{\tau}$. Maybe mention theoretical work, maybe mention where the inertial cutoff
+In physical systems the stochastic force is produced through interactions with phonon modes. The overall interaction strength is set by $\eta$ but modes may couple to the particle to varying degrees, in this case set by $\tau$. This is reflected in the top panel of Fig. \ref{fig:e_auto} as $\phi^{-1}$ remains linear in $\eta$, regardless of the value of $\tau$. Since the energy exchange rate and the friction parameter both carry units of inverse time, we introduce a dimensionless function $$I[U(x), m, \tau] = \frac{\phi^{-1}}{\eta}$$. In principal, $I$ is a functional of the potential energy surface, $m$ and $\tau$ with no $\eta$ dependence. All other variables held constant, $I$ quantifies the degree to which the energy exchange rate is affected by introducing a noise cutoff of $\frac{1}{\tau}$. Maybe mention theoretical work, maybe mention where the inertial cutoff
 
-A seperate  
+\section*{Hopping rates}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\columnwidth]{isf_dk}
+	\caption{The main axes show a typical ISF over time for a fixed momentum transfer. The decay rate, $\Gamma$, of the ISF's exponential tail is proportional to the hopping rate of the adatom. By calculating $\Gamma$ over a range of momentum transfers a jump distribution plot may be constructed, as shown in the inset axes.} 
+	\label{fig:isf_dk}
+\end{figure}
 
- may be expressed as $\phi^{-1}=\eta I[U(x), m, \tau]$
-
-
- 
-Regardless of the value of $\tau$, one finds the energy exchange rate remains affine in the $\eta$. This suggests that $\eta$ parametrizes the overall interaction strength with phonon modes but modes may interact with the particle to different extents, in this case set by the value of $\tau$.
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\columnwidth]{gamma_ttf}
+	\caption{A scatter of the maximum ISF dephasing rate, $\Gamma_{\text{max}}$, against the energy exchange rate, $\phi^{-1}$, for each microscopic model demonstrates that the ISF dephasing rate is set by the energy exchange rate and the potential background with less than $5\%$ variance accross the vastly different microscopic models.}
+	\label{fig:gamma_ttf}
+\end{figure}
 
 The observable quantity in a surface scattering experiment is the intermediate scattering function,
 $$
 \mathrm{ISF}(\Delta{\vec{K}}, t) = \left<\exp\left(i\Delta{\vec{K}}\cdot\vec{r(t)}\right)\right>.
 $$
-Typically the ISF is quoted for a single momentum transfer, $\Delta{K}$, over a range of time, as shown in the main axes of Figure \ref{fig:isf_dk}. For the purposes of extracting long-time transport co-efficients (read average rate of diffusion over the surface), the exponential decay rate of the ISF at long times, $\Gamma(\Delta{\vec{K}})$, is the quantity of interest and is proportional to the hopping rate\cite{Chudley}. By varying the magnitude of $\Delta{K}$ in a particular direction, one may calculate the jump distribution plot as shown in the inset of Figure \ref{fig:isf_dk}. When an adatom escapes from a well, it may hop more than one site before it settles down again. The spectral content, and therefore the shape, of the jump distribution is set by the relative probability of the number of sites an adatom travels before settling down again. The Markovian Langevin equation has been succesfully used to fit both the overal jump rate and jump distributions of physics systems \cite{Alexandrowicz, Hedgeland, Jardine} and non-stochastic molecular dynamics simulations \cite{Diamant}. 
+Typically the ISF is quoted for a single momentum transfer, $\Delta{K}$, over a range of time, as shown in the main axes of Figure \ref{fig:isf_dk}. For the purposes of extracting long-time transport co-efficients (read average rate of diffusion over the surface), the exponential decay rate of the ISF at long times, $\Gamma(\Delta{\vec{K}})$, is the quantity of interest and is proportional to the adatom hopping rate under certain assumptions \cite{Chudley}. By varying the magnitude of $\Delta{K}$ in a particular direction, one may calculate the jump distribution plot as shown in the inset of Figure \ref{fig:isf_dk}. When an adatom escapes from a well, it may hop more than one site before it settles down again. The shape of the jump distribution is set by the relative probability of the number of sites an adatom travels before settling down again. Therefore one may compare the hopping rate and hop length distributions of two systems through the amplitude and shape of their jump distributions.
+
+. The Markovian Langevin equation has been succesfully used to fit both the overal jump rate and jump distributions of physics systems \cite{Alexandrowicz, Hedgeland, Jardine} and non-stochastic molecular dynamics simulations \cite{Diamant}. 
 
 \section{The effect of noise correlations}
 
@@ -189,12 +198,6 @@ Although the results in this paper demonstrate that noise correlations can have 
 Something about energy exchange rates \& hopping rates
 Something about activated diffusion being bound with occasional hops
 
-\begin{figure}
-	\centering
-	\includegraphics{isf_dk}
-	\caption{}
-	\label{fig:isf_dk}
-\end{figure}
 
 \section{Computational Model}
 

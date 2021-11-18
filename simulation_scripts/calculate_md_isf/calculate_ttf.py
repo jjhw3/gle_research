@@ -11,11 +11,14 @@ from md.configuration import MDConfig
 potential_grid = np.load('/Users/jeremywilkinson/research/gle/simulations/high_res_potential_grid.npy')
 interpolation_coefficients = get_coefficient_matrix_grid(potential_grid)
 
+# z_k = 10557.210000649435
+# z_mean = 14.351935754749448
+
 def get_e_auto(working_dir):
     config = MDConfig.load(working_dir)
     positions = np.load(config.working_directory / 'absorbate_positions.npy')
     potentials = np.zeros(positions.shape[1])
-    inv_in_plane_basis = np.linalg.inv(config.in_plane_basis[:2, :2])
+    inv_in_plane_basis = np.linalg.inv(config.in_plane_basis)[:2, :2]
 
     for i in range(potentials.shape[0]):
         potentials[i] = eval_pot_grid(
@@ -25,8 +28,8 @@ def get_e_auto(working_dir):
             positions[1, i],
         )
 
-    velocities = np.gradient(positions[:2], axis=1) / 0.01
-    kinetic_energies = 0.5 * config.absorbate_mass * np.sum(velocities ** 2, axis=0)
+    velocities = np.gradient(positions, axis=1) / 0.01
+    kinetic_energies = 0.5 * config.absorbate_mass * np.sum(velocities[:2] ** 2, axis=0)
 
     e_auto = fast_auto_correlate(potentials + kinetic_energies)
     return e_auto

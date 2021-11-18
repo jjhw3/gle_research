@@ -25,7 +25,7 @@
 #SBATCH --mem=5980mb
 #! Submit a job array with index values between 0 and 31
 #! NOTE: This must be a range, not a single number (i.e. specifying '32' here would only run one job, with index 32)
-#SBATCH --array=0-7
+#SBATCH --array=0-5
 
 #! This is the partition name.
 #SBATCH -p skylake
@@ -53,8 +53,8 @@ echo "This is job" $SLURM_ARRAY_TASK_ID
 
 #! export SLURM_ARRAY_TASK_ID=1
 
-ETAs=(0.4000 0.4500 0.5000 0.5500 0.6000 0.6500 0.7000 0.7500)
-TAUs=(0.0862 0.1065 0.1236 0.1384 0.1514 0.1640 0.1759 0.1867)
+ETAs=(0.3100 0.5100 0.7100 0.7900 0.7300 0.7900)
+TAUs=(0.0000 0.0000 0.0000 0.2000 0.1000 0.0500)
 
 ETA=${ETAs[SLURM_ARRAY_TASK_ID]}
 TAU=${TAUs[SLURM_ARRAY_TASK_ID]}
