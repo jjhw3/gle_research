@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
 
 
-    config.potential_grid *= 0 #####################################################
+    # config.potential_grid *= 0 #####################################################
 
 
 
@@ -107,6 +107,8 @@ if __name__ == '__main__':
     )
 
     print('Temp:', 0.5 * config.absorbate_mass * (results.velocities**2).sum(axis=0).mean() / boltzmann_constant)
+    # plt.plot(*results.positions)
+    # plt.show()
 
     results.save()
 

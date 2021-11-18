@@ -46,7 +46,7 @@ plt.xlabel(r"Noise correlation time $\tau$ (ps)")
 plt.yticks([], [])
 
 plt.subplots_adjust(left=0.13, bottom=0.092, right=0.99, top=0.945, wspace=0.02, hspace=0.03)
-plt.savefig('/Users/jeremywilkinson/research/gle/drafts/nature_physics/images/eta_tau_ttf_gamma.eps', format='eps')
+plt.savefig('/Users/jeremywilkinson/research/gle/drafts/nature_physics/images/eta_tau_ttf_gamma.pdf')
 plt.show()
 
 
@@ -68,7 +68,7 @@ plt.show()
 # plt.xlabel(r'$\tau$ (ps$^{-1}$)')
 # plt.ylabel(r'$\phi^{-1} / \eta$')
 # plt.legend()
-# plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/theoretical_tau_ttf.eps', format='eps')
+# plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/theoretical_tau_ttf.pdf')
 # plt.show()
 #
 # W0s, ETAs, TAUs = np.meshgrid(w0s, etas, taus, indexing='ij')

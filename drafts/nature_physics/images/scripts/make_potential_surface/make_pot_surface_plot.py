@@ -14,7 +14,9 @@ def amu_K_ps_to_eV(x):
 x = np.linspace(0, 2.53851334, 101)
 x = (x[1:] + x[:-1]) / 2
 pot_surface = amu_K_ps_to_eV(np.fft.fftshift(np.load('high_res_potential_grid.npy'), axes=(0, 1))) * 1000
-
+trajectory = np.load('/Users/jeremywilkinson/research_data/gle_data/sample_markovian/absorbate_positions.npy')
+trajectory[0] -= np.max(x) * 1.5
+trajectory[1] -= np.max(x) * 0.5
 
 plt.gcf().set_size_inches(12 * cm, 8 * cm)
 
@@ -27,12 +29,15 @@ plt.text(18, 0.05, r'$E_a=67$meV')
 
 plt.subplot2grid((1, 6), (0, 0), colspan=4)
 cont = plt.contour(x, x, pot_surface, levels=20)
+plt.plot(*trajectory, alpha=0.8)
 plt.gca().set_aspect(1.0)
+plt.xlim(np.min(x), np.max(x))
+plt.ylim(np.min(x), np.max(x))
 # plt.clabel(cont)
 plt.xlabel(r'x coordinate ($\AA$)')
 plt.ylabel(r'y coordinate ($\AA$)')
 plt.axvline(x[50], c='r', linestyle='--')
 
 plt.subplots_adjust(left=0.105, bottom=0.15, right=0.988, top=0.987, wspace=0.1)
-plt.savefig(Path('../../pot_surface.eps'), format='eps')
+plt.savefig(Path('../../pot_surface.pdf'))
 plt.show()

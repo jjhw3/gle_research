@@ -34,5 +34,5 @@ plt.scatter(dk_mags[24], alphas[24], c='r', s=20, marker='x')
 plt.xlabel(r'$|\Delta{K}|$ ($\AA^{-1}$)')
 plt.ylabel(r'$\Gamma(\Delta{K})$ (ps$^{-1}$)')
 
-plt.savefig('../../isf_dk.eps', format='eps')
+plt.savefig('../../isf_dk.pdf')
 plt.show()

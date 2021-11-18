@@ -7,8 +7,8 @@ from common.tools import fast_auto_correlate
 from gle.interpolation_tools import get_coefficient_matrix_grid
 from md.configuration import MDConfig
 
-potential_grid = np.load('/home/jjhw3/code/gle_research/simulations/high_res_potential_grid.npy')
-# potential_grid = np.load('/Users/jeremywilkinson/research/gle/simulations/high_res_potential_grid.npy')
+# potential_grid = np.load('/home/jjhw3/code/gle_research/simulations/high_res_potential_grid.npy')
+potential_grid = np.load('/Users/jeremywilkinson/research/gle/simulations/high_res_potential_grid.npy')
 interpolation_coefficients = get_coefficient_matrix_grid(potential_grid)
 
 def get_e_auto(working_dir):
@@ -34,8 +34,8 @@ def get_e_auto(working_dir):
 
 
 if __name__ == '__main__':
-    # rootdir = Path('/Users/jeremywilkinson/research_data/md_data/0')
-    # get_e_auto(rootdir)
+    rootdir = Path('/Users/jeremywilkinson/research_data/md_data/0')
+    get_e_auto(rootdir)
     rootdir = Path('/home/jjhw3/rds/hpc-work/md/calculate_md_isf/8/300')
     num_folders = 201
 

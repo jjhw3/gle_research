@@ -43,5 +43,5 @@ plt.title('Exponential kernel')
 
 plt.gcf().set_size_inches(5, 3.5)
 plt.subplots_adjust(left=0.11, bottom=0.065, right=0.992, top=0.930, wspace=0.105)
-plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/kernel_spectra.eps', format='eps')
+plt.savefig('/Users/jeremywilkinson/research/gle/drafts/coloured_noise/images/kernel_spectra.pdf')
 plt.show()

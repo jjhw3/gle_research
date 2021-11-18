@@ -32,5 +32,5 @@ plt.ylabel(r'y coordinate ($\AA$)')
 plt.axvline(x[50], c='r', linestyle='--')
 
 plt.subplots_adjust(left=0.095, bottom=0.12, right=0.988, top=0.987, wspace=0.1)
-plt.savefig(Path('../pot_surface.eps'), format='eps')
+plt.savefig(Path('../pot_surface.pdf'))
 plt.show()

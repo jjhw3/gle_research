@@ -4,7 +4,7 @@ amu = 1.66e-27
 picosecond = 1e-12
 angstrom = 1e-10
 
-cm = 1/2.54 # cm in inches
+cm = 1 / 2.54 # cm in inches
 
 boltzmann_constant = 1.38e-23 / angstrom**2 / amu * picosecond**2
 planck_constant = 6.626e-34 / angstrom**2 / amu * picosecond
