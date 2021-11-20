@@ -8,13 +8,14 @@ dks = np.linspace(0, 2.46, 50)
 fit_mask = (dks > 1.23 - 0.5) & (dks < 1.23 + 0.5)
 fit_dks = dks[fit_mask]
 
+
 def plot_alpha_dk(path, norm=None, s=10, **kwargs):
     alphas = np.load(path)
     if norm is not None:
         poly = np.polyfit(fit_dks, alphas[fit_mask], 2)
         alphas /= np.max(np.polyval(poly, fit_dks))
         alphas *= norm
-    plt.scatter(dks, alphas, s=s, **kwargs)
+    plt.plot(dks, alphas, **kwargs)
 
 
 dirs = [
@@ -24,6 +25,7 @@ dirs = [
 ]
 ttfs = [0.3, 0.5, 0.7]
 norms = [0.06294573372369872, 0.091227573239961, 0.12118987650132698]
+# norms = [1.0, 1.0, 1.0]
 cs = ['g', 'r', 'b']
 labels = [
     'Markovian Langevin Equation',
@@ -40,7 +42,7 @@ for i, plot_dir in enumerate(dirs):
             label = labels[i]
         plot_alpha_dk(plot_dir / f'{ttf}.npy', norms[j], c=cs[i], label=label, marker=markers[i])
 
-plot_alpha_dk(Path('md_alphas.npy'), marker='s', label='3D molecular dynamics')
+# plot_alpha_dk(Path('md_alphas.npy'), marker='s', label='3D molecular dynamics')
 
 plt.gcf().set_size_inches(12 * cm, 8 * cm)
 plt.subplots_adjust(left=0.137, bottom=0.15, right=0.993, top=0.987)

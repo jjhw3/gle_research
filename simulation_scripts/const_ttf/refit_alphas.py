@@ -23,8 +23,6 @@ if __name__ == '__main__':
     alphas = np.zeros(len(isfs))
 
     for i, dk in enumerate(dk_mags):
-        print(i, dk)
-        
         try:
             alpha = stable_fit_alpha(
                 times,
@@ -38,6 +36,7 @@ if __name__ == '__main__':
             )
         except FitFailedException as e:
             alpha = np.nan
+        print(i, dk, alpha)
         alphas[i] = alpha
 
     np.save(isfs_dir / 'alphas.npy', alphas)

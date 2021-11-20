@@ -17,7 +17,7 @@ if __name__ == '__main__':
     dk_mags = np.linspace(0, 2.46, 50)
     times = config.times[::10]
     save_mask = times < 5000
-    num_iterations = 200
+    num_iterations = 170
     coeff = config.interpolation_coefficients
 
     isfs = {}
