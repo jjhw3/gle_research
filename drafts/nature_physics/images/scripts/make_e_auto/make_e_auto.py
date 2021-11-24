@@ -23,7 +23,7 @@ plt.annotate('', (0, 1 / np.e), xytext=(phi, 1 / np.e), arrowprops=dict(arrowsty
 plt.annotate('', (phi, 0), xytext=(phi, 1 / np.e), arrowprops=dict(arrowstyle='<->'))
 plt.text(phi / 2 - 0.2, 1 / np.e - 0.07, r'$\phi$')
 plt.text(phi + 0.2, 1 / 2 / np.e - 0.05, r'$1/e$')
-plt.text(5, 0.15, r"$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2}$ ~ $\exp\left(-t/\phi\right)$", c='red')
+# plt.text(5, 0.15, r"$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2}$ ~ $\exp\left(-t/\phi\right)$", c='red')
 
 plt.xlim(0, 15)
 plt.xlabel('Time (ps)')

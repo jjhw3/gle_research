@@ -95,15 +95,24 @@ def get_greens_function_parameters(w0, eta, tau):
     return chi1, chi2, eta1
 
 
+def get_ek_auto(times, kernel, eta, w0):
+    dt = times[1] - times[0]
+    ws = 2 * np.pi * np.fft.fftfreq(times.shape[0], dt)
+    K_tilde = np.fft.fft(kernel) * dt
+    F_tilde = K_tilde / (-ws**2 + 1j * eta * ws * K_tilde + w0**2)
+    E_auto_tilde = ws**2 * np.abs(F_tilde)**2
+    return np.fft.ifft(E_auto_tilde)**2
+
+
 if __name__ == '__main__':
-    from gle.configuration import ComplexTauGLEConfig
-
-    working_dir = Path(sys.argv[1])
-    print(sys.argv[1])
-    config = ComplexTauGLEConfig.load(working_dir)
-
-    plot_time = 20
-    plot_mask = config.times < 10
-    msd = calculate_theoretical_msd(config)
-    plt.plot(config.times[plot_mask], msd[plot_mask])
+    times = np.arange(0, 1000, 0.001)
+    dt = times[1] - times[0]
+    wc = 7.4
+    kernel = np.sin(wc * times) / (wc * times)
+    kernel[0] = 1
+    kernel /= np.sum(kernel) * dt
+    eta = 0.1
+    w0 = 7.7
+    auto = get_ek_auto(times, kernel, eta, w0)
+    plt.plot(times, kernel)
     plt.show()
