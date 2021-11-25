@@ -30,6 +30,6 @@ def get_fourier_spectrum(path):
 
 base_path = Path('/home/jjhw3/rds/hpc-work/md/calculate_md_isf')
 for size in [8]:
-    temp_dir = base_path / f'{size}/{160}'
+    temp_dir = base_path / f'{size}/{300}'
     spectrum = get_fourier_spectrum(temp_dir)
     np.save(temp_dir / 'spectrum.npy', spectrum)

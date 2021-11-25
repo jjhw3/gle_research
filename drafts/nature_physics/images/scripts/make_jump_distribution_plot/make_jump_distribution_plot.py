@@ -45,7 +45,7 @@ for i, plot_dir in enumerate(dirs):
             label = labels[i]
         plot_alpha_dk(plot_dir / f'{ttf}.npy', norms[j], c=cs[i], label=label, marker=markers[i], s=sizes[i])
 
-plot_alpha_dk(Path('md_alphas.npy'), marker='x', label='3D molecular dynamics', c='r')
+plot_alpha_dk(Path('md_alphas.npy'), marker='x', label='3D MD simulation', c='r')
 
 plt.gcf().set_size_inches(12 * cm, 8 * cm)
 plt.subplots_adjust(left=0.137, bottom=0.15, right=0.993, top=0.987)

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from common.constants import cm
+from common.constants import cm, boltzmann_constant
 
 amu = 1.66e-27
 picosecond = 1e-12
@@ -26,6 +26,8 @@ plt.yticks([0.5, 1.0, 1.5, 2.0, 2.5], [''] * 5)
 plt.xlabel('Potential (meV)')
 plt.annotate(r'', (0, x[0]), xytext=(67, 0), arrowprops=dict(arrowstyle='<->'))
 plt.text(18, 0.05, r'$E_a=67$meV')
+plt.axvline(1000 * amu_K_ps_to_eV(0.5 * boltzmann_constant * 300), color='black')
+plt.text(15, 2.48, r'$\frac{1}{2}kT \approx 13$meV')
 
 plt.subplot2grid((1, 6), (0, 0), colspan=4)
 cont = plt.contour(x, x, pot_surface, levels=20)
