@@ -17,24 +17,24 @@ def get_fourier_spectrum(path):
     noise_spectrum = None
     N = 0
 
-    for run_dir in path.glob('*'):
-        print(run_dir)
+    for i, run_dir in enumerate(path.glob('*')):
+        print(i, run_dir)
         if not run_dir.name.isdecimal():
             continue
 
         config = MDConfig.load(run_dir)
-        positions = np.load(run_dir / 'absorbate_positions.npy')[0]
-        forces = np.diff(positions, 2) / 0.01**2
+        positions = np.load(run_dir / 'absorbate_positions.npy')
+        forces = np.gradient(positions[0], 2) / 0.01**2
+        cob = np.linalg.inv(config.in_plane_basis[:2, :2])
 
-        background_forces = np.zeros_like((2, positions.shape[0]))
+        background_forces = np.zeros_like(positions)
 
-        for i in range(background_forces.shape[1]):
+        for i in range(positions.shape[1]):
             eval_force_from_pot(
-                background_forces[i],
-                config.inv_in_plane_basis[:2, :2],
+                background_forces[:, i],
+                cob,
                 spline_coefficient_matrix_grid,
-                positions[0, i],
-                positions[1, i],
+                positions[:, i],
             )
 
         fft = np.abs(np.fft.fft(forces - background_forces[0]))**2
@@ -50,7 +50,7 @@ def get_fourier_spectrum(path):
 
 
 base_path = Path('/home/jjhw3/rds/hpc-work/md/calculate_md_isf')
-for size in [8]:
+for size in [32]:
     temp_dir = base_path / f'{size}/{300}'
     spectrum = get_fourier_spectrum(temp_dir)
     np.save(temp_dir / 'spectrum.npy', spectrum)
