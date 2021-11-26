@@ -107,18 +107,18 @@ def record_absorbate(config, auto_save=False):
                 config.working_directory / f"absorbate_positions.npy",
                 absorbate_positions
             )
-            # np.save(
-            #     config.working_directory / f"absorbate_velocities.npy",
-            #     absorbate_velocities
-            # )
-            # np.save(
-            #     config.working_directory / f"absorbate_potentials.npy",
-            #     absorbate_potentials
-            # )
-            # np.save(
-            #     config.working_directory / f"absorbate_forces.npy",
-            #     absorbate_forces
-            # )
+            np.save(
+                config.working_directory / f"absorbate_velocities.npy",
+                absorbate_velocities
+            )
+            np.save(
+                config.working_directory / f"absorbate_potentials.npy",
+                absorbate_potentials
+            )
+            np.save(
+                config.working_directory / f"absorbate_forces.npy",
+                absorbate_forces
+            )
 
             # sio.savemat(
             #     config.working_directory / 'adsorbate_trajectory.mat',

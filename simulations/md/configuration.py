@@ -76,14 +76,8 @@ class MDConfig:
             self.lattice_connections = get_nearest_neighbour_list(self.in_plane_basis)
 
     @property
-    def run_time(self):
-        return self._run_time
-
-    @run_time.setter
-    def run_time(self, val):
-        self._run_time = val
-        self._times = None
-        self.num_iterations = int(np.round(self._run_time / self.dt))
+    def num_iterations(self):
+        return int(np.round(self.run_time / self.dt))
 
     @property
     def times(self):

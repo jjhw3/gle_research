@@ -37,5 +37,11 @@ if __name__ == '__main__':
             record_temperature(config, absorbate_window_size_ps=100),
             absorbate_recorder,
         ],
+        initial_substrate_deltas=substrate_displacements,
+        initial_absorbate_position=absorbate_position,
     )
 
+    np.save(
+        config.working_directory / f"absorbate_positions.npy",
+        absorbate_positions
+    )
