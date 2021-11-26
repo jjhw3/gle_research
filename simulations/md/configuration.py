@@ -54,8 +54,6 @@ class MDConfig:
         if not self.log_isf_directory.exists():
             self.log_isf_directory.mkdir()
 
-        self._times = None
-
         self.in_plane_basis_canonical_coords = get_in_plane_basis(
             self.canonical_basis,
             self.conventional_cell,
@@ -89,9 +87,7 @@ class MDConfig:
 
     @property
     def times(self):
-        if self._times is None:
-            self._times = np.linspace(0, self.run_time, self.num_iterations)
-        return self._times
+        return np.linspace(0, self.run_time, self.num_iterations)
 
     def calculate_absorbate_check_bubble(self):
         min_periodicity_dist = np.min(mag(self.in_plane_basis[:, :2]) * self.lattice_shape[:2])

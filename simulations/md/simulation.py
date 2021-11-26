@@ -143,12 +143,12 @@ def simulate(
             # new_absorbate_position = absorbate_position
 
             foo = absorbate_F_net.copy()
-            foo[:2] = 0
+            foo[:3] = 0
             bar = prev_absorbate_velocity.copy()
-            bar[:2] = 0
+            bar[:3] = 0
             if prev_absorbate_force is not None:
                 bla = prev_absorbate_force.copy()
-                bla[:2] = 0
+                bla[:3] = 0
             else:
                 bla = None
 

@@ -15,7 +15,7 @@ if __name__ == '__main__':
     config = MDConfig.load(working_dir)
 
     absorbate_positions, absorbate_velocities, absorbate_potentials, absorbate_forces, absorbate_recorder = record_absorbate(config, auto_save=True)
-    substrate_positions, substrate_recorder = record_last_N_substrate_positions(config, -1)
+    # substrate_positions, substrate_recorder = record_last_N_substrate_positions(config, -1)
 
     # substrate_displacements, substrate_velocities, absorbate_position, absorbate_velocity = simulate(
     #     config,
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # )
 
     absorbate_position = config.centre_top_point + config.in_plane_basis[:, 1] / 2 + config.in_plane_basis[:, 0] / 2
-    absorbate_position[2] += config.r0
+    absorbate_position[2] += config.r0 * 0.9
     substrate_displacements, absorbate_position = get_nearest_equilibrium_configuration(config, absorbate_position)
 
     # absorbate_position += [1, 1, 0]
