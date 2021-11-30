@@ -29,11 +29,20 @@ if __name__ == '__main__':
     for rootdir in Path('/home/jjhw3/rds/hpc-work/md/phonon_cutoff/').glob('*'):
         num_folders = 100
         cum_e_auto = None
+        N = 0
+
         for i in range(num_folders):
             print(i)
-            e_auto = get_e_auto(rootdir / str(i))
+            try:
+                e_auto = get_e_auto(rootdir / str(i))
+            except Exception as e:
+                print('Error', rootdir / str(i), e)
+                continue
+
             if cum_e_auto is None:
                 cum_e_auto = np.zeros_like(e_auto)
-            cum_e_auto += e_auto / num_folders
 
-        np.save(rootdir / 'total_energy_autocorrelation.npy', cum_e_auto)
+            cum_e_auto += e_auto
+            N += 1
+
+        np.save(rootdir / 'total_energy_autocorrelation.npy', cum_e_auto / N)
