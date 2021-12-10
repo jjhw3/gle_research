@@ -96,25 +96,15 @@ if __name__ == '__main__':
     print(sys.argv[1])
     config = ComplexTauGLEConfig.load(working_dir)
 
-
-
-    # config.potential_grid *= 0 #####################################################
-
-
+    from final.harmonic.run_harmonic_le import generate_harmonic_potential_grid
+    config.potential_grid = generate_harmonic_potential_grid(config, 8.8)
 
     results = run_gle(
         config
     )
 
+    pots = config.evaluate_potentials(results.positions[:, ::10])
+
     print('Temp:', 0.5 * config.absorbate_mass * (results.velocities**2).sum(axis=0).mean() / boltzmann_constant)
-    # plt.plot(*results.positions)
-    # plt.show()
-
+    # np.save(working_dir / 'absorbate_positions.npy', results.positions)
     results.save()
-
-    # last_result.save_summary()
-
-    # from memory_profiler import memory_usage
-    # mem_usage = memory_usage(f)
-    # plt.plot(mem_usage)
-    # plt.show()

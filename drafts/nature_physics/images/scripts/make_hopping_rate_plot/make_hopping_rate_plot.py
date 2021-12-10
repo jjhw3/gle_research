@@ -12,9 +12,18 @@ eta_tau_ttf_grid = np.load('../eta_tau_ttf_grid_300.npy')
 # eta_tau_ttf_grid = np.load('/Users/jeremywilkinson/research_data/gle_data/eta_tau_ttf_grid.npy')
 markovian_mask = gle_TAUs == 0
 
-plt.scatter(eta_tau_ttf_grid, eta_tau_gamma_grid, s=2, c=gle_ETAs, label='non-Markovian Langevin equation', cmap='cool')
+plot_every = 3
+plt.scatter(
+    eta_tau_ttf_grid[::plot_every, ::plot_every],
+    eta_tau_gamma_grid[::plot_every, ::plot_every],
+    s=4,
+    c=gle_ETAs[::plot_every, ::plot_every],
+    label='non-Markovian Langevin equation',
+    cmap='copper',
+    zorder=10
+)
 plt.colorbar(label=r'Friction constant, $\eta$ (ps$^{-1}$)', fraction=0.1, pad=0.01)
-plt.scatter(eta_tau_ttf_grid[markovian_mask], eta_tau_gamma_grid[markovian_mask], s=30, marker='+', c='g', label='Markovian Langevin equation')
+plt.scatter(eta_tau_ttf_grid[markovian_mask][::2], eta_tau_gamma_grid[markovian_mask][::2], s=30, marker='+', c='g', label='Markovian Langevin equation')
 
 xhis = np.arange(5e-6, 3e-5, 1e-6)
 cubic_ttfs = np.load('../cubic_ttfs.npy')

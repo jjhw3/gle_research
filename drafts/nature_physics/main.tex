@@ -8,15 +8,15 @@
 \usepackage{hyperref}
 \graphicspath{{./images/}}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage[version=4]{mhchem}
-
-\usepackage{natbib}
-\bibliographystyle{abbrv}
-\usepackage[superscript,biblabel]{cite}
 
 \usepackage[a4paper, total={183mm, 247mm}]{geometry}
 \usepackage[switch]{lineno}
-% \linenumbers
+\linenumbers
+
+\bibliographystyle{unsrt}
+\usepackage[superscript,biblabel]{cite}
 
 \newcommand*{\ts}{{\tau^{*}}}
 \newcommand*{\diff}{\mathop{}\!\mathrm{d}}
@@ -35,7 +35,7 @@
 \sectionfont{\small}
 \subsectionfont{\small}
 
-\title{Reductionism in surface dynamics, energy exchange rates, and the Kramers problem}
+\title{Justification for the use of Markovian Langevin statistics in the modeling of activated surface diffusion.}
 
 \date{September 2021}
 
@@ -43,66 +43,29 @@
 
 \maketitle
 
-\begin{abstract}
-	At low temperatures, the motion of an adatom across a surface is an activated diffusion process characterised by the rate of hopping between adsorbtion sites. An understanding of what properties influence a system's hopping rate, and how these emerge from microscopic motion, allow for the classification and development of materials with desireable transport properties. The standard approach to modeling surface dynamics via the two dimensional Markovian Langevin equation, leads to the classification of systems through the properties of the potential, such as an activation energy, and a single interaction strength parameter. The consequences of modelling a complex bandlimited system with linear Markovian forces is not fully understood and it is unclear whether more parameters are required to fully characterize such systems. Through the study of four distinct models of microscopic motion covering correlated noise, alternative models of friction, and motion in three dimensions, we show that the the two dimensional equilibrium phase space distribution and the total energy decorrelation rate are enough to constrain the hopping rate and jump distributions of an adatom to within a few percent. Our results validate the standard approach in the field provided the Markovian interaction strength parameter is reinterpreted as an effective energy exchange rate to which many effects contribute. The insights gained into the mechanism through which noise correlations affect the energy exchange rate suggest the existance of a directly observable resonance effect which drastically suppresses the hopping rate pre-exponential factor in systems where the vibrational frequency of the adatom matches the substrate's phonon cutoff frequency.  
+Abstract max length: 200 words
 
-\end{abstract}
+\section*{Abstract 1 (239)}
+
+At low temperatures, the motion of an adatom across a surface is an activated diffusion process characterized by the rate of hopping between adsorption sites. An understanding of what properties influence a system's hopping rate, and how these emerge from microscopic motion, allow for the classification and development of materials with desirable transport properties. The standard approach to modeling surface dynamics via the two dimensional Markovian Langevin equation leads to the classification of systems through the properties of the potential, such as an activation energy, and a single interaction strength parameter. The consequences of modeling a complex band-limited system with linear Markovian forces is not fully understood and it is unclear whether more parameters are required to fully characterize such systems. Through the study of four distinct models of microscopic motion covering correlated noise, alternative models of friction, and motion in three dimensions, we show that the two dimensional equilibrium phase space distribution and the total energy decorrelation rate are enough to constrain the hopping rate and jump distributions of an adatom to within a few percent. Our results validate the standard approach in the field provided the Markovian interaction strength parameter is reinterpreted as an effective energy exchange rate to which many effects contribute. Insights gained into the mechanisms of energy exchange suggest noise correlations have a strong effect on the hopping pre-exponential factor of systems where lateral adatom vibration frequencies are comparable to the phonon cutoff frequency.  
+
+\section*{Abstract 2 (202)}
+
+Low temperature surface diffusion is driven by the thermally activated hopping of adatoms between adsorption sites. Helium spin-echo techniques, capable of measuring the sub-picosecond motion of individual adatoms, have enabled the benchmarking of many important adsorbate-substrate properties. The well-known Markovian Langevin equation has emerged as the standard tool for the interpretation of such experimental data, replacing surface phonons interactions with stochastic white noise and linear friction. However, the consequences of ignoring the coloured noise spectrum and non-linearities inherent to surface systems are not known. Through the computational study of three alternative models of adatom motion, we show that the hopping rate and jump distributions of an adatom are fixed to within a few percent by the potential energy surface and a new generalised energy exchange rate parameter alone, independent of the model used. This result justifies the use of the Markovian Langevin equation, regardless of the true statistical nature of adatom forces, provided results are interpreted in terms of the new energy exchange rate parameter. Insights gained into the mechanisms of energy exchange suggest noise correlations in particular can have a strong effect on the hopping pre-exponential factor of systems where lateral adatom vibration frequencies are comparable to the phonon cutoff frequency.
 
 \section*{Introduction}
 
-Since the random motion of microscopic pollen grains was first observed under an optical microscope in 1827, the measurement of diffusive motion has seen a progression through a further five orders of magnitude in size and fourteen in time\cite{Jardine200911}. Each technological breakthrough in measurement techniques has revealed new forms of qualitatively distinct behaviours which govern diffusion at the given scale. The motion of microscopic particles in a simple fluid like water exhibits an asymptotically linear mean square displacement captured by the original well-known Markovian Langevin equation. At the nanoscopic scale, some fluids are found to respond to purturbing forces with a delayed kick-back, a property known as visco-elasticity. The chaotic nature of interactions with the diffusive media neccesetates the use of a statistical model for microscopic motion. The well known Markovian Langevin equation was developed to model the diffusion of microscopic particles through simple fluids. However many generalisations The chaotic nature of interactions with the diffusive medium neccesitate the use of a stochastic models of microscopic motion. Langevin dynamics has emerged as the most common framework for theoretical analysis. Einstein famously used kinetic theory to predict the asymptotically linear mean square displacement  
+Diffusion on the atomic scale is distinguished from the diffusion of larger particles as the potential generated by the medium cannot be considered homogeneous at this scale\cite{Jardine2004}. The regular periodic potential formed by a crystalline substrate results in a form of activated diffusion where adatoms become bound to and hop between local adsorption sites. The motion observed through helium scattering is therefore far more sophisticated than the archetypal diffusion of the Einstein-Smoluchowski type through a homogeneous fluid\cite{Jardine200906}.
 
-Although water served as the diffusive medium in foundational measurements of Brownian motion, cutting edge techniques are capable of measuring the diffusion of individual \ce{H2O} molecules over a surface\cite{Tamtgl2020}. The development of helium-3 spin-echo spectroscopy has allowed experimental work to probe the limits of classical diffusion through the direct measurement of individual atoms diffusing over a substrate surface on a sub-picosecond timescale. The technique has uncovered  Understanding motion on these scales promises insights into the implementation of quantum computing\cite{Jardine2009}, graphene growth\cite{Tamtgl2015}, photovoltaic devices\cite{Sacchi} as well as direct observation of quantum mechanics processes such quantum tunneling\cite{McIntosh2013}. 
+The information contained in helium spin-echo measurements is sufficient to benchmark many important properties of the adatom-substrate interaction. These include the activation barrier to diffusion, adatom vibrational frequencies, the rate of hopping between sites, and the strength of atomic scale friction\cite{Jardine200911, Lechner2015, Alexandrowicz, Hedgeland}. These properties are consequential for the development of many technologies and the results of helium spin-echo experiments have contributed to the understanding of graphene growth, self-assembling organic semiconductors, and the design of topological insulators\cite{Tamtgl2015, Townsend, Sacchi, Tamtgl2020}. A thorough understanding of how to model activated diffusion processes and interpret the important quantities involved is therefore of great interest.
+ 
+The standard approach to modeling diffusive motion uses a Markovian Langevin equation to reduce the forces of a large complex heat bath on a particle of interest to a simple Markovian stochastic force and a dissipative linear friction\cite{Kramers, Zwanzig, Kubo}. This approach is used in the interpretation of almost all helium spin-echo data despite numerous properties of adatom diffusion being in direct conflict with the assumptions used to construct the Markovian Langevin equation.  For instance, the white noise power spectrum implied by the Markovian approximation cannot exist on a real substrate since the source of noise, surface phonons, cannot vibrate faster than the Debye phonon cutoff frequency. The cutoff frequency of most lighter metals is around $6-10\THz$ \cite{Sinha, Rao, Zarestky, Stedman1966}, which is not significantly faster than typical adatom vibrational frequencies of $1-4\THz$\cite{Ellis1995, Senet1999LowfrequencyVO, Hofmann1996}. The Debye frequency of heavier metals such as lead and rubidium is found to dip into the low terahertz range\cite{Brockhouse, Copley1973}, making the approximation that adatom motion is effectively driven by white noise manifestly false. The fact that all real forms of noise are band-limited is a negligible detail for most forms of long-time diffusion\cite{Townsend2018, GlattHoltz2020}. However even without the complications of atomic scale interactions, some phenomena, such as anomalous sub-diffusion through viscoelastic fluids, can only be accounted for through the use of a generalized non-Markovian Langevin equation\cite{Kubo, GlattHoltz2020, Mason}. The assumption of a linear friction force is also difficult to justify since the exact trajectories of adatoms are not experimentally accessible. From a theoretical perspective, there is no a priori reason for the vanishing of higher powers of velocity in the friction force\cite{Kramers}. The laws of equilibrium thermodynamics can be satisfied by a large number of non-linear friction laws with linear friction being nothing more than the simplest possible case. 
 
-The interaction of an  
+If the forces on an adatom do not resemble Markovian Langevin statistics, the question arises, to what extent are the wide array of results derived from the Langevin equation in surface dynamics meaningful at all? We address this concern through the computational study of alternative models of diffusion which explore the effect of noise correlations and non-linear force laws on activated diffusion. We demonstrate that the details of adatom motion can have a significant effect on long-time behavior, however, provided the results derived through Markovian Langevin simulations are reinterpreted in terms of a generalized energy exchange rate parameter, the conclusions that follow remain valid. 
 
-The defining feature of diffusive motion, the chaotic interactions with the diffusive medium, neccesitates the use of statistical tools in its modelling.
+\section*{Definitions \& computational models}
 
-Langevin dynamics has emerged as the primary theoretical tool used to understand classical diffusive motion over all length and time scales. The original Markovian Langevin equation  
-
-Langevin dynamics, along with the associated Fokker-Planck equations, has emerged as the preffered tool for the theoretical study of diffusion. The linear mean square distance $\operatorname{MSD}(t)=<(x(t)-x(0))^2> \propto t$  
-
-The theoretical analysis of diffusive motion has remained in lockstep with experimental work with Langevin dynamics (and their corresponding Fokker-Planck equations) emerging as the standard tool of analysis.
-
-The aim of Langevin dynamics is to reduce the influence of a large complex heat bath on a particle of interest to a simple stochastic force. In its most general form, a Langevin equation is constrained only by the principal of entropy maximisation which requires a Boltzmannian equilibrium phase space distribution. Although this condition greatly constrains the possible statistics of the stochastic force, the Markovian noise and linear friction in the widely used Markovian Langevin equation is far from unique. As a consequence of such a radical and underconstrained simplification, it is natural to wonder whether any important details of particle motion is lost.
-
-In certain cases we know the answer to this question is yes. The delayed response of a visco-elastic medium to a purturbing force necesarily results in a noise force which is correlated in time. Dynamic light scattering techniques have observed that the diffusion of microparticles through such materials can exhibit a sub-linear mean square displacement, $\left<x^2(t)\right> \propto t^\alpha$ with $\alpha < 1$, which cannot be reproduced by the Markovian Langevin equation. The diffusion through viscoelastic fluids, a problem frequently encountered in biological systems, therefore requires the use of a generalised non-Markovian Langevin equation which succesfully captures this anomolous behaviour.
-
-On the scale of a microparticle, the average force exerted by the many particles in a fluid average out to appear completely homogenous in space with no preffered position. The development of helium spin-echo microscopy enabled the direct observation of individual atoms over the surface of a substrate. On this scale, at low temperatures, all diffusion is activated as atoms become bound to local adsorbtion sites  
-
-diffusion of microparticles through visco-elastic fluids has been found to provides an example of the Markovian The diffusion of nanoparticles through a viscoelastic medium, provides a well known example of such an issue 
-
-Early experimental efforts verified the asymptocially linear mean square displacement, $\left<x^2(t)\right> \propto t$, predicted by the Markovian Langevin equation through the direct observation of microscopic particles under a microscope. However the development of dynamic light scattering techniques provided access to similar measurements for nano-scale particles and uncovered a form of anomolous diffusion with a sub-linear mean square displacement, $\left<x^2(t)\right> \propto t^\alpha$ with $\alpha < 1$, for diffusion through certain viscoelastic media. The non-Markovian generalised Langevin equation\cite{Kubo} emerged as the accepted model for such systems through the introduction of a noise force correlated in time. This anomoly was the first example of a microscopic effect unaccounted for within the Markovian framework which had effects on the long-time diffusion of a particle. 
-
-Since its seminal application to the Brownian motion\cite{Lemons1997} of microscopic particles suspended in a fluid, Langevin dynamics have become the standard tool for the study of diffusive motion. . In response to such a radical simplification, one may wonder whether any important details have been lost. Modern dynamic light scattering techniques\cite{Pecora} were the first to directly measure the diffusion constant, $D$, of nanoscale particles in a homogenous fluid\cite{FOORD1970, Pecora2000} and observe the asymptotically linear mean square displacement predicted by the Markovian Langevin equation\cite{Zwanzig}, $\left<x^2(t)\right> \sim Dt$. The limits of the Markovian approximation were quickly encountered when diffusion through viscoelastic biological media was discovered to exhibit an anomolous sublinear diffusion of the form $\left<x^2(t)\right> \sim Dt^\alpha$ where $\alpha < 1$. This phenomenon order to reproduce this phenomenon, the introdu which could only be modelled through a non-Markovian generalised Langevin equation with a coloured noise spectrum\cite{Mason, Hfling2013, McKinley2018}. The non-Markovian Langevin equation has since emerged as the standard technique for modelling systems where noise correlations are a consequential property\cite{GlattHoltz2020, Kubo}.
-
-While dynamic light scattering techniques are able to measure the nanoscale motion of particles, the development of helium spin-echo microscopy\cite{DeKieviet1995, DEKIEVIET1997} introduced the possibility of measuring atomic motion over a substrate surface on an a sub-picosecond timescale. At this scale, the homogenous
-
-While the observables in a surface scattering experiment contain a certain statistical description of adatom motion\cite{vanHowe}, the microscopic trajectories of adatoms are not directly observable. The nature of microscopic adatom motion from which macroscopic observable quantities emerge therefore remains open to conjecture. Little can be known about the exact state of a substrate and its interactions with an adsorbate, yet physical properties emerge which can be reliably defined and measured with complete ignorance to the vast majority of information in the system. The questions therefore arise, \emph{what are the relevant observable quantities in a system} and \emph{what is the minimum amount of information needed to explain these observables}. 
-
-At low temperatures, surface diffusion is predominantly a classical activated diffusion process\cite{someone} wherein adatoms are bound to local minima in the substrate potential, referred to as adsorption sites. As an adatom oscillates about its local adsorption site it is able to slowly exchange energy with the substrate through interactions with surface phonons. On occasion, the adatom will find itself with enough energy to overcome the trapping potential and is able to hop to an adjacent site, or further. The hopping rate and distribution of jump lengths set the rate of macroscopic diffusion over the surface and are strongly influenced by the shape of the trapping well, in particular the activation energy, as well as the rate at which the adatom exchanges energy with the substrate.
-
-The observable quantity in a surface scattering experiment is the intermediate scattering function,
-$$
-\mathrm{ISF}(\Delta{\vec{K}}, t) = \left<\exp\left(i\Delta{\vec{K}}\cdot\vec{r(t)}\right)\right>.
-$$
-The ISF is typically quoted for a single momentum transfer, $\Delta{K}$, over a range of time, as shown in the main axes of Fig. \ref{fig:isf_dk}. For the purposes of extracting the long-time average rate of diffusion over the surface, the exponential decay rate of the ISF at long times, $\Gamma(\Delta{\vec{K}})$, is the quantity of interest and is proportional to the adatom hopping rate\cite{Chudley}. By varying the magnitude of $\Delta{K}$ in a particular direction, one may calculate the jump distribution plot as shown in the inset of Fig. \ref{fig:isf_dk}. When an adatom escapes from a well, it may hop more than one site before it settles down again. The shape of the jump distribution is set by the relative probability of the number of sites an adatom travels before settling down again \cite{Chudley}. The transport properties of systems may therefore be compared through the amplitude and shape of their jump distributions.
-
-<ONE MORE SENTENCE TO RELATE TO OTHER FIELDS THROUGH KRAMERS PROBLEM> 
-
-\section*{Surface diffusion}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=1.0\columnwidth]{isf_dk}
-	\caption{The main axes show a typical ISF over time for a fixed momentum transfer. The decay rate, $\Gamma$, of the ISF's exponential tail is proportional to the hopping rate of the adatom. By calculating $\Gamma$ over a range of momentum transfers a jump distribution plot may be constructed, as shown in the inset axes.} 
-	\label{fig:isf_dk}
-\end{figure}
-
-
-The rate of hopping, $\gamma$, is usually observed to obey an Arrhenius law, of the form $\gamma = A\exp\left(-E_a/k_BT\right)$, with an associated activation energy, $E_a$ and a pre-exponential factor $A$. The exponential Boltzmann factor serves as a quantifier of the number of particles with sufficient energy to clear the potential barrier at equilibrium while the pre-exponential factor contains all other dynamical information and is in principal a complicated functional of the trapping potential, the energy exchange rate, and the substrate-adatom interactions. 
-
-While it is relatively simple to extract an activation energy directly from experimental data\cite{Diamant,Alexandrowicz2006}, it is not possible to disentangle the energy exchange rate of the system from other effects without making further assumptions. The most common approach is to assume that the force on the particle may be treated as a random variable obeying the Markovian Langevin equation,
+With the notable exception of Hydrogen adsorbates\cite{McIntosh2013}, surface diffusion is predominantly a classical activated diffusion process. The hopping rate and distribution of jump lengths fully specify the rate of macroscopic diffusion over the surface. Both are strongly influenced by the shape of the trapping well, in particular the activation energy, as well as the rate at which the adatom exchanges energy with the substrate. The rate of hopping, $\gamma$, is usually observed to obey an Arrhenius law, of the form $\gamma = A\exp\left(-E_a/k_BT\right)$, with an associated activation energy, $E_a$ and a pre-exponential factor $A$. While it is relatively simple to extract an activation energy directly from experimental data\cite{Diamant,Alexandrowicz2006}, it is not possible to disentangle the energy exchange rate of the system from other effects which contribute to the pre-exponential factor without making further assumptions. The most common approach assumes that the force on the particle may be treated as a random variable obeying the Markovian Langevin equation,
 \begin{equation}
 \begin{gathered}
 	m\ddot{\vec{r}}=-m\eta\dot{\vec{r}}-\nabla U(\vec{r})+\vec{f}(t) \\ 
@@ -110,104 +73,118 @@ While it is relatively simple to extract an activation energy directly from expe
 \end{gathered}
 	\label{eq:langevin}
 \end{equation}
-and to fit the experimental data with simulated solutions to the Langevin equation. The resulting best fit friction parameter, $\eta$, parameterizes the strength of the random force $\vec{f}$ and may be used as a quantifier of the rate of energy transfer with the substrate. Theoretical results for the escape rate of a Markovian Langevin particle from a one dimensional potential well indicate that one expects a pre-exponential factor which is proportional to the friction constant $\eta$ in the low friction regime\cite{Kramers, Zwanzig}. 
+and to fit the experimental data with simulated solutions to the Langevin equation. The resulting best fit friction parameter, $\eta$, parameterized the strength of the random force $\vec{f}$ and may be used as a quantifier of the rate of energy transfer with the substrate. This approach is used in the analysis of almost all helium spin-echo data. Theoretical results for the escape rate of a Markovian Langevin particle from a one dimensional potential well indicate that one expects a pre-exponential factor which is proportional to the friction constant $\eta$ in the low friction regime\cite{Kramers, Zwanzig}. 
 
-Other than their attractive simplicity, the use of a friction term strictly linear in the instantaneous velocity and a random force completely uncorrelated in time are difficult to justify a priori. Attempts by the authors to directly observe the force distribution on an adatom in a full 3D molecular dynamics simulations have yet to demonstrate Langevin type statistics, suggesting that the statistics involved are more sophisticated. Furthermore, in the Fourier domain, uncorrelated noise corresponds to a uniform power spectrum $\left<\tilde{f}(\omega_1)\tilde{f}(\omega_2)\right>=4\pi k_BTm\eta\delta(\omega_1+\omega_2)$. However, the source of noise in a surface dynamics system, the substrate phonons, have a well defined maximum vibrational cutoff frequency, on the order of a few terahertz, and therefore the force they exert must be correlated in time\cite{Sinha}. The Markovian Langevin approach has nevertheless been used to successfully fit the jump rate and distributions of both physical systems\cite{someone} and three dimensional simulations\cite{Diamant}, for reasons which will become clear through the results presented. 
-
-\section*{Computational Models}
-
-In addition to the aforementioned Markovian Langevin equation, we present three models for the microscopic motion of adatoms. The first is a generalized form of the Langevin equation which incorporates correlations in the noise force through convolution with a memory kernel, $K(t)$. The preservation of Boltzmann statistics requires that both the friction force and the noise force be modified, resulting in the generalized Langevin equation\cite{Kubo},
+In addition to the Markovian Langevin equation, we present three models for the motion of adatoms. The first relaxes the Markovian approximation by introducing a correlated noise force with an autocorrelation function given by a memory kernel, $K(t)$. The second fluctuation-dissipation theorem requires that both the friction force and the noise force be modified, resulting in the generalized Langevin equation\cite{Kubo},
 \begin{equation}
-	m\ddot{\vec{r}}+m\eta\int_0^t\diff{t'}K(t-t')\dot{\vec{r}}(t')+\nabla U(\vec{r})=\int_0^t\diff{t'}\vec{f}(t')K(t-t').
+\begin{gathered}
+	m\ddot{\vec{r}}+m\eta\int_0^t\diff{t'}K(t-t')\dot{\vec{r}}(t')+\nabla U(\vec{r})=\vec{f}(t) \\
+	\text{ where } \left<f(t_1)f(t_2)\right>=2k_BTm\eta K(\left|t_1-t_2\right|).
+\end{gathered}
 	\label{eq:gle}
 \end{equation}
-A causal exponential memory kernel, $K(t)=\frac{1}{\tau}\exp\left(-\frac{t}{\tau}\right)\theta(t)$, parameterized by a noise correlation time $\tau$ was used to generate a Lorentzian noise power spectrum given by $\left|\tilde{K}(\omega)\right|^2=\frac{1}{1+\omega^2\tau^2}$ and a bandwidth of $\omega_\text{cutoff}=\frac{1}{\tau}$. In the limiting case of $\tau=0$, the white noise of the Markovian Langevin equation is recovered. 
+A causal exponential memory kernel, $K(t)=\frac{1}{\tau}\exp\left(-\frac{t}{\tau}\right)\theta(t)$, parameterized by a noise correlation time $\tau$ was used to generate a Lorentzian noise power spectrum given by $\left|\tilde{K}(\omega)\right|^2=\frac{1}{1+\omega^2\tau^2}$. In the limiting case of $\tau=0$, the white noise of the Markovian Langevin equation is recovered. 
 
-The fundamental requirement for a valid law of fluctuation and dissipation is that a Boltzmannian phase space distribution is attained at equilibrium. The linear friction in Eq. \ref{eq:langevin} is the simplest friction law with this trait but is far from the only one \cite{Kramers}. The consequences of using an alternative friction law were explored through a Markovian Langevin equation with a cubic friction force parameterized through $\zeta$,
-$$
-m\ddot{\vec{x}} + m\zeta\dot{x}^2\dot{\vec{x}} + m \nabla U(x) = \vec{f}(t),
-$$
-along with a modified fluctuation-dissipation theorem\cite{Kramers},
-$$\left<f(t_1)f(t_2)\right>=\left(4\zeta\left(k_BT\right)^2 + 2 m \zeta \left(k_BT\right)\dot{x}^2(t_1)\right)\delta\left(t_1-t_2\right).$$
+The second model explores the effects of non-linear friction through a cubic friction law parameterized by $\zeta$\cite{Kramers},
+\begin{equation}
+\begin{gathered}
+	m\ddot{\vec{x}} + m\zeta\dot{x}^2\dot{\vec{x}} + m \nabla U(x) = \vec{f}(t) \text{ where } \\
+	\left<f(t_1)f(t_2)\right>=\left(4\zeta\left(k_BT\right)^2 + 2 m \zeta \left(k_BT\right)\dot{x}^2(t_1)\right)\delta\left(t_1-t_2\right). 
+\end{gathered}
+\end{equation}
+In general, such a friction law may also contain a linear component, however, we present the results of pure cubic friction as an extreme case with no resemblence to the commonly used linear friction. 
 
-The final model presented is a full 3D molecular dynamics simulation of sodium on copper(001) which tracks the harmonic interactions and motion of each copper atom in an $8\times8\times8$ substrate as well as the interactions with a sodium adatom via a Morse potential. The simulation parameters determined by Ellis and Toennies\cite{Ellis} were optimized to fit the binding energy, activation energy and vibrational frequency of Na on Cu(001). This model reproduces the phonon dispersion relation of a real copper crystal\cite{Sinha} and therefore provides a realistic model of three dimensional phonon-adatom interactions.
+
+The final model presented is a full 3D molecular dynamics simulation of sodium on copper(001) which tracks the harmonic interactions and motion of each copper atom in an $8\times8\times8$ substrate as well as the interactions with a sodium adatom via a Morse potential. The simulation parameters determined by Ellis and Toennies were optimized to fit the binding energy, activation energy, and vibrational frequency of Na on Cu(001)\cite{Ellis}. This model reproduces the phonon dispersion relation of a real copper crystal\cite{Sinha} and therefore provides a realistic model of three dimensional phonon-adatom interactions. Interactions with the surface electron cloud, which have a discernible effect in physical systems\cite{Rittmeyer2016}, are not accounted for.
 
 The two dimensional free energy surface parallel to the substrate was extracted from the 3D simulation through the density function of a microcanonical ensemble of trajectories and the definition,
 \begin{equation}
-	U(\vec{x}) = -kT\log\left(\left<\delta^{(2)}(\vec{r}_{\parallel}(t) - \vec{x})\right>\right).
+	U_{\text{free}}(\vec{x}) = -kT\log\left(\left<\delta^{(2)}(\vec{r}_{\parallel}(t) - \vec{x})\right>\right).
 	\label{eq:free_energy}
 \end{equation}
-This potential, shown in Fig. \ref{fig:pot_surface}, was used as the background potential of the Langevin type simulations. Each model therefore attains the same two dimensional equilibrium phase space distribution, albeit through different microscopic statistics. 
+This potential, shown in Fig. \ref{fig:pot_surface}, was used as the background potential of the Langevin type simulations and ensures that each model attains the same two dimensional equilibrium phase space distribution,
+$$\rho(\vec{r}, \vec{p})=\frac{e^{-\beta \left(\frac{p^2}{2m} + U_{\text{free}}(\vec{r})\right)}}{\int\diff{\vec{x}}\diff{\vec{p}}e^{-\beta H\left(\vec{r}, \vec{p}\right)}},$$
+albeit through different microscopic statistics. The mass of the adatom in each simulation was set to the mass of sodium, $23\amu$. 
+
+The absence of a linear Markovian friction in these alternative models necessitates the introduction of a generalized energy exchange rate parameter. While the fraction of time spent above the activation energy is set by Boltzmann statistics, the number of times this energy level is attained independently per unit time is set by the energy exchange rate. For this reason, we define the energy exchange rate as the inverse of the correlation time, $\phi$, of the \emph{total energy} auto-correlation function, $$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2},$$ as defined in Fig. \ref{fig:e_auto}. The energy exchange rate defined through $\phi^{-1}$ has the advantage of being applicable to any model of diffusion while coinciding with $\eta$ in the case of a Markovian Langevin equation in a harmonic well. The energy exchange rate of the MD simulation contains an additional very rapid decorrelation at short times due to interactions with the third coordinate. To compensate for this effect, the decorrelation time of the long-time exponential tail was used in the case of the 3D simulation (further discussion in the supplemental information).
 
 \begin{figure}
 	\centering
 	\includegraphics[width=1.0\columnwidth]{pot_surface}
-	\caption{The potential energy surface extracted from the sodium on copper(001) 3D molecular dynamics simulation with a superimposed trajectory typical for a low friction activated diffusion process. The red dashed line in the right panel shows a cross section of the potential through an adsorption site and two bridge sites as annotated in the panel on the left. All ISFs presented in this paper are quoted with the a momentum transfer pointing from the adsorption site through one of the equivalent bridge sites}
+	\caption{The potential energy surface extracted from the sodium on copper(001) 3D molecular dynamics simulation with a superimposed trajectory typical for a low friction activated diffusion process. The red dashed line in the right panel shows a cross-section of the potential through an adsorption site and two bridge sites as annotated in the panel on the left. All ISFs presented in this paper are quoted with the a momentum transfer pointing from the adsorption site through one of the equivalent bridge sites}
 	\label{fig:pot_surface}
 \end{figure}
-
-\section*{Energy exchange rates}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=1.0\columnwidth]{e_auto}
-	\caption{A typical total energy auto-correlation function notably absent of any oscillations which are generally present in a kinetic energy correlation function. Since the decay is generally not a pure exponential, the total energy correlation time $\phi$ is defined as the interval over which the normalized auto-correlation function drops to $1/e$.}
+	\caption{The generalized energy exchange rate, $\phi^{-1}$, is defined as the inverse correlation time of the normalized total energy autocorrelation function. Since the total energy auto-correlation function is generally not a pure exponential, $\phi$ is defined as the time taken for the function to fall by a factor of $\frac{1}{e}$.}
 	\label{fig:e_auto}
 \end{figure}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.8\textwidth]{energy_exchange_rates}
-	\caption{The top left panel shows the variation of the energy exchange rate as a function of the friction parameter, $\eta$, and noise correlation time, $\tau$, in the linear friction Langevin models. The suppression factor, $I=\phi^{-1}/\eta$, of the non-Markovian Langevin model is shown in the top right panel and the bottom left panel shows the energy exchange rate as a function of the cubic friction coupling constant $\zeta$. The bottom right panel shows the total energy autocorrelation function of the 3D molecular dynamics with the fit }
-	\label{fig:energy_exchange_rates}
-\end{figure*}
-
-While the fraction of time spent above the activation energy is set by Boltzmann statistics, the number of times this energy level is attained independently per unit time is set by the energy exchange rate. For this reason, we define the energy exchange rate as the inverse of the correlation time, $\phi$, of the \emph{total energy} auto-correlation function, $$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2},$$ as shown in Fig. \ref{fig:e_auto}. Each simulation was run at $300\K$, with thermal energy approximately a third of the barrier height, across a range of parameters and the observed energy exchange rates are summarized in Fig. \ref{fig:energy_exchange_rates}. 
- 
-The introduction of noise correlations was found to suppresses the energy exchange rate with the substrate, as shown in the top panel of Fig. \ref{fig:energy_exchange_rates}. For the sake of comparison, the red line shows the energy exchange rate of a particle with Markovian Langevin statistics in a harmonic well, $\phi^{-1}=\eta$. For short correlation times, we find the energy exchange rate is close to $\eta$, but even for $\tau=0$, there are small differences due to anharmonicities in the background potential. As the noise correlation time approaches $0.4\ps$, the energy exchange rate is seen to fall by close to a factor of four, demonstrating that the narrowing of the noise power spectrum can have a large effect on the energy exchange rate. Regardless of the noise correlation time, the exchange rate was found to remain linear in $\eta$ suggesting that $\eta$ continues to act as an overall interaction strength parameter while $\tau$ controls the coupling strength to individual modes, suppressing interactions with high frequency modes. 
-
-The linear dependence on $\eta$ inspires the introduction of a dimensionless, $\eta$ independent, suppression factor, $I = \frac{\phi^{-1}}{\eta}$, which quantifies the suppression of energy exchange as a function of $\tau$. The suppression factor for the non-Markovian simulation is shown in the top right panel of Fig. \ref{fig:energy_exchange_rates} alongside the analytically derrived suppression factor of an equivalent system in a harmonic well of natural frequency $\omega_0$. The toy model is solved in the supplemental information and is found to admit a similar $\eta$ independent suppression factor in the low friction limit. Within this simplified model, the suppression effect can be understood by considering the expected energy change of the adatom when subjected to a single noise impulse which decays in time as $K(t)$. Without loss of generality, we suppose the impulse is imparted in the direction of the instantaneous velocity. If $K(t)$ decays quickly compared to the oscillation period, then the impulse is imparted entirely in the direction of motion, and the adatom quickly settles into a new, higher energy level. If $K(t)$ decays at a rate comparable to the oscillation period of the well then some of the energy imparted initially is removed when the force acts against the direction of motion as the adatom swings back. The new energy level attained is therefore not as high as in the former case and we therefore expect a lower change in the total energy per impulse. A similar argument can be made for the correlated friction force removing less energy per oscillation. This interpretation is reflected in the mathematical form of the low friction approximation of the harmonic well's suppression factor as an oscillating integral over $K(t)$,
-\begin{equation}
-	I(\tau, \omega_0) = \int_0^{\infty}\diff{t}K(t)\cos{\omega_0t} = \mathrm{Re}\left(\tilde{K}(\omega_0)\right) = \frac{1}{1+\left(\omega_0\tau\right)^2}.
-	\label{eq:suppression_factor}
-\end{equation}
-For an exponential memory kernel, the suppression factor coincides exactly with the power spectrum of the memory kernel, however in general 
-the the real component of $\tilde{K}(\omega)$ is not equal to $\left|\tilde{K}(\omega)\right|^2$. 
-
-The energy exchange rate of the cubic friction model, shown in the bottom left panel of Fig. \ref{fig:energy_exchange_rates}, was found to be linear in $\zeta$, with energy exchange rates comparable to the linear friction models when $\zeta$ is on the order of $10^{-5}\uzeta$.
 
 \section*{Hopping rates}
 
 \begin{figure}
 	\centering
+	\includegraphics[width=1.0\columnwidth]{isf_dk}
+	\caption{The main axes show a typical ISF over time for a fixed momentum transfer. The decay rate, $\Gamma$, of the ISF's exponential tail is proportional to the hopping rate of the adatom. By calculating $\Gamma$ over a range of momentum transfers, a jump distribution plot may be constructed as shown in the inset axes. The shape of the jump distribution is set by the distribution of adatom jump lengths.} 
+	\label{fig:isf_dk}
+\end{figure}
+
+Each simulation was run repeatedly at $300\K$ for a total run time of up to $2\us$ per configuration. The hopping behavior of each simulated adatom was evaluated using the observable quantity in a surface scattering experiment, the intermediate scattering function,
+$$
+\mathrm{ISF}(\Delta{\vec{K}}, t) = \left<\exp\left(i\Delta{\vec{K}}\cdot\vec{r(t)}\right)\right>.
+$$
+A typical ISF for a fixed momentum transfer, $\Delta{\vec{K}}$, is shown in the main axes of Fig. \ref{fig:isf_dk}. In the case of activated diffusion, the long time decay rate of the ISF, $\Gamma$, is proportional to the adatom hopping rate, and the shape of $\Gamma$ as a function of $\Delta{K}$, as shown in the inset of Fig. \ref{fig:isf_dk}, is set by the distribution of jump lengths.
+
+\begin{figure}
+	\centering
 	\includegraphics[width=1.0\columnwidth]{gamma_ttf}
-	\caption{A scatter of the maximum ISF dephasing rate, $\Gamma_{\text{max}}$, against the energy exchange rate, $\phi^{-1}$, for each microscopic model demonstrates that the ISF dephasing rate is set by the energy exchange rate and the potential background with other microscopic details accounting for less than $3\%$ of the variance in the limit of low energy exchange rate.}
+	\caption{A scatter of the maximum ISF dephasing rate, $\Gamma_{\text{max}}$, against the energy exchange rate, $\phi^{-1}$, for each model demonstrates that the ISF dephasing rate is set by the energy exchange rate and the 2D potential background. Other microscopic details account for less than $3\%$ of the variance in the limit of low energy exchange rate. The color of the non-Markovian model's small points show the value of $\eta$ used in the simulation.}
 	\label{fig:gamma_ttf}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\includegraphics[width=1.0\columnwidth]{jump_distribution}
-	\caption{Each scatter shows the jump distribution of a particular microscopic model for three different energy exchange rates, $0.3$, $0.5$ and $0.7\ips$. A noise correlation time of $0.1\ps$ was used for the non-Markovian model in each instance.} 
+	\caption{Each set of points show the jump distribution of a particular model for three energy exchange rates: $\phi^{-1}=0.3$, $0.5$ and $0.7\ips$. A noise correlation time of $\tau=0.1\ps$ was used for the non-Markovian model in each instance. The jump distributions show very little variation across the models at a fixed energy exchange rate.} 
 	\label{fig:jump_distribution}
 \end{figure}
 
-As a measure of the total hopping rate, The peak of the jump distribution, $\Gamma_{\text{max}}$ (annotated in Fig. \ref{fig:isf_dk}), was calculated for each model. The small round points in Fig. \ref{fig:gamma_ttf}, show that the energy exchange rate of the non-Markovian Langevin equation is an excellent estimator for the total hopping rate of the system. The color of the markers demonstrates that for fixed $\eta$, the total hopping rate can vary by many multiples when the noise correlation time is adjusted. However when considered as a function of a fixed energy exchange rate, the hopping rate is found to vary by less than $3$\%, a portion of which may be attributed to statistical error. We therefore find that noise correlations do in fact have an effect on an adatom's hopping rate, however to first order, this effect only occurs through the the energy exchange rate and can therefore be compensated for through an adjustment of $\eta$.
+As a measure of the total hopping rate, The peak of the jump distribution, $\Gamma_{\text{max}}$ (annotated in Fig. \ref{fig:isf_dk}), was calculated for each model. The small round points in Fig. \ref{fig:gamma_ttf}, show that the energy exchange rate of the non-Markovian Langevin equation is an excellent estimator for the total hopping rate of the system. The color of the markers demonstrate that for fixed $\eta$, the total hopping rate can vary by many multiples when the noise correlation time is adjusted. However, when considered as a function of a fixed energy exchange rate, the hopping rate is found to vary by less than $3$\%. We therefore find that noise correlations do in fact have an effect on an adatom's hopping rate, however to first order, this effect only occurs through the energy exchange rate and can therefore be compensated for through an adjustment of $\eta$. The cubic model's hopping rate was found to vary linearly as a function of the coupling $\zeta$, however, if the energy exchange rate is tuned to match the exchange rate of the linear friction models, the hopping rate is found to lay within a few percent of the linear friction models. The 3D model was also found to lay within $6$\% of the Markovian Langevin simulation with an analogous energy exchange rate. 
 
-The cubic model's hopping rate was found to vary linearly as a function of the coupling $\zeta$, however once again, if the energy exchange rate is tuned to match the exchange rate of the linear friction models, the hopping rate is found to lay within a few percent of the linear friction models.
+The shape of the jump distribution of each model was compared by tuning the available parameters to run each model over a fixed set of energy exchange rates. The jump distributions for each model at the energy exchange rate of approximately $0.3$, $0.5$, and $0.7\ips$ are shown in Fig. \ref{fig:jump_distribution}. Since the variation of amplitudes is quantified in Fig. \ref{fig:gamma_ttf}, the jump distributions presented are normalized to peak at the same height within each energy transfer rate to allow for the comparison of the jump distribution shape. For a fixed energy exchange rate, the adatom jump distribution shapes were found to agree well across all models with only small differences in shape. The peaks of the jump distributions at higher exchange rates are all observed to be narrower than those at lower exchange rates, indicating an increase in the probability of single hops to adjacent sites\cite{Diamant}. This is expected as higher energy exchange rates decrease the probability that a particle which has escaped its well finds another bridge site before attaining an independent energy level, likely lower than the activation energy, and being bound to an adjacent well. The largest deviation is seen in the 3D model with a greater proportion of adatom jumps terminating outside of the adjacent adsorption sites compared to the 2D models.  
 
-The shape of the jump distribution of each model was compared by tuning the available parameters to run each model over a fixed set of energy exchange rates. The jump distributions for each model at the energy exchange rates $0.3$, $0.5$, and $0.7\ips$ are shown in Fig. \ref{fig:jump_distribution}. The jump distributions presented are normalized to peak at the same height within each energy transfer rate to allow for the comparison of the jump distribution shape. For a fixed energy exchange rate, the adatom jump distribution shapes were found to agree well across all models with only small differences in the overall shape. The peaks of the jump distributions at higher exchange rates are all observed to be narrower than those at lower exchange rates, indicating an increase in the probability of single hops to adjacent sites\cite{Diamant}. This is expected as higher energy exchange rates decrease the probability that a particle which has escaped its well finds another bridge site before attaining an independent energy level likely lower than the activation energy and being bound to an adjacent well.
+We therefore conclude that the hopping rate and jump distribution of a low-friction activated diffusion model are fixed by the 2D potential energy surface and the energy exchange rate, with almost complete independence of any other details in the low exchange rate limit. The deviations of the 3D model are not well understood but are likely due to additional memory effects as a result of energy exchange with the third co-ordinate and the 3D details of the potential affecting the probability of escape when enough energy is obtained. Furthermore the deviations seen across the board are well within the accuracy of current experimental techniques and therefore would not be observable within an experimental context (Would you be comfortable making this statement John? From what I can tell the accuracy of HSEM measurements around $\Gamma_{max}$ appears to be $\sim 10$\%.).
 
-We therefore find that to first order, the hopping rate and jump distribution are fully specified by the potential energy surface and the energy exchange rate of the system, almost entirely independent of microscopic details in the low exchange rate limit. 
+\section*{Energy exchange rates}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.8\textwidth]{energy_exchange_rates}
+	\caption{Panel a) presents the variation of the energy exchange rate as a function of the friction parameter, $\eta$, and noise correlation time, $\tau$, in the linear friction Langevin models. The suppression factor, $I=\phi^{-1}/\eta$, of the non-Markovian Langevin model is shown in the b) alongside the suppression factor of an equivalent harmonic potential. The power spectrum of the force seen by an adatom held fixed at the minimum of an adsorption site in the 3D simulation is shown in c) inset with the corresponding time domain auto-correlation function. The energy exchange rate of the non-linear friction model as a function of the cubic friction coupling constant $\zeta$ is found in panel d).} 
+	\label{fig:energy_exchange_rates}
+\end{figure*}
+
+Having established the generalized energy exchange rate as a quantity of interest, we shift focus to evaluating the effects which contribute to $\phi^{-1}$. The introduction of noise correlations was found to suppresses the energy exchange rate with the substrate, as shown in Fig. \ref{fig:energy_exchange_rates}a. For the sake of comparison, the red line shows the energy exchange rate of a particle with Markovian Langevin statistics in a harmonic well, $\phi^{-1}=\eta$. For short correlation times, we find the energy exchange rate is close to $\eta$, but even for $\tau=0$, there are small differences due to anharmonicities in the background potential. As the noise correlation time approaches $0.4\ps$, the energy exchange rate is seen to fall by close to a factor of four, demonstrating that the narrowing of the noise power spectrum can have a large effect on the energy exchange rate. Regardless of the noise correlation time, the exchange rate was found to remain linear in $\eta$ suggesting that $\eta$ continues to act as an overall interaction strength parameter while $\tau$ controls the coupling strength to individual modes, suppressing interactions with high frequency modes. 
+
+The linear dependence on $\eta$ inspires the introduction of a dimensionless, $\eta$ independent, suppression factor $I = \frac{\phi^{-1}}{\eta}$ which quantifies the suppression of energy exchange as a function of $\tau$. The suppression factor for the non-Markovian simulation is shown in Fig. \ref{fig:energy_exchange_rates}b alongside an analytically derived suppression factor of an equivalent particle in a harmonic well. The toy model, solved in the supplemental information, is found to admit a similar $\eta$ independent suppression factor in the low friction limit. The qualitative agreement of the suppression factors indicates a similar underlying origin albeit distorted through anharmonicities in the corrugated potential. The origin of the effect can be understood by considering the expected energy change of the adatom when subjected to a single noise impulse which decays in time as $K(t)$. Without loss of generality, we suppose the impulse is imparted in the direction of the instantaneous velocity. If $K(t)$ decays quickly compared to the oscillation period, then the impulse is imparted entirely in the direction of motion, and the adatom quickly settles into a new, higher energy level. If $K(t)$ decays at a rate comparable to the oscillation period of the well then some of the energy imparted initially is removed when the force acts against the direction of motion as the adatom swings back. The new energy level attained is therefore not as high as in the former case and we expect a lower change in the total energy per impulse. A similar argument can be made for the correlated friction force removing less energy per oscillation. This interpretation is reflected in the mathematical form of the low friction approximation of the harmonic well's suppression factor as an oscillating integral over $K(t)$,
+\begin{equation}
+	I(\tau, \omega_0) = \int_0^{\infty}\diff{t}K(t)\cos{\omega_0t} = \mathrm{Re}\left(\tilde{K}(\omega_0)\right) = \frac{1}{1+\left(\omega_0\tau\right)^2}.
+	\label{eq:suppression_factor}
+\end{equation}
+For an exponential memory kernel, the suppression factor coincides exactly with the power spectrum of the memory kernel, however in general this is not the case. 
+
+Moreover, the power spectrum of noise in a physical system is likely to exhibit a much sharper cutoff than the Lorentzian spectrum of an exponential memory kernel. Fig. \ref{fig:energy_exchange_rates}c contrasts the power spectrum of the force experienced by an adatom held fixed at an equilibrium point of the 3D simulation compared to the Lorentzian spectrum used in our non-Markovian simulations. This spectrum is feature rich but clearly demonstrates a sharp cutoff around the copper cutoff frequency of $7.4\THz$. The corresponding time domain correlation function contains clear oscillations on the order of a few terahertz. By tuning the mass of the adatom in this simulation, a doubling in the energy exchange rate has been observed in the 3D simulation when the frequency of the noise correlation oscillations match those of the adatom. This effect warrents its own investigation but is included here to demonstrate that this effect is likely meaningful in the context of realistic phonon-adatom interactions. High atomic mass substrates such as lead or rubidium paired with light adatoms may result in the conditions needed to see this effect although it is unknown whether the effect would be visible over the other differences in such materials.
+
+The energy exchange rate of the cubic friction model, shown in Fig. \ref{fig:energy_exchange_rates}d is included for completeness and was found to be linear in $\zeta$, with energy exchange rates comparable to the linear friction models when $\zeta$ is on the order of $10^{-5}\uzeta$. 
+
 
 \section*{Discussion}
 
-We conclude that the single energy exchange rate parameter included in the standard approach is sufficient for describing the transport properties of a system, however must be interpreted as an aggregation of subtle microscopic details, the breakdown of which may not be knowable. Effects attributable to the differences in microscopic statistics have been safely ignored until this point as they can be compensated for in the Markovian Langevin equation by adjusting the substrate interaction strength.
+We conclude that the single energy exchange rate parameter obtained through the Markovian Langevin equation is sufficient for describing the transport properties of low friction activated surface diffusion. However, the energy exchange rate must be interpreted as an aggregation of subtle microscopic details, the breakdown of which may not be knowable. Although the ability to fit data with sophisticated microscopic statistics using a Markovian Langevin equation is an interesting result in its own right, the true goal is to construct models which can make causal predictions of surface processes. The most important determinants of the rate of chemical reactions on a surface are the distribution of reagents in phase space and the rate of replenishment of spent reagents. The results presented demonstrate that a Markovian Langevin equation equipped with the correct energy exchange rate gets precisely this right. For simple monatomic species, this is the end of the story and the Markovian Langevin equation can likely be safely used for the prediction of surface processes. We however make the final comment that the reactions of larger molecules is influenced by their conformational mobility. Kramer's theory of reaction rates\cite{Kramers, Zwanzig} treats the contortion of molecules as a diffusive process in its own right, driven by Markovian noise\cite{Kramers, Zwanzig}. While the timescale of most molecular vibrations is much greater than the phonon cutoff frequency of a substrate, there are examples of certain molecular vibrational modes, in Benzene for example\cite{Wang2020}, which fluctuate as slowly as $10\THz$. If these vibrational modes are important to the rate of a particular reaction, the details of a substrate's phonon spectrum may become relevant. 
 
-While an exponential memory kernel was used in these simulations for computational efficiency, the hard phonon cutoff in real systems is likely to induce oscillations in the memory kernel, akin to a sinc function. When the period of oscillations in the adsorption site match those of the phonon cutoff frequency, Eq. \ref{eq:suppression_factor} predicts a sharp reduction in the hopping pre-exponential factor. By exploring various substrate-adsorbate combinations, it may be possible to observe the harsh drop in the hopping pre-exponential factor in systems for which the vibrational frequency exceeds the phonon cutoff frequency. High atomic mass substrates such as lead or rubidium paired with light adatoms may result in the conditions needed to see the transition, although it is unknown whether the effect would be visible over the other differences in such materials.  
-
-\bibliography{bibliography}
-
+%TC:ignore
 \section*{Methods}
 
 \subsection*{Langevin simulations}
@@ -216,15 +193,28 @@ The 2D Langevin simulations were performed with a $\Delta{t} = 1\fs$ timestep fo
 $$
 \int_0^{t_n} dt' K\left(t-t'\right) \vec{f}(t') \approx \alpha \int_0^{t_{n-1}} dt' K\left(t-t'\right) \vec{f}(t') + \frac{1}{1-\alpha} \vec{f}\left(t_n\right)
 $$
-where $\alpha = \exp{\frac{-\Delta{t}}{\tau}}$. Once the net force was determined as the sum of the background force, noise force, and the relevant friction law, the adatom position and velocity were propegated forwards in time using a Velocity Verlet integrator.
+where $\alpha = \exp{\frac{-\Delta{t}}{\tau}}$. The coloured noise spectrum was produced by generating an uncorrelated sequence of impulses and convolving with $K(t)$, this trick is only valid for an exponential memory kernel. Once the net force was determined as the sum of the background force, noise force, and the relevant friction law, the adatom position and velocity were propegated forwards in time using a Velocity-Verlet integrator\cite{Verlet}.
 
 \subsection*{3D molecular dynamics simulations}
 
-The 3D molecular dynamics simulation was constructed in a similar fashion to the simulation presented by Ellis\cite{Ellis} and used the same substrate spring constant and Morse potential parameters. The key difference is that an $8\times8\times8$ substrate was used and the pairwise adatom interactions with the substrate atoms were tracked up to a separation of $3.1$ times the Morse potential parameter $r_0$ in separation. A Velocity Verlet integrator with a $10\fs$ timestep was used to propegate the simulation through time for $200$ runs of $10\us$ at $300\K$.
+The 3D molecular dynamics simulation was constructed in a similar fashion to the simulation constructed by Ellis\cite{Ellis} and used the same substrate spring constant and Morse potential parameters. The key difference is that a larger $8\times8\times8$ substrate was used and the pairwise adatom interactions with the substrate atoms were tracked up to a separation of $3.1$ times the Morse potential parameter $r_0$ in separation. A Velocity Verlet integrator\cite{Verlet} with a $10\fs$ timestep was used to propegate the simulation through time for $200$ runs of $10\ns$ at $300\K$.
 
 \subsection*{Extracting the 2D background potential}
 
 The 3D MD simulation was used to produce $2\us$ of adatom trajectory at 8 temperatures across the range $140-300\K$. The $2\us$ trajectory of each temperature was mapped back into the first 2D unit cell on the periodic surface and binned into a $100\times100$ 2D grid. Using Eq. \ref{eq:free_energy}, the 2D free energy was calculated and verified not to vary as a function of temperature. The potential grid provided in the supplemental information and shown in Fig. \ref{fig:pot_surface} is the arithmatic mean of these grids.
+
+\section*{Code availability}
+
+All code was written in a combination of Python and Cython and is available on github through the link \url{https://github.com/jjhw3/gle_research}. If this manuscript is accepted for publication I will provide a condensed version of the code as this repository was used for many projects relating to Langevin and Molecular Dynamics simulations and therefore contains some clutter. 
+
+\section*{Data availability}
+
+The trajectories of all 3D molecular dynamics simulations is available upon request. The trajectories of Langevin simulations were not stored due to storage space constraints (The equivelant of more than 20Tb of data in total), however, equivelant trajectories may be readily simulated in two days. The total energy autocorrelation function of each Langevin simulation run was stored and these are available upon request. The microcanonical ensemble average of the first $100\ps$ of these autocorrelation functions is provided in the supplemental information.
+
+\bibliography{bibliography}
+
+\pagebreak
+\onecolumn
 
 \section*{Supplemental Information}
 
@@ -244,11 +234,164 @@ The jump distributions of each simulation shown in Fig. \ref{fig:gamma_ttf} is p
 
 The jump distributions and simulation parameters used to generate Fig. \ref{fig:jump_distribution} are provided as an xlsx file.
 
-\subsection*{Analytical expressions for a Langevin particle in the presence of a harmonic well and non-Markovian noise}
+
+\subsection*{Energy exchange rate of the 3D simulation}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.5\textwidth]{MD_e_auto}
+	\caption{The total energy autocorrelation function of the 3D simulation shows an extremely fast drop at short times not present in 2D simulations. This is assumed to be caused by fast motion in the perpendicular co-ordinate. To compensate for this, the decay rate of the tail is used as the energy exchange rate for this simulation.} 
+	\label{fig:MD_e_auto}
+\end{figure*}
+
+There is a certain ambiguity as to what energy to use for the definition of the energy exchange rate of the 3D simulation. Although energy may be exchanged with the third co-ordinate, the motion in the this direction is generally much faster than in the lateral directions. This leads to undesireable oscillations in the total energy auto-correlation function if one tries to use a definition in terms of the lateral co-ordinates only. Subsequently, we decided to use the 3D total energy of the adatom as the sum of its kinetic energy in all three dimensional plus the free energy as a function of all three co-ordinates. The 3D free energy was determined in the same fashon described in the methods section except the position was binned on a 3D grid. The resulting total energy autocorrelation function, Fig. \ref{fig:MD_e_auto}, contains an extremely fast drop at short times not present in 2D simulations. This is assumed to be caused by fast motion in the perpendicular co-ordinate. To compensate for this, the decay rate of the tail is used as the energy exchange rate for this simulation. An investigation into how to rigorously define effective 2D properties from such 3D simulations is a potential avenue for future work.
+
+\section*{Derrivation of the suppresion factor for a particle in a harmonic well with non-Markovian noise}
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.5\textwidth]{F_poles}
+	\caption{The pole structure of the Green's function of the non-Markovian Langevin equation with an exponential memory kernel.} 
+	\label{fig:F_poles}
+\end{figure*}
 
 The non-Markovian Langevin equation in a harmonic well of natural frequency $\omega_0$ is given by
 $$
-m\ddot{\vec{r}}+m\eta\int_0^t\diff{t'}K(t-t')\dot{\vec{r}}(t')+m\omega_0^2\vec{r}=\int_0^t\diff{t'}\vec{f}(t')K(t-t').
+	m\ddot{\vec{r}}+m\eta\int\diff{t'}K(t-t')\dot{\vec{r}}(t')+m\omega_0^2\vec{r}=\vec{f}(t)
 $$
+$$
+	\text{ where } \left<f(t_1)f(t_2)\right>=2k_BTm\eta K(\left|t_1-t_2\right|).
+$$
+where $K(t)$ is a causal memory kernel with total area of $1$. Taking the Fourier transform of this equation, applying the convolution theorem, and collecting terms results in a solution for the particle's trajectory in Fourier space in terms of a Green's function $\tilde{F}$,
+\begin{equation}\label{eq:greens_function}
+	\tilde{x} = \frac{1}{m} \frac{\tilde{f}}{-\omega^2 + i \eta \omega \tilde{K} + \omega_0^2} = \frac{1}{m} \tilde{f} \tilde{F} 
+\end{equation}
+$$
+\implies x(t) = \frac{1}{m}\int\frac{\diff{\omega}}{2\pi}\tilde{f} \tilde{F} e^{i\omega t}.
+$$
+The ensemble average of observables like the energy exchange rate, $\phi^{-1}$, are functions of the positions of the poles of $\tilde{F}$. Although the introduction of $\tilde{K}$ will in general add further poles to the Green's function, the residue of the two poles evident in the denominator of Eq. \ref{eq:greens_function} are the dominant features of the total energy autocorrelation function. In particular, it may be shown that in the low friction limit, the energy exchange rate is given by twice the imaginary co-ordinate of these poles. We therefore evaluate the energy exchange rate of the system through the shift of these two poles as a result of $\tilde{K}$ by factorizing the denominator in Eq. \ref{eq:greens_function},
+$$
+\frac{1}{-\omega^2 + i \eta \omega \tilde{K} + \omega_0^2} = \frac{-1}{\left(\omega - \frac{i\eta\tilde{K}}{2} + \omega_0\sqrt{1-\left(\frac{i\eta\tilde{K}}{2\omega_0}\right)^2}\right)\left(\omega - \frac{i\eta\tilde{K}}{2} - \omega_0\sqrt{1-\left(\frac{i\eta\tilde{K}}{2\omega_0}\right)^2}\right)}
+$$
+We proceed by labelling one of the poles $\chi$ and suppose it satisfies
+$$
+\left(\chi - \frac{i\eta\tilde{K}(\chi)}{2} - \omega_0\sqrt{1-\left(\frac{i\eta\tilde{K}(\chi)}{2\omega_0}\right)^2}\right)=0.
+$$
+First we note that $\chi=\omega_0$ for $\eta=0$ and proceed by expanding $\chi$ to the lowest order in $\eta$. Implicitly differentiating the above expression with respect to $\eta$ and taking $\eta=0$ demonstrates that $\chi = \omega_0 + \frac{i\eta\tilde{K}(\omega_0)}{2} + O(\eta^2)$. Therefore in the low friction limit, the imaginary component of $\chi$ is shifted to $\frac{\eta\operatorname{Re}(\tilde{K}(\omega_0))}{2}$ and the suppression factor is given by $I=\frac{\phi^{-1}}{\eta}=\frac{2\operatorname{Im}(\chi)}{\eta}=\operatorname{Re}(\tilde{K}(\omega_0))$. In the case of a causal exponential memory kernel with correlation time $\tau$, this gives $I=\frac{1}{1+(\omega_0\tau)^2}$ 
+
+
+\subsection*{Exact analytic expressions for the ISF and kinetic energy autocorrelation function of a particle in a harmonic well with non-Markovian noise}
+
+Do you think it is worth cleaning this up and including it in the submission (lines 560-600)? Its interesting and useful to me, but I'm not sure whether anyone else will ever use it.
+
+The non-Markovian Langevin equation in a harmonic well of natural frequency $\omega_0$ is given by
+$$
+m\ddot{\vec{r}}+m\eta\int\diff{t'}K(t-t')\dot{\vec{r}}(t')+m\omega_0^2\vec{r}=\int\diff{t'}\vec{f}(t')K(t-t')
+$$
+where $K(t)$ is a causal memory kernel with total area of $1$. Taking the Fourier transform of this equation, applying the convolution theorem, and collecting terms results in a solution for the particle's trajectory in Fourier space in terms of a Green's function $\tilde{F}$,
+$$
+\tilde{x} = \frac{1}{m} \frac{\tilde{f} \tilde{K}}{-\omega^2 + i \eta \omega \tilde{K} + \omega_0^2} = \frac{1}{m} \tilde{f} \tilde{F}. \label{eq:greens_function}
+$$
+In the case of a causual exponential memory kernel $K(t)=\frac{1}{\tau}e^{-\frac{t}{\tau}}$, with Fourier spectrum $\tilde{K}(\omega)=\frac{1}{1+i\omega\tau}$, the Green's function is the reciprocal of a third order polynomial,
+$$
+\tilde{F} = \frac{-1}{i\tau\omega^3 + \omega^2 - i\omega(\omega_0^2\tau + \eta) - \omega_0^2} =: \frac{-1}{P(\omega)}.
+$$
+Since $P(i\omega)$ is a polynomial with real co-efficients, it follows from the complex conjugate root theorem that for any root $z$ of $P(\omega)$, $-z^*$ is also a root of $P(\omega)$. This allows us to make the ansatz that $P$ may be factorized as $P(\omega) = i\tau\left(\omega - \chi\right)\left(\omega + \chi^*\right)\left(\omega - i\eta_1\right)$ for some $\chi\in\mathbb{C}$ and ${\eta_1\in\mathbb{R}}$. While it is possible that $P(\omega)$ admits three imaginary solutions in some regions of the $\tau,\eta,\omega_0$ parameter space, these parameter ranges have not been encountered in our study of activated diffusion. If the Greens function $F(t)$ is to be causal, all three roots must occur in the upper half plane. We therefore find that the pole structure of $\tilde{F}(\omega)$ is of the form shown in Figure \ref{fig:F_poles}. A simple application of the residue theorem allows useful integrals of the form $\int\frac{dw}{2\pi} g\left(\omega\right) \left|\tilde{F}\left(\omega\right)\right|^2$ to be evaluated using the formula,
+
+
+The non-Markovian Langevin equation in a harmonic well of natural frequency $\omega_0$ is given by
+$$
+m\ddot{\vec{r}}+m\eta\int\diff{t'}K(t-t')\dot{\vec{r}}(t')+m\omega_0^2\vec{r}=\int\diff{t'}\vec{f}(t')K(t-t')
+$$
+where $K(t)$ is a causal memory kernel with total area of $1$. Taking the Fourier transform of this equation, applying the convolution theorem, and collecting terms results in a solution for the particle's trajectory in Fourier space in terms of a Green's function $\tilde{F}$,
+$$
+\tilde{x} = \frac{1}{m} \frac{\tilde{f} \tilde{K}}{-\omega^2 + i \eta \omega \tilde{K} + \omega_0^2} = \frac{1}{m} \tilde{f} \tilde{F}. \label{eq:greens_function}
+$$
+In the case of a causual exponential memory kernel $K(t)=\frac{1}{\tau}e^{-\frac{t}{\tau}}$, with Fourier spectrum $\tilde{K}(\omega)=\frac{1}{1+i\omega\tau}$, the Green's function is the reciprocal of a third order polynomial,
+$$
+\tilde{F} = \frac{-1}{i\tau\omega^3 + \omega^2 - i\omega(\omega_0^2\tau + \eta) - \omega_0^2} =: \frac{-1}{P(\omega)}.
+$$
+Since $P(i\omega)$ is a polynomial with real co-efficients, it follows from the complex conjugate root theorem that for any root $z$ of $P(\omega)$, $-z^*$ is also a root of $P(\omega)$. This allows us to make the ansatz that $P$ may be factorized as $P(\omega) = i\tau\left(\omega - \chi\right)\left(\omega + \chi^*\right)\left(\omega - i\eta_1\right)$ for some $\chi\in\mathbb{C}$ and ${\eta_1\in\mathbb{R}}$. While it is possible that $P(\omega)$ admits three imaginary solutions in some regions of the $\tau,\eta,\omega_0$ parameter space, these parameter ranges have not been encountered in our study of activated diffusion. If the Greens function $F(t)$ is to be causal, all three roots must occur in the upper half plane. We therefore find that the pole structure of $\tilde{F}(\omega)$ is of the form shown in Figure \ref{fig:F_poles}. A simple application of the residue theorem allows useful integrals of the form $\int\frac{dw}{2\pi} g\left(\omega\right) \left|\tilde{F}\left(\omega\right)\right|^2$ to be evaluated using the formula,
+\begin{equation}
+	\int\frac{dw}{2\pi} g\left(\omega\right) \left|\tilde{F}\left(\omega\right)\right|^2 =  -\frac{1}{2 \tau^{2}}\left(\frac{1}{2 \chi' \chi''} \operatorname{Re}\left(\frac{g(\chi)}{\chi\left(\chi^{2}+\eta_{1}^{2}\right)}\right)+\frac{g(i\eta_{1})}{\left(|\chi|^{2}+n_{1}^{2}\right)^{2} \eta_{1}}\right), \label{eq:integral_over_CF}
+\end{equation}
+provided $g(\omega)$ is an entire function which decays sufficiently fast as $\operatorname{Im}({\omega})\rightarrow\infty$.
+
+\subsection*{Evaluating the ISF}
+
+The intermediate scattering function is given by the spatial Fourier transform of the van Hove pair correlation function $G\left(\vec{r},t\right)$. For a single particle, this is equivalent to $P\left(\vec{r}, t\right)$, the probability of finding the particle at $\vec{r}$ at time $t$ given that it was at the origin at $t=0$. For a single particle trajectory, $\vec{r}(t)$, this given by 
+
+$$
+ISF(\Delta \vec{K}, t) = \int d\vec{R} e^{-i \Delta \vec{K} \cdot \left(\vec{R} - \vec{r}(0)\right)} P(\vec{R}, t) = \int d\vec{R} e^{-i \Delta \vec{K} \cdot \left(\vec{R} - \vec{r}(0)\right)} \delta(\vec{R} - \vec{r}(t)) = e^{-i \Delta \vec{K} \cdot \left(\vec{r}(t) - \vec{r}(0)\right)}
+$$
+\\
+Inserting the solution for $\vec{r}(t)$ in terms of the Green's function, expanding the exponential and taking an ensemble average gives
+$$
+\left<ISF(\Delta \vec{K}, t)\right> = \sum_{n=0}^{\infty} \left(- \frac{i}{m}\right)^n \frac{1}{n!} \left< \left( \int \frac{d\omega}{2\pi} \left(e^{i\omega t} - 1\right) \tilde{F} \left(\Delta \vec{K} \cdot \tilde{f}\right)\right)^n\right>
+$$
+\\
+\begin{equation}
+= \sum_{n=0}^{\infty} \left(- \frac{i}{m}\right)^n \frac{1}{n!} \left( \int \frac{d\omega}{2\pi} \left(e^{i\omega t} - 1\right) \tilde{F}\right)^n \left< \left(\Delta \vec{K} \cdot \tilde{f}\right)^n\right> \label{eq:isf_1}
+\end{equation}
+\\
+I have abused notation in the last line to summarize $n$ integrals over $\omega_1$ through $\omega_n$. Taking a closer look at $\left< \left(\Delta \vec{K} \cdot \tilde{f}\right)^n\right>$ in one dimension,
+$$
+\left< \left(\Delta \vec{K} \cdot \tilde{f}\right)^n\right> = \left|\Delta \vec{K}\right|^n \left< \tilde{f}\left(\omega_1\right) \ldots \tilde{f}\left(\omega_n\right)\right>.
+$$
+From the isotropy and zero mean of $f$ it follows that the above vanishes for odd $n$. Assuming $f$ is a gaussian random variable, expectation value for even $n$ is given by the sum over the product of all possible pairwise expectations of $\left< \tilde{f}\left(\omega_1\right) \ldots \tilde{f}\left(\omega_n\right) \right>$,
+$$
+\left< \left(\Delta \vec{K} \cdot \tilde{f}\right)^{2n}\right> = \left|\Delta \vec{K}\right|^{2n} \frac{1}{2^nn!} \sum_P \left< \tilde{f}\left(\omega_{P_1}\right) \tilde{f}\left(\omega_{P_2}\right)\right> \ldots \left< \tilde{f}\left(\omega_{P_{2n-1}}\right) \tilde{f}\left(\omega_{P_{2n}}\right)\right>
+$$
+$$
+= \left|\Delta \vec{K}\right|^{2n} \frac{\left(2\pi\sigma^2\right)^n}{2^nn!} \sum_P \delta\left(\omega_{P_1} + \omega_{P_2}\right) \ldots \delta\left(\omega_{P_{2n-1}} + \omega_{P_{2n}}\right)
+$$
+The last step follows immediately from the Fourier transform of $\left<f(t)f(t')\right>=\delta(t-t')\sigma^2$. Substituting into \ref{eq:isf_1} yields
+$$
+\sum_{n=0}^{\infty} \left(- \frac{i}{m}\right)^{2n} \frac{1}{(2n)!} \left( \int \frac{d\omega}{2\pi} \left(e^{i\omega t} - 1\right) \tilde{F}\right)^{2n} \left|\Delta \vec{K}\right|^{2n} \frac{\left(2\pi\sigma^2\right)^n}{2^nn!} \sum_P \delta\left(\omega_{P_1} + \omega_{P_2}\right) \ldots \delta\left(\omega_{P_{2n-1}} + \omega_{P_{2n}}\right)
+$$
+$$
+= \sum_{n=0}^{\infty} \left(- \frac{i}{m}\right)^{2n} \frac{1}{(2n)!} \left( \int \frac{d\omega}{2\pi} \left|\left(e^{i\omega t} - 1\right) \tilde{F}\right|^2\right)^{n} \left|\Delta \vec{K}\right|^{2n} \frac{\left(\sigma^2\right)^n(2n)!}{2^nn!}
+$$
+$$
+= \sum_{n=0}^{\infty} \frac{1}{n!} \left(-\frac{|\Delta \vec{K}|^2 \sigma^2}{m^2} \int \frac{d\omega}{2\pi}\left(1 - \cos\left(\omega t\right)\right) \left| \tilde{F} \right|^2\right)^n
+$$
+\begin{equation}
+= \exp\left(-\frac{|\Delta \vec{K}|^2 \sigma^2}{m^2} \int \frac{d\omega}{2\pi}\left(1 - \cos\left(\omega t\right)\right) \left| \tilde{F} \right|^2\right) \label{isf_explicity_norm}
+\end{equation}
+\\
+From equation \ref{isf_explicity_norm} it is clear the ISF is normalized to 1 at $t=0$. Since $F(t)$ is a real function, $|\tilde{F}|^2$ must be even, so $\int \frac{d\omega}{2\pi}\left(\cos\left(\omega t\right)\right) \left| \tilde{F} \right|^2 = \int \frac{d\omega}{2\pi}\ e^{i \omega t} \left| \tilde{F} \right|^2$ which is nothing but the auto-correlation of $F(t)$. This integral may be evaluated using Eq. \ref{eq:integral_over_CF} resulting in the final expression, 
+\begin{equation}
+	ISF\left(\Delta \vec{K}, t\right) = ISF\left(\Delta \vec{K}, \infty\right) \exp\left(\frac{-\sigma^2\left|\Delta \vec{K}\right|^2}{2m^2\tau^2}\left(\frac{e^{-\chi''t}}{2\chi'\chi''}\operatorname{Re}\left(\frac{e^{i\chi't}}{\chi\left(\chi^2+\eta_1^2\right)}\right) + \frac{e^{-\eta_1t}}{\left(\left|\chi\right|^2+\eta_1^2\right)^2\eta_1}\right)\right) \label{isf_exp}.
+\end{equation}
+
+This expression is extremely useful as the starting point for certain short-time theoretical calculations and for checking the correctness of computational work.
+
+\subsection*{Evaluating the kinetic energy autocorrelation function}
+
+The velocity the particle may be written in terms of the Green's function as $\dot{x}(t) = \frac{i}{m}\int\frac{d\omega}{2\pi} \omega e^{i\omega t}\tilde{f}(\omega)\tilde{F}(\omega)$. The kinetic energy auto-correlation function is therefore given by
+$$
+\left<E(0)E(t)\right>=\frac{m^2}{4}\left<\dot{x}(0)^2\dot{x}(t)^2\right>=\frac{1}{4m^2}\left(\int\frac{d\omega}{2\pi}\omega\tilde{F}\right)^4 e^{i\left(\omega_3 + \omega_4 \right)t} \left<\left(\tilde{f}(\omega_1)\cdot\tilde{f}(\omega_2)\right)\left(\tilde{f}(\omega_3)\cdot\tilde{f}(\omega_4)\right)\right>.
+$$
+I have once again abused notation to summarize four integrals over $\omega_1\cdots\omega_4$. By expanding the dot product component wise and taking care to sum over all the products of pairwise expectations,  $\left<\left(\tilde{f}(\omega_1)\cdot\tilde{f}(\omega_2)\right)\left(\tilde{f}(\omega_3)\cdot\tilde{f}(\omega_4)\right)\right>$ is given by
+
+$$
+2\left(2\pi\sigma^2\right)^2\left(2\delta(\omega_1+\omega_2)\delta(\omega_3+\omega_4) + \delta(\omega_1+\omega_2)\delta(\omega_3+\omega_4) + \delta(\omega_1+\omega_2)\delta(\omega_3+\omega_4)\right).
+$$
+\\
+Therefore in 2 dimensions,
+$$
+\left<E(0)E(t)\right>=\frac{\sigma^4}{m^2}\left(\left(\int\frac{dw}{2\pi}\omega^2\left|\tilde{F}(\omega)\right|^2\right)^2 + \left(\int\frac{dw}{2\pi}e^{i\omega t}\omega^2\left|\tilde{F}(\omega)\right|^2\right)^2\right).
+$$
+Which may be evaluated for an exponential memory kernel using Eq. \ref{eq:integral_over_CF} giving,
+
+\begin{equation}
+	\left<E(0)E(t)\right>=\left<E(0)E(\infty)\right> + \frac{\sigma^4}{4\tau^4m^2}\left(\frac{e^{-\chi''t}}{2\chi'\chi''}\operatorname{Re}\left(\frac{\chi e^{i\chi't}}{\chi^2+\eta_1^2}\right) + \frac{\eta_1e^{-\eta_1 t}}{\left(\left|\chi\right|^2 + \eta_1^2\right)^2} \right)^2 \label{eq:ek_auto}
+\end{equation}
+$$
+\left<E(0)E(\infty)\right> = \frac{\sigma^4}{4\tau^4m^2}\left(\frac{1}{2\chi'\chi''}\operatorname{Re}\left(\frac{\chi}{\chi^2+\eta_1^2}\right) - \frac{\eta_1}{\left(\left|\chi\right|^2 + \eta_1^2\right)^2} \right)^2.
+$$
+The expression for $\left<E(0)E(\infty)\right>$ is particularly interesting as it is not exactly equal to $(k_BT)^2$, although in the relevant parameter range it is very close. This gives a tangible example of the temperature parameter used in the fluctuation dissipation relation giving an incorrect system temperature.
+
+%TC:endignore
 
 \end{document} 

@@ -45,7 +45,7 @@ for i, plot_dir in enumerate(dirs):
             label = labels[i]
         plot_alpha_dk(plot_dir / f'{ttf}.npy', norms[j], c=cs[i], label=label, marker=markers[i], s=sizes[i])
 
-plot_alpha_dk(Path('md_alphas.npy'), marker='x', label='3D MD simulation', c='r')
+plot_alpha_dk(Path('md_alphas.npy'), norms[2], marker='x', label='3D MD simulation', c='r')
 
 plt.gcf().set_size_inches(12 * cm, 8 * cm)
 plt.subplots_adjust(left=0.137, bottom=0.15, right=0.993, top=0.987)
@@ -53,9 +53,10 @@ plt.legend(loc='lower center', frameon=False)
 plt.xlabel(r'Momentum transfer, |$\Delta{K}$| ($\AA^{-1}$)')
 plt.ylabel(r'Normalised ISF decay rate, $\Gamma$ (ps$^{-1}$)')
 
-plt.text(0.9, norms[0] - 0.012, r'$\phi^{-1} \approx 0.3$ps$^{-1}$')
-plt.text(0.9, norms[1] - 0.012, r'$\phi^{-1} \approx 0.5$ps$^{-1}$')
-plt.text(0.9, norms[2] - 0.018, r'$\phi^{-1} \approx 0.7$ps$^{-1}$')
+plt.text(0.78, norms[0] - 0.013, r'$\phi^{-1} = 0.3$ps$^{-1}$$\pm2$%')
+plt.text(0.78, norms[1] - 0.013, r'$\phi^{-1} = 0.5$ps$^{-1}$$\pm2$%')
+plt.text(0.78, norms[2] - 0.018, r'$\phi^{-1} = 0.7$ps$^{-1}$ $\pm2$%')
+plt.text(1.85, norms[2] - 0.01, r'$\phi^{-1} = 0.68$ps$^{-1}$', c='r')
 
 plt.savefig('../../jump_distribution.pdf')
 plt.show()
@@ -78,3 +79,5 @@ plt.show()
 #
 # tau = 0.05
 # (0.7900000000000004, 0.6993006993006994)
+
+# MD (0.6838884274372572)
