@@ -26,15 +26,6 @@ def get_time_to_forget(path, eta, tau):
     # cla()
 
     return alpha
-    alpha = stable_fit_alpha(
-        times,
-        energies,
-        np.array([1.0, 0]),
-        0,
-        plot_dir=path / 'plots'
-    )
-
-    return alpha
 
 
 def get_gamma(path):

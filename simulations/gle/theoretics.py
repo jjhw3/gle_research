@@ -107,23 +107,11 @@ def get_ek_auto(times, kernel, eta, w0):
 if __name__ == '__main__':
     times = np.arange(0, 1000, 0.001)
     dt = times[1] - times[0]
-    wc = 10
+    tau = 0.1
+    eta = 1
+    w0 = 8.8
 
-    tau = 1.0
-    # kernel = np.exp(- times / tau)
-
-    # kernel = np.sin(wc * times) / (wc * times)
-    # kernel[0] = 1
-
-    kernel = np.exp(- times / tau) * np.cos(wc*times)
-
-    kernel /= np.sum(kernel) * dt
-    eta = 0.1
-    w0 = 7.7
-    auto = get_ek_auto(times, kernel, eta, w0)
-    auto /= auto[0]
-    plt.plot(times, auto)
-    # plt.plot(times, np.exp(- times * eta))
-    # plt.plot(times, np.exp(- times * eta / (1 + (tau * w0)**2)))
-    plt.plot(times, np.exp(- times * eta * np.sum(np.cos(w0*times) * kernel * dt)))
-    plt.show()
+    for tau in np.linspace(0, 20, 20):
+        chi1, chi2, eta1 = get_greens_function_parameters(w0, eta, tau)
+        chi = chi1 + 1j * chi2
+        print(eta**2 / tau**4 * (np.real((chi) / (chi**2 + eta1**2)) / (2 * chi1 * chi2) - eta1 / (np.abs(chi)**2 + eta1**2)**2)**2)

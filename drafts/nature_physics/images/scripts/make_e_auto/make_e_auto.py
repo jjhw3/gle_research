@@ -24,7 +24,7 @@ plt.annotate('', (phi, 0), xytext=(phi, 1 / np.e), arrowprops=dict(arrowstyle='<
 plt.text(phi / 2 - 0.2, 1 / np.e - 0.08, r'$\phi$')
 plt.text(phi + 0.1, 1 / 2 / np.e - 0.08, r'$1/e$')
 plt.xlim(0, 15)
-plt.xlabel('Time (ps)')
+plt.xlabel('Time, t (ps)')
 plt.ylabel(r'$\frac{\left<E(t)E(0)\right> - \left<E\right>^2}{\left<E^2\right> - \left<E\right>^2}$')
 plt.ylim(-0.01, 1.05)
 

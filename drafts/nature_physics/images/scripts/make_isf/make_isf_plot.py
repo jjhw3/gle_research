@@ -21,7 +21,7 @@ plt.plot(times[fit_mask], np.exp(m * fit_times + c), linestyle='--', c='r', line
 plt.text(5, 0, r'$\mathrm{ISF} \sim e^{-\Gamma(\Delta{K}) t}$', c='r')
 plt.axvline(3, linestyle='--', c='black', linewidth=1)
 plt.xlim(-1, 60)
-plt.xlabel('Time (ps)')
+plt.xlabel('Time, t (ps)')
 plt.ylabel(r'$\mathrm{ISF}(\Delta{K}, t)$ / $\mathrm{ISF}(\Delta{K}, 0)$')
 plt.subplots_adjust(left=0.123, bottom=0.13, right=0.98, top=0.99, wspace=0.138)
 

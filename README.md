@@ -4,4 +4,4 @@ The primary loops for the Langevin simulations are available in simulations/gle/
 
 The primary loop for the MD simulation is in simulations/md/run_md.py and is entitled 'simulate'.
 
-The simulation_scripts directory contains scripts used to execute experiments on the Cambridge high performance computing cluster.
+The simulation_scripts directory contains scripts used to execute experiments on the Cambridge high performance computing cluster. The relevant folders are 'cubic', 'eta_tau_scan', and 'calculate_md_isf'.

@@ -2,7 +2,7 @@ import cle
 import matplotlib.pyplot as plt
 import numpy as np
 import yaml
-from cle import eval_pot_grid
+from cle import eval_pot_grid, eval_force_from_pot
 
 from common.constants import boltzmann_constant
 from common.lattice_tools.common import change_basis, get_basis_rotation_matrix, rotate_basis, get_in_plane_basis
@@ -158,6 +158,20 @@ class GLEConfig:
             )
 
         return potentials
+
+    def evaluate_forces(self, positions):
+        forces = np.zeros_like(positions)
+        interpolation_coefficients = self.interpolation_coefficients
+
+        for i in range(forces.shape[1]):
+            eval_force_from_pot(
+                forces[:, i],
+                self.inv_in_plane_basis,
+                interpolation_coefficients,
+                positions[:, i]
+            )
+
+        return forces
 
 
 class CubicGLEConfig(GLEConfig):
