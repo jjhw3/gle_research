@@ -1,6 +1,6 @@
 I must apologize for a certain degree of clutter at this stage and my embarrassing misspellings of adsorbate.
 
-The primary loops for the Langevin simulations are available in simulations/gle/cle/src/cython_le.pyx . The two main functions are 'run_gle_cubic', 'run_gle', and 'run_complex_gle'.
+The primary loops for the Langevin simulations are available in simulations/gle/cle/src/cython_le.pyx . The two main functions are 'run_gle_cubic', 'run_gle', and 'run_complex_gle'. Note there is a slight difference in the definition of zeta used in the paper vs in this repository, the conversion may be performed through (zeta paper) = m^2 * (zeta this repo).
 
 The primary loop for the MD simulation is in simulations/md/run_md.py and is entitled 'simulate'.
 

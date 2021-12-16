@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import InsetPosition
 
-from common.constants import cm
+from common.constants import cm, boltzmann_constant
 from common.tools import stable_fit_alpha
 from gle.theoretics import get_greens_function_parameters
 import matplotlib.transforms as mtransforms
@@ -71,21 +71,26 @@ ax2.set_xlabel('Time, t (ps)', labelpad=0)
 ax2.set_ylabel('Corresponding\nAuto-correlation', labelpad=0)
 
 
+m = 23
+eta = 0.4
+T = 300
 plt.sca(axs['d)'])
-xhis = np.arange(5e-6, 3e-5, 1e-6)
+xhis = np.arange(5e-6, 3e-5, 1e-6) * m**2  # You defined zeta in the paper in a different way to the sim. So need m^2
 pure_cubic_ttfs = np.load('../pure_cubic_ttfs.npy')
 cubic_ttfs = np.load('../eta_0.1_cubic_ttfs.npy')
-plt.scatter(xhis * 1e5, cubic_ttfs, s=16, label='Linear + Cubic friction', color='b')
-plt.scatter(xhis * 1e5, pure_cubic_ttfs, s=30, label='Cubic friction', color='black', marker='x')
-plt.plot(np.arange(0, 4), 0.4 + 0.28 * np.arange(0, 4), c='blue', label=r'$\phi^{-1}=\eta + 2k_BT/(m\omega_0^2)\zeta$')
-plt.plot(np.arange(0, 4), 0.28 * np.arange(0, 4), c='black', label=r'$\phi^{-1}=2k_BT/(m\omega_0^2)\zeta$')
-plt.xlabel(r'$\zeta$ ($10^{-5}$ ps$/\AA^{2}$)')
+plt.scatter(1e3 * xhis, cubic_ttfs, s=16, label='Linear + Cubic friction', color='b')
+plt.scatter(1e3 * xhis, pure_cubic_ttfs, s=30, label='Cubic friction', color='black', marker='x')
+
+fit_xhi = np.linspace(0, np.max(xhis), 2)
+plt.plot(1e3 * fit_xhi, eta + 4.76 * boltzmann_constant * T / m * fit_xhi, c='blue', label=r'$\phi^{-1}=\eta + 4.76 \cdot \zeta k_BT/m$')
+plt.plot(1e3 * fit_xhi, 4.76 * boltzmann_constant * T / m * fit_xhi, c='black', label=r'$\phi^{-1}=4.76 \cdot \zeta k_BT/m$')
+plt.xlabel(r'$\zeta$ ($10^{-3}$ ps$/\AA^{2}$)')
 plt.ylabel('Energy exchange\nrate, $\\phi^{-1}$ (ps$^{-1}$)')
 plt.legend(loc='upper left', prop={'size': 8}, frameon=False)
 trans = mtransforms.ScaledTranslation(0, -0.68, fig.dpi_scale_trans)
 plt.text(0.5, 0.0, 'd)', transform=plt.gca().transAxes + trans, fontsize='medium', va='bottom', fontfamily='serif')
 plt.ylim(0, 1.45)
-plt.xlim(0, 3.1)
+plt.xlim(0, 16.5)
 
 
 plt.gcf().set_size_inches(18.3 * cm, 14 * cm)
